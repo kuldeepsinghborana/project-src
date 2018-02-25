@@ -1,0 +1,45 @@
+<div class="header">
+  <nav class="navbar">
+    <div class="navbar-header">
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#nav" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <i class="fa fa-sort-desc"></i>
+        </button>
+      <a class="navbar-brand" routerLink="search">
+        <h1>jobbunny.co</h1>
+      </a>
+    </div>
+    <div class="collapse navbar-collapse" id="nav">
+      <ul class="nav nav-pills">
+        <li class="left20" role="presentation">
+          <a routerLink="about">How it works?</a>
+        </li>
+        <li class="left20" role="presentation">
+          <a routerLink="contact">Contact</a>
+        </li>
+        <li class="left20" role="presentation">
+          <a routerLink="register">Signup</a>
+        </li>
+        <li class="left20" role="presentation">
+          <a routerLink="login">Login</a>
+        </li>
+        <div class="right">
+          <div class="medium strong">For Employers</div>
+          <a class="btn btn-md btn-green top10" routerLink="newjob">Post job for free</a>
+          <br>
+          <small class="top10">3 minutes is all you need</small>
+        </div>
+      </ul>
+    </div>
+  </nav>
+</div>
+<div class="container-fluid">
+  <div class="clearfix">
+  </div>
+</div>
+
+<router-outlet></router-outlet>
+
+<div class="footer">
+  <span>© jobbunny.co | {{currentYear}} </span>
+</div>

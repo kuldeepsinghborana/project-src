@@ -5,40 +5,63 @@ var bcrypt = require('bcrypt');
 var imgur = require('imgur');
 
 // POST /api/users/register
-module.exports.register = function(req, res) {
+module.exports.register = function (req, res) {
   console.log('registering user');
 
-  if (req.body.email && req.body.password && req.body.passwordConf) {
+  if (req.body.email && req.body.password && req.body.confirmpassword) {
     var userData = {
       email: req.body.email,
       username: req.body.username,
       password: req.body.password,
-      passwordConf: req.body.passwordConf,
+      // passwordConf: req.body.passwordConf,
+      phoneNumber: req.body.handphoneNumber,
+      companyname: req.body.companyname
     }
 
-    if (userData.password !== userData.passwordConf) {
+    if (req.body.password !== req.body.confirmpassword) {
       err = "Password does not match with Password confirmation";
       console.log(err);
-      res.status(400).render('sessions/register', { error: err });
+      // res.status(400).render('sessions/register', { error: err });
+      let response = {
+        status: 400,
+        message: err
+      }
+      res.send(response);
     }
 
     User.create(userData, function (err, user) {
       if (err) {
         console.log("Error creating user", err)
-        res.status(400).render('sessions/register', { error: err });
+        // res.status(400).render('sessions/register', { error: err });
+        let response = {
+          status: 400,
+          message: "FAILED"
+        }
+        res.send(response);
       } else {
         console.log("User created ", user);
-        res.status(201).render("sessions/login", { message: "Registration Successful. Please login." });
+        // res.status(201).render("sessions/login", { message: "Registration Successful. Please login." });
+        let response = {
+          status: 200,
+          message: "SUCCESS"
+        }
+        res.send(response);
       }
     });
   } else {
-    console.log('Insufficient data. Cannot register!')
-    res.status(400).render('sessions/register', { error: 'Insufficient data. Cannot register!' });
+    console.log('Insufficient data. Cannot register!');
+    // res.status(400).render('sessions/register', { error: 'Insufficient data. Cannot register!' });
+    let response = {
+      status: 400,
+      message: 'Insufficient data. Cannot register!'
+    }
+    res.send(response);
+
   }
 };
 
 // POST /api/users/login
-module.exports.login = function(req, res) {
+module.exports.login = function (req, res) {
   console.log('logging in user');
 
   var email = req.body.email;
@@ -46,18 +69,18 @@ module.exports.login = function(req, res) {
 
   User
     .findOne({ email: email })
-    .exec(function(err, user) {
+    .exec(function (err, user) {
       if (err) {
         console.log(err)
         res.status(400).render('sessions/login', { error: err });
       } else {
-        if ( user && bcrypt.compareSync(password, user.password) ) {
+        if (user && bcrypt.compareSync(password, user.password)) {
           console.log('User found', user);
           // set req.session.user for server
           req.session.userId = user._id;
           req.session.user = user;
           req.session.carrots = req.session.user.carrots;
-          Notification.find({ notifieeId: user._id, seen: false }, function(err, notifications){
+          Notification.find({ notifieeId: user._id, seen: false }, function (err, notifications) {
             if (err) {
               console.error(err)
             }
@@ -80,13 +103,13 @@ module.exports.login = function(req, res) {
 };
 
 // GET /logout
-module.exports.logout = function(req, res, next) {
+module.exports.logout = function (req, res, next) {
   console.log('logging out user -->' + req.session);
   if (req.session) {
     console.log('...deleting session')
     // delete session object
-    req.session.destroy(function(err) {
-      if(err) {
+    req.session.destroy(function (err) {
+      if (err) {
         next(err);
       } else {
         res.clearCookie('userId');
@@ -97,7 +120,7 @@ module.exports.logout = function(req, res, next) {
 };
 
 // POST /api/users/update
-module.exports.updateUser = function(req, res) {
+module.exports.updateUser = function (req, res) {
   var userId = req.session.user._id;
   var current_user = req.session.user;
   console.log('UPDATE user with _id: ' + userId);
@@ -114,17 +137,17 @@ module.exports.updateUser = function(req, res) {
     if (formData.password !== formData.passwordConf) {
       err = "Password does not match with Password confirmation";
       req.flash('error', err);
-      return res.redirect( _getRedirectionPath(current_user.userType) );
+      return res.redirect(_getRedirectionPath(current_user.userType));
     }
     updateParams.password = formData.password;
   } else {
     req.flash('error', 'Please enter password and password confirmation to update your settings');
-    return res.redirect( _getRedirectionPath(current_user.userType) );
+    return res.redirect(_getRedirectionPath(current_user.userType));
   }
 
   User
     .findById(userId)
-    .exec(function(err, user){
+    .exec(function (err, user) {
       if (err) {
         console.log("User not found: ", err)
         res.locals.error = 'User not found ' + err;
@@ -141,10 +164,10 @@ module.exports.updateUser = function(req, res) {
         req.flash('info', 'Account updated sucessfully');
         if (user.profilePic) {
           // upload profile pic
-          imgur.uploadFile('public/uploads/'+user.profilePic).then(function (json) {
+          imgur.uploadFile('public/uploads/' + user.profilePic).then(function (json) {
             remote_url = json.data.link;
-            User.findByIdAndUpdate(user._id, { $set: { profilePic: remote_url }}, { new: true }, function(err, user){
-              if (err){
+            User.findByIdAndUpdate(user._id, { $set: { profilePic: remote_url } }, { new: true }, function (err, user) {
+              if (err) {
                 console.log("Something wrong when updating data!");
                 res.redirect(_getRedirectionPath(current_user.userType));
               }
@@ -154,21 +177,21 @@ module.exports.updateUser = function(req, res) {
               res.redirect(_getRedirectionPath(current_user.userType));
             });
           })
-          .catch(function (err) {
-            console.error(err.message);
-            res.redirect(_getRedirectionPath(current_user.userType));
-          });
+            .catch(function (err) {
+              console.error(err.message);
+              res.redirect(_getRedirectionPath(current_user.userType));
+            });
         } else {
           // reset session user to reflect changes in UI
           req.session.user = user;
-          res.redirect( _getRedirectionPath(current_user.userType) );
+          res.redirect(_getRedirectionPath(current_user.userType));
         }
       });
     });
 }
 
 // HELPER methods
-var _getRedirectionPath = function(user_type) {
+var _getRedirectionPath = function (user_type) {
   var tmp = '/';
   if (user_type == 'admin') {
     tmp = '/admin/settings';

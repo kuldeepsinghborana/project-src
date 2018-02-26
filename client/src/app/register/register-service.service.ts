@@ -17,7 +17,7 @@ export class RegisterServiceService {
   }
 
   register(data) {
-    return this.commonServiceService.post('',data)
+    return this.commonServiceService.post('/users/register',data)
       .map(res => res.json())
       .catch(this.handleError);
   }

@@ -1,0 +1,254 @@
+<div class="container-fluid">
+  <div class="clearfix"></div>
+</div>
+<div class="banner-cover height50"></div>
+<div class="postjob">
+  <div class="container-fluid container">
+    <div class="row">
+      <div class="col-sm-7">
+        <br>
+        <div class="row">
+          <div class="col-sm-3">
+            <a class="btn btn-rectangle btn-green btn-block" href="/newjob">BASIC JOB POST</a>
+          </div>
+          <div class="col-sm-6">
+            <a class="btn btn-rectangle btn-gray btn-block" href="/newjob?profile=advanced">DETAILED JOB POST</a>
+          </div>
+        </div>
+        <p></p>
+        <h2 class="strong">Post your Job in 3 minutes !</h2>
+        <br>Basic Job Post have less details and but are quick to fill. They are for jobs that do not need much explanations.
+        3 minutes is all you need to complete. Both are free to use!
+        <br>
+        <form class="form-horizontal" enctype="multipart/form-data" (ngSubmit)="postJob(post)">
+          <h4 class="strong green-font">1. YOUR BASIC JOB DETAILS</h4>
+          <br>
+          <div class="form-group">
+            <label class="control-label col-sm-2 small">JOB TITLE</label>
+            <div class="col-sm-10">
+              <input class="form-control" type="text" [(ngModel)]="post.jobTitle" placeholder="Enter job title" name="jobTitle" required="">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-2 small">NUMBER OF HIRES</label>
+            <div class="col-sm-10">
+              <input class="form-control" type="number" [(ngModel)]="post.requiredNumber" placeholder="How many people do you need to hire ?"
+                name="requiredNumber" required="">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-2 small">JOB TYPE</label>
+            <div class="col-sm-10">
+              <select class="form-control" name="jobType" id="job-type" [(ngModel)]='post.jobType' required="">
+                <option value="Full-time">Full-time</option>
+                <option value="Part-time">Part-time</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-2 small">INDUSTRY</label>
+            <span></span>
+            <div class="col-sm-10">
+              <select class="form-control" name="jobIndustry" id="job-industry" required="" [(ngModel)]='post.jobIndustry'>
+                <option value="Accounting / Finance">Accounting / Finance</option>
+                <option value="Admin / HR">Admin / HR</option>
+                <option value="Sales / Marketing">Sales / Marketing</option>
+                <option value="Arts Design Media">Arts Design Media</option>
+                <option value="Computer / Technology">Computer / Technology</option>
+                <option value="Training and education">Training and education</option>
+                <option value="Engineering">Engineering</option>
+                <option value="Service / Logistics">Service / Logistics</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-2 small">SALARY TYPE</label>
+            <div class="col-sm-10">
+              <select class="form-control" name="salaryType" required="" [(ngModel)]='post.salaryType'>
+                <option value="Per Hour">Per Hour</option>
+                <option value="Per Month">Per Month</option>
+                <option value="Per Project">Per Project</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-2 small">SALARY</label>
+            <div class="col-sm-10">
+              <input class="form-control" type="number" [(ngModel)]='post.salary' placeholder="How much are you willing to pay?" name="salary"
+                required="">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-2 small">WORKING PERIOD</label>
+            <div class="col-sm-5">
+              <small class="strong">START DATE</small>
+              <div class="input-group datepicker">
+                <input type="date" name="startDate" [(ngModel)]='post.startDate' id="start-date" required="">
+              </div>
+            </div>
+            <div class="col-sm-5" id="end-date-wrapper" style="display: none;">
+              <small class="strong">END DATE</small>
+              <div class="input-group datepicker">
+                <input type="date" name="endDate" id="end-date" [(ngModel)]='post.endDate'>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-2 small">WORKING DAYS</label>
+            <div class="col-sm-10">
+              <select class="form-control" name="workPeriod" required="" [(ngModel)]='post.workPeriod'>
+                <option value="Weekdays">Weekdays</option>
+                <option value="Weekends">Weekends</option>
+                <option value="Both weekdays and weekends">Both weekdays and weekends</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group" id="total-hours-wrap" style="display: none;">
+            <label class="control-label col-sm-2 small">TOTAL HOURS</label>
+            <div class="col-sm-10">
+              <input class="form-control" type="number" [(ngModel)]='post.totalHours' placeholder="How many manhours total?" id="total-hours"
+                name="totalHours">
+            </div>
+          </div>
+          <div class="form-group" id="working-hours-wrap">
+            <label class="control-label col-sm-2 small strong">START TIMING</label>
+            <div class="col-sm-4">
+              <div class="input-group clockpicker">
+                <input class="form-control" type="text" [(ngModel)]='post.startTime' value="09:30" name="startTime">
+                <span class="input-group-addon">
+                  <span class="glyphicon glyphicon-time"></span>
+                </span>
+              </div>
+            </div>
+            <label class="control-label col-sm-2 small strong">END TIMING</label>
+            <div class="col-sm-4">
+              <div class="input-group clockpicker">
+                <input class="form-control" type="text" [(ngModel)]='post.endTime' value="09:30" name="endTime">
+                <span class="input-group-addon">
+                  <span class="glyphicon glyphicon-time"></span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-2 small">EXPIRATION DATE OF JOB</label>
+            <div class="col-sm-10">
+              <select class="form-control" name="jobExpiration" id="job-expiration" required="" [(ngModel)]='post.jobExpiration'>
+                <option value="start-period">At the start of working period</option>
+                <option value="end-period">At the end of working period</option>
+                <option value="two-months">After 2 months</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-2 small">LOCATION OF WORK</label>
+            <div class="col-sm-10">
+              <input class="form-control" type="text" [(ngModel)]='post.location' placeholder="Work location" name="location" required="">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-2 small">LOCATION REGION</label>
+            <div class="col-sm-10">
+              <select class="form-control" name="workRegion" required="" [(ngModel)]='post.workRegion'>
+                <option value="North">North</option>
+                <option value="West">West</option>
+                <option value="East">East</option>
+                <option value="Central">Central</option>
+                <option value="Central Business District">Central Business District</option>
+              </select>
+            </div>
+          </div>
+          <br>
+          <h4 class="strong green-font">2. ROLES AND RESPONSIBILITIES</h4>
+          <br>
+          <div class="form-group">
+            <label class="control-label col-sm-2 small strong">BACKGROUND OF JOB</label>
+            <div class="col-sm-10">
+              <textarea class="form-control" [(ngModel)]='post.description' rows="5" placeholder="Give a description of what your company does or a message to attract employees"
+                name="description" required=""></textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-2 small strong">RESPONSIBILITIES</label>
+            <div class="col-sm-10">
+              <textarea class="form-control" rows="5" placeholder="What are your employees expected to do ?" name="jobRole" [(ngModel)]='post.jobRole'></textarea ></div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-sm-2 small strong">REQUIREMENTS</label>
+							<div class="col-sm-10"><textarea class="form-control" [(ngModel)]='post.requirement' rows="5" placeholder="What basic requirements should your employee have ?" name="requirement"></textarea>
+            </div>
+          </div>
+          <br>
+          <h4 class="strong green-font">3. CONTACT INFORMATION</h4>
+          <br>
+          <div class="form-group">
+            <label class="control-label col-sm-2 small">ARE YOU EMPLOYING FOR YOURSELF?</label>
+            <div class="col-sm-10">
+              <select class="form-control" name="selfEmployer" required="" [(ngModel)]='post.selfEmployer'>
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-2 small strong">COMPANY NAME</label>
+            <div class="col-sm-10">
+              <input class="form-control" type="text" name="companyName" required="" [(ngModel)]='post.companyName'>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-2 small strong">COMPANY WEBSITE</label>
+            <div class="col-sm-10">
+              <input class="form-control" type="url" name="companyWebsite" [(ngModel)]='post.companyWebsite'>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-2 small strong">RECRUITER NAME</label>
+            <div class="col-sm-10">
+              <input class="form-control" type="text" name="employerName" [(ngModel)]='post.employerName'>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-2 small strong">RECRUITER HANDPHONE</label>
+            <div class="col-sm-10">
+              <input class="form-control" type="text" name="employerPhone" [(ngModel)]='post.employerPhone'>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-2 small strong">RECRUITER EMAIL</label>
+            <div class="col-sm-10">
+              <input class="form-control" type="email" name="employerEmail" [(ngModel)]='post.employerEmail'>
+            </div>
+          </div>
+          <button class="btn-lg btn-warning pull-right" type="submit">Post and See Available Employees</button>
+        </form>
+        <br>
+        <br>
+      </div>
+      <div class="col-sm-4 col-sm-offset-1">
+        <br>
+        <h3 class="strong">Post Jobs for free</h3>
+        <ul>
+          <li>No credit card required to start</li>
+          <li>First
+            <span class="strong green-font"> 100 credits free</span>
+          </li>
+          <li>Post Jobs for free. use credits only when you shortlist</li>
+          <li>Pay as low as
+            <span class="strong green-font"> $1SGD</span>
+            <span> per successful recruitment</span>
+          </li>
+          <li>Complete simple tasks and you can even use it totally free</li>
+        </ul>
+        <br>
+        <h3 class="strong">Choose available employees after posting</h3>
+        <p>We have employees already available in the system that you can invite immediately.</p>
+        <p>Wait no time awating for employees to apply to your job. Invite them immediately.</p>
+        <br>
+        <h3 class="strong">Choose available employees after posting</h3>
+        <p>Our Job management system is built for recruiters and HR managers alike.</p>
+        <p>Whats more, it comes totally free for managing your existing Jobs in a mordern user interface.</p>
+      </div>
+    </div>
+  </div>
+</div>

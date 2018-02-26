@@ -13,7 +13,9 @@ var options = {
     server: { socketOptions: { keepAlive: 300000, connectTimeoutMS: 30000 } },
     replset: { socketOptions: { keepAlive: 300000, connectTimeoutMS: 30000 } }
 };
-var mongodbUri = 'mongodb://jobbunnyadmin:jobbunnyadminasdlkjasdlkj123@ds111103.mlab.com:11103/jobbunnyworkers';
+// var mongodbUri = 'mongodb://jobbunnyadmin:jobbunnyadminasdlkjasdlkj123@ds111103.mlab.com:11103/jobbunnyworkers';
+let mongodbUri = 'mongodb://localhost:27017/jobbunnyDev';
+
 mongoose.connect(mongodbUri, options);
 mongoose.Promise = global.Promise;
 var conn = mongoose.connection;
@@ -26,21 +28,21 @@ Controller.create = function (messenger_user_id, data) {
     console.log(JSON.stringify(data));
 
     var query = { 'messengerUserId': messenger_user_id };
-    return Worker.findOneAndUpdate(query, {'$set': data}, {upsert:true});
+    return Worker.findOneAndUpdate(query, { '$set': data }, { upsert: true });
 }
 
 
 
-Controller.addExperience = function(messenger_user_id, experience){
+Controller.addExperience = function (messenger_user_id, experience) {
     var query = { 'messengerUserId': messenger_user_id };
     console.log(experience);
-    return Worker.findOneAndUpdate(query, { '$push' : { 'experience': experience } });
+    return Worker.findOneAndUpdate(query, { '$push': { 'experience': experience } });
 }
 
 
-Controller.propertyExists = function(messenger_user_id, property_name){
-    request = {'messengerUserId': messenger_user_id }
-    request[property_name] = { $exists: true}
+Controller.propertyExists = function (messenger_user_id, property_name) {
+    request = { 'messengerUserId': messenger_user_id }
+    request[property_name] = { $exists: true }
     return Worker.findOne(request);
 }
 
@@ -55,7 +57,7 @@ Controller.addEntry = function (data) {
 
 
 
-Controller.getWorker = function(messenger_user_id){
+Controller.getWorker = function (messenger_user_id) {
     return Worker.findOne({ 'messengerUserId': messenger_user_id });
 }
 
@@ -83,7 +85,7 @@ Controller.delete = function () {
 
 }
 
-Controller.filter = function(criteria) {
+Controller.filter = function (criteria) {
     // format dates
 
     criteria.dateStart = moment(criteria.dateStart, 'YYYY-MM-DD').toDate();
@@ -98,7 +100,7 @@ Controller.filter = function(criteria) {
         $or: [{ // worker salary <= company salary
             'salaryHour': { $lte: criteria.salary }
         }, {
-            'salaryMonth': { $lte: criteria.salary }  
+            'salaryMonth': { $lte: criteria.salary }
         }]
     });
 }
@@ -113,6 +115,6 @@ Controller.filter = function(criteria) {
 
 
 module.exports = {
-     Controller: Controller,
-     dbUrl: mongodbUri
- };
+    Controller: Controller,
+    dbUrl: mongodbUri
+};

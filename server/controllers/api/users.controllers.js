@@ -8,27 +8,15 @@ var imgur = require('imgur');
 module.exports.register = function (req, res) {
   console.log('registering user');
 
-  if (req.body.email && req.body.password && req.body.confirmpassword) {
+  if (req.body.email && req.body.password) {
     var userData = {
       email: req.body.email,
-      username: req.body.username,
+      name: req.body.name,
       password: req.body.password,
       // passwordConf: req.body.passwordConf,
       phoneNumber: req.body.handphoneNumber,
       companyname: req.body.companyname
     }
-
-    if (req.body.password !== req.body.confirmpassword) {
-      err = "Password does not match with Password confirmation";
-      console.log(err);
-      // res.status(400).render('sessions/register', { error: err });
-      let response = {
-        status: 400,
-        message: err
-      }
-      res.send(response);
-    }
-
     User.create(userData, function (err, user) {
       if (err) {
         console.log("Error creating user", err)
@@ -37,15 +25,15 @@ module.exports.register = function (req, res) {
           status: 400,
           message: "FAILED"
         }
-        res.send(response);
+        return res.status(200).json(response);
       } else {
-        console.log("User created ", user);
+        // console.log("User created ", user);
         // res.status(201).render("sessions/login", { message: "Registration Successful. Please login." });
         let response = {
           status: 200,
           message: "SUCCESS"
         }
-        res.send(response);
+        return res.status(200).json(response);
       }
     });
   } else {
@@ -55,8 +43,7 @@ module.exports.register = function (req, res) {
       status: 400,
       message: 'Insufficient data. Cannot register!'
     }
-    res.send(response);
-
+    return res.status(400).json(response);
   }
 };
 

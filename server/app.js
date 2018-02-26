@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var sassMiddleware = require('node-sass-middleware');
 var flash = require('connect-flash');
+let cors = require('cors');
 // for colored console logs
 require('paint-console');
 
@@ -14,7 +15,7 @@ const session = require('express-session');
 const mongoStore = require('connect-mongo')(session);
 const sessionSecret = 'jobbunny';
 
-console.log('process.env',process.env.NODE_ENV);
+console.log('process.env', process.env.NODE_ENV);
 if (process.env.NODE_ENV !== 'production') {
   require('dotenv').load();
 }
@@ -27,7 +28,7 @@ if (process.env.NODE_ENV == 'development') {
 }
 
 var app = express();
-
+app.use(cors());
 // flash messages
 app.use(flash());
 

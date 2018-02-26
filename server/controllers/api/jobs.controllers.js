@@ -247,7 +247,7 @@ module.exports.markJob = function(req, res, next) {
 
 // POST /search
 module.exports.searchJob = function(req, res, next) {
-  var jobQuery = req.body.query;
+  var jobQuery = req.query.query;
   console.log('searchJob with param: ' + jobQuery);
 
   Job
@@ -263,7 +263,7 @@ module.exports.searchJob = function(req, res, next) {
       // fix UI error, filterjobs also uses the same template
       res.locals.jobFilters = [];
       console.log('Found jobs: ', jobs);
-      res.status(200).render('jobs/jobsList', {
+      res.status(200).json({
         title: 'Jobbynny | Jobs',
         jobs: jobs,
         query: jobQuery,

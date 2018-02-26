@@ -7,8 +7,8 @@
         <br>
         <br>
         <form class="form-inline" action="/search" accept-charset="UTF-8" method="post">
-          <input class="form-control right10" id="search-field" type="text" size="50" name="query" placeholder="Search here" autofocus>
-          <input class="btn btn-md" id="search-button" type="submit" name="commit" value="Search" data-disable-with="Search">
+          <input class="form-control right10" id="search-field" type="text" size="50" name="query" placeholder="Search here" autofocus [(ngModel)]="query" >
+          <input class="btn btn-md" id="search-button"  name="commit" value="Search" (click)="search()" data-disable-with="Search">
         </form>
         <img class="top20" src="../../assets/img/Jobbunny.png" style="height:250px;width:200px;">
       </div>

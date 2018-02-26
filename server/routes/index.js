@@ -299,8 +299,8 @@ router
   .get(ctrlJobs.showJob)
 
 router
-  .route('/search')
-  .post(ctrlJobs.searchJob)
+  .route('/api/search')
+  .get(ctrlJobs.searchJob)
 
 router
   .route('/jobs')

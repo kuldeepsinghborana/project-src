@@ -10,22 +10,36 @@ import { ContactComponent } from './contact/contact.component';
 import { AboutComponent } from './about/about.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { CreatejobComponent } from './createjob/createjob.component';
+import { JoboverviewComponent } from './joboverview/joboverview.component';
+import { JobmanagementComponent } from './jobmanagement/jobmanagement.component';
+import { EmployeemanagementComponent } from './employeemanagement/employeemanagement.component';
+import { PurchasecarrotsComponent } from './purchasecarrots/purchasecarrots.component';
+import { FarmcarrotsComponent } from './farmcarrots/farmcarrots.component';
 
 
 export const routes: Routes = [
-  { path: '',   redirectTo: '/homepage', pathMatch: 'full' },
+  { path: '', redirectTo: '/homepage', pathMatch: 'full' },
   {
     path: 'homepage', component: HomeComponent,
-children: [
-      { path: 'search', component: SearchComponent,pathMatch: 'full' },
-      { path: 'login', component: LoginComponent ,pathMatch: 'full'},
-      { path: 'contact', component: ContactComponent ,pathMatch: 'full'},
-      { path: 'register', component: RegisterComponent ,pathMatch: 'full'},
-      { path: 'about', component: AboutComponent,pathMatch: 'full' },
-      { path: 'postjob', component: CreatejobComponent,pathMatch: 'full' },
+    children: [
+      { path: 'search', component: SearchComponent, pathMatch: 'full' },
+      { path: 'login', component: LoginComponent, pathMatch: 'full' },
+      { path: 'contact', component: ContactComponent, pathMatch: 'full' },
+      { path: 'register', component: RegisterComponent, pathMatch: 'full' },
+      { path: 'about', component: AboutComponent, pathMatch: 'full' },
+      { path: 'postjob', component: CreatejobComponent, pathMatch: 'full' },
     ]
   },
-  { path: 'dashboard', canActivate: [AuthGuard], component: DashboardComponent}
+  {
+    path: 'dashboard', canActivate: [AuthGuard], component: DashboardComponent,
+    children: [
+      { path: 'overview', component: JoboverviewComponent },
+      { path: 'jobmanagement', component: JobmanagementComponent },
+      { path: 'employeemanagement', component: EmployeemanagementComponent },
+      { path: 'purchasecarrots', component: PurchasecarrotsComponent },
+      { path: 'farmcarrot', component: FarmcarrotsComponent }
+    ]
+  }
 ];
 
 @NgModule({

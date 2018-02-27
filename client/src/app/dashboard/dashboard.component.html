@@ -1,3 +1,50 @@
-<p>
- hello from dashboard works!
-</p>
+<div class="wrapper">
+    <div class="sidebar" data-color="#303135">
+        <div class="sidebar-wrapper">
+            <div class="logo align-center">
+                <img class="img-circle" height="75" length="75" src="https://i.imgur.com/0ifoulJ.jpg">
+                <div class="strong medium">Gary Lim</div>
+                <div class="medium">Jobbunny</div>
+                <a href="/employer/settings">
+                    <i class="small">Edit Account Settings</i>
+                </a>
+            </div>
+            <ul class="nav list-group">
+                <li class="left20">MAIN</li>
+                <li class="active">
+                    <a href="/employer">
+                        <i class="fa fa-newspaper-o medium"></i>
+                        <span>Overview</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/employer/jobs">
+                        <i class="fa fa-briefcase medium"></i>
+                        <span>Job Management</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/employer/workers">
+                        <i class="fa fa-users medium"></i>
+                        <span>Employee management</span>
+                    </a>
+                </li>
+                <br>
+                <li class="left20">CARROT</li>
+                <li>
+                    <a href="/employer/buy-carrots">
+                        <i class="fa fa-credit-card medium"></i>
+                        <span>Purchase Carrots</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/employer/farm-carrots">
+                        <i class="fa fa-coffee medium"></i>
+                        <span>Farm Carrots</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <router-outlet></router-outlet>
+</div>

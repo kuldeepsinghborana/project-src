@@ -19,6 +19,12 @@ import { LoginComponent } from './login/login.component';
 import { FormsModule } from '@angular/forms';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { CreatejobComponent } from './createjob/createjob.component';
+import { LoginService } from './login/login.service';
+import { JoboverviewComponent } from './joboverview/joboverview.component';
+import { JobmanagementComponent } from './jobmanagement/jobmanagement.component';
+import { EmployeemanagementComponent } from './employeemanagement/employeemanagement.component';
+import { PurchasecarrotsComponent } from './purchasecarrots/purchasecarrots.component';
+import { FarmcarrotsComponent } from './farmcarrots/farmcarrots.component';
 
 const appRoutes: Routes = [];
 @NgModule({
@@ -31,7 +37,12 @@ const appRoutes: Routes = [];
     ContactComponent,
     LoginComponent,
     DashboardComponent,
-    CreatejobComponent
+    CreatejobComponent,
+    JoboverviewComponent,
+    JobmanagementComponent,
+    EmployeemanagementComponent,
+    PurchasecarrotsComponent,
+    FarmcarrotsComponent
   ],
   imports: [
     BrowserModule,
@@ -52,6 +63,7 @@ const appRoutes: Routes = [];
   providers: [ToasterService, { provide: BrowserXhr, useClass: NgProgressBrowserXhr },
     CommonServiceService,
     RegisterServiceService,
+    LoginService,
     AuthGuard
   ],
   bootstrap: [AppComponent]

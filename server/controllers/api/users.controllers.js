@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+let jwt = require('../../helper/jwt');
 var User = mongoose.model('User');
 var Notification = mongoose.model('Notification');
 var bcrypt = require('bcrypt');
@@ -51,39 +52,64 @@ module.exports.register = function (req, res) {
 module.exports.login = function (req, res) {
   console.log('logging in user');
 
-  var email = req.body.email;
-  var password = req.body.password;
+  let email = req.body.email;
+  let password = req.body.password;
 
   User
     .findOne({ email: email })
     .exec(function (err, user) {
       if (err) {
         console.log(err)
-        res.status(400).render('sessions/login', { error: err });
+        // res.status(400).render('sessions/login', { error: err });
+        let response = {
+          status: 400,
+          message: 'Something went wrong please try again'
+        }
+        return res.status(400).json(response);
       } else {
-        if (user && bcrypt.compareSync(password, user.password)) {
-          console.log('User found', user);
-          // set req.session.user for server
-          req.session.userId = user._id;
-          req.session.user = user;
-          req.session.carrots = req.session.user.carrots;
-          Notification.find({ notifieeId: user._id, seen: false }, function (err, notifications) {
-            if (err) {
-              console.error(err)
+        if (user && user != null) {
+          if (user && bcrypt.compareSync(password, user.password)) {
+            // set req.session.user for server
+            let secretToken = jwt.createSecretToken({ uid: user._id });
+            // req.session.userId = user._id;
+            // req.session.user = user;
+            // req.session.carrots = req.session.user.carrots;
+            let response = {
+              status: 200,
+              token: secretToken
             }
-            req.session.stats = { notificationsCount: notifications.length };
-            if (user.userType === "admin") {
-              req.flash('message', 'Admin login Successful');
-              res.status(301).redirect('/admin');
-            } else {
-              req.flash('message', 'Employer login Successful');
-              res.status(301).redirect('/employer');
+            return res.status(200).json(response);
+            // Notification.find({ notifieeId: user._id, seen: false }, function (err, notifications) {
+            //   if (err) {
+            //     console.error(err)
+            //   }
+
+            //   req.session.stats = { notificationsCount: notifications.length };
+            //   // if (user.userType === "admin") {
+            //   //   req.flash('message', 'Admin login Successful');
+            //   //   res.status(301).redirect('/admin');
+            //   // } else {
+            //   //   req.flash('message', 'Employer login Successful');
+            //   //   res.status(301).redirect('/employer');
+            //   // }
+            // });
+
+          } else {
+            // reset session if user not found
+            // req.session.destroy();
+            // res.status(401).render('sessions/login', { error: 'Unauthorized ! username and/or password does not match.' });
+            let response = {
+              status: 400,
+              message: 'Unauthorized ! username and/or password does not match.'
             }
-          });
+            return res.status(400).json(response);
+          }
         } else {
-          // reset session if user not found
-          req.session.destroy();
-          res.status(401).render('sessions/login', { error: 'Unauthorized ! username and/or password does not match.' });
+          let response = {
+            status: 400,
+            message: 'You are not registered with us'
+          }
+          return res.status(400).json(response);
         }
       }
     });

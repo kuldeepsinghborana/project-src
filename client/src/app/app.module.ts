@@ -18,6 +18,7 @@ import { ContactComponent } from './contact/contact.component';
 import { LoginComponent } from './login/login.component';
 import { FormsModule } from '@angular/forms';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { JobComponent } from './job/job.component';
 
 const appRoutes: Routes = [];
 @NgModule({
@@ -29,7 +30,8 @@ const appRoutes: Routes = [];
     AboutComponent,
     ContactComponent,
     LoginComponent,
-    DashboardComponent
+    DashboardComponent,
+    JobComponent
   ],
   imports: [
     BrowserModule,

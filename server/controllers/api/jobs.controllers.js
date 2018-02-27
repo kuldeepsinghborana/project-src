@@ -173,10 +173,10 @@ module.exports.showJob = function(req, res, next) {
       if (err) {
         console.log("Job not found: ", err)
         res.locals.error = 'Page not found';
-        res.status(400).render('error');
+        res.status(400).json({message : err.message, error : error});
       } else {
         console.log('Found job: ', job._id);
-        res.status(200).render('jobs/show', { title: 'Jobbunny | Job', job: job, moment: moment, title: 'Jobbunny | Jobs' });
+        res.status(200).json({job});
       }
     });
 }
@@ -253,22 +253,12 @@ module.exports.searchJob = function(req, res, next) {
   Job
     .find( {$text: { $search: jobQuery }}, {score: { $meta: "textScore" }} )
     .exec(function(err, jobs){
-      if (err || jobs.length < 1) {
+      if (err) {
         console.log("Nothing found: ", err)
-        res.locals.error = 'Matching job not found for: '+ jobQuery;
-        return res.status(400).render('jobs/jobsList');
+        return res.status(500).json({ message: err.message, err: err });
       }
-      res.locals.jobsCount = jobs.length;
-      res.locals.query = jobQuery;
-      // fix UI error, filterjobs also uses the same template
-      res.locals.jobFilters = [];
       console.log('Found jobs: ', jobs);
-      res.status(200).json({
-        title: 'Jobbynny | Jobs',
-        jobs: jobs,
-        query: jobQuery,
-        moment: moment
-      });
+      res.status(200).json(jobs);
     });
 }
 

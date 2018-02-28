@@ -25,6 +25,7 @@ import { JobmanagementComponent } from './jobmanagement/jobmanagement.component'
 import { EmployeemanagementComponent } from './employeemanagement/employeemanagement.component';
 import { PurchasecarrotsComponent } from './purchasecarrots/purchasecarrots.component';
 import { FarmcarrotsComponent } from './farmcarrots/farmcarrots.component';
+import { JobComponent } from './job/job.component';
 
 const appRoutes: Routes = [];
 @NgModule({
@@ -42,7 +43,8 @@ const appRoutes: Routes = [];
     JobmanagementComponent,
     EmployeemanagementComponent,
     PurchasecarrotsComponent,
-    FarmcarrotsComponent
+    FarmcarrotsComponent,
+    JobComponent
   ],
   imports: [
     BrowserModule,

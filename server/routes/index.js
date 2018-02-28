@@ -1,6 +1,9 @@
 var express = require('express');
 var cookieParser = require('cookie-parser');
+var cors = require('cors');
 var router = express.Router();
+
+router.use(cors());
 // image upload
 var multer  = require('multer')
 var storage = multer.diskStorage({
@@ -27,9 +30,6 @@ var database = require('../controllers/mongo').Controller
 var botControl = require('../controllers/api/bot.controller')
 
 /* GET home page. */
-router.get('/', function (req, res, next) {
-res.sendfile('./../public/dist/index.html');
-});
 
 /* GET employee search page. */
 router.get('/employeesearch', function (req, res, next) {
@@ -216,8 +216,8 @@ router
   .route('/employer/jobs/new')
   .get(isAuthenticated, isEmployer, ctrlEmployer.newJob);
 router
-  .route('/employer/jobs/:jobId')
-  .get(isAuthenticated, isEmployer, ctrlEmployer.showJob);
+.route('/employer/jobs/:jobId')
+.get(isAuthenticated, isEmployer, ctrlEmployer.showJob);
 router
   .route('/employer/jobs/:jobId/edit')
   .get(isAuthenticated, isEmployer, ctrlEmployer.editJob);
@@ -295,7 +295,7 @@ router
   .get(ctrlJobs.markJob)
 
 router
-  .route('/jobs/:jobId')
+  .route('api/jobs/:jobId')
   .get(ctrlJobs.showJob)
 
 router

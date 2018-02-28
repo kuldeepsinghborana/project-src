@@ -15,6 +15,7 @@ import { JobmanagementComponent } from './jobmanagement/jobmanagement.component'
 import { EmployeemanagementComponent } from './employeemanagement/employeemanagement.component';
 import { PurchasecarrotsComponent } from './purchasecarrots/purchasecarrots.component';
 import { FarmcarrotsComponent } from './farmcarrots/farmcarrots.component';
+import { JobComponent } from './job/job.component';
 
 
 export const routes: Routes = [
@@ -28,6 +29,7 @@ export const routes: Routes = [
       { path: 'register', component: RegisterComponent, pathMatch: 'full' },
       { path: 'about', component: AboutComponent, pathMatch: 'full' },
       { path: 'postjob', component: CreatejobComponent, pathMatch: 'full' },
+      { path: 'job/:id', component: JobComponent, pathMatch:'full' }      
     ]
   },
   {

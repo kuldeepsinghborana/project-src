@@ -76,8 +76,8 @@ app.use(sassMiddleware({
   prefix: '/css'  // Where prefix is at <link rel="stylesheets" href="prefix/style.css"/>
 }));
 
-app.use(express.static(path.join(__dirname, 'public')));
-app.use("/node_modules", express.static(__dirname + '/node_modules'));
+app.use(express.static(path.join(__dirname, 'dist')));
+app.use("/node_modules" , express.static(__dirname + '/node_modules'));
 
 // check if user's cookie is still saved in browser but user is not set
 app.use((req, res, next) => {
@@ -92,13 +92,8 @@ app.use((req, res, next) => {
 app.use('/', routes);
 
 // catch 404 and forward to error handler
-app.use(function (req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  res.render('error', {
-    title: "Jobbunny | Error",
-    error: "Page not Found"
-  });
+app.use(function(req, res, next) {
+    return res.sendfile('./dist/index.html');
 });
 
 // clear flash messages after loaded once

@@ -18,10 +18,11 @@ import { FarmcarrotsComponent } from './farmcarrots/farmcarrots.component';
 
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/homepage', pathMatch: 'full' },
+  { path: '', redirectTo: '/homepage/search', pathMatch: 'full' },
   {
     path: 'homepage', component: HomeComponent,
     children: [
+      { path: '', redirectTo: 'search', pathMatch: 'full' },
       { path: 'search', component: SearchComponent, pathMatch: 'full' },
       { path: 'login', component: LoginComponent, pathMatch: 'full' },
       { path: 'contact', component: ContactComponent, pathMatch: 'full' },
@@ -33,6 +34,7 @@ export const routes: Routes = [
   {
     path: 'dashboard', canActivate: [AuthGuard], component: DashboardComponent,
     children: [
+      { path: '', redirectTo: 'overview', pathMatch: 'full' },
       { path: 'overview', component: JoboverviewComponent },
       { path: 'jobmanagement', component: JobmanagementComponent },
       { path: 'employeemanagement', component: EmployeemanagementComponent },

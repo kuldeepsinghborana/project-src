@@ -25,7 +25,7 @@ import { JobmanagementComponent } from './jobmanagement/jobmanagement.component'
 import { EmployeemanagementComponent } from './employeemanagement/employeemanagement.component';
 import { PurchasecarrotsComponent } from './purchasecarrots/purchasecarrots.component';
 import { FarmcarrotsComponent } from './farmcarrots/farmcarrots.component';
-
+import { CreatejobService } from './createjob/createjob.service';
 const appRoutes: Routes = [];
 @NgModule({
   declarations: [
@@ -64,7 +64,8 @@ const appRoutes: Routes = [];
     CommonServiceService,
     RegisterServiceService,
     LoginService,
-    AuthGuard
+    AuthGuard,
+    CreatejobService
   ],
   bootstrap: [AppComponent]
 })

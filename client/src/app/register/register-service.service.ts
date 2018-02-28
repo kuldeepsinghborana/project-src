@@ -9,20 +9,20 @@ export class RegisterServiceService {
   constructor(private http: Http, private commonServiceService: CommonServiceService) {
 
   }
-  getData() {
+  public getData() {
     console.log('in register')
     return this.commonServiceService.get('user/cap/abba')
       .map(res => res.json())
       .catch(this.handleError);
   }
 
-  register(data) {
+  public register(data) {
     return this.commonServiceService.post('/users/register',data)
       .map(res => res.json())
       .catch(this.handleError);
   }
 
-  handleError(error: Response | any) {
+  private handleError(error: Response | any) {
     const body = JSON.parse(JSON.stringify(error)) || '';
     return Observable.throw(body);
 

@@ -1,5 +1,5 @@
 import { Component, NgModule, OnInit } from '@angular/core';
-import { ToasterModule, ToasterService } from 'angular5-toaster';
+import { ToasterModule, ToasterContainerComponent, ToasterService } from './../../../node_modules/angular5-toaster/angular5-toaster';
 import { RegisterServiceService } from './register-service.service';
 
 @Component({
@@ -34,13 +34,13 @@ export class RegisterComponent implements OnInit {
     // })
   }
 
-  popToast() {
+  public popToast() {
     console.log("hello")
     this.toasterService.pop('success', 'Args Title', 'Args Body');
   }
 
 
-  register() {
+  public register() {
     if (this.email == '') {
       return this.toasterService.pop('error', 'Error', "Username Can't be blank");
     }

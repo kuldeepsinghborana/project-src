@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ToasterModule, ToasterService } from 'angular5-toaster';
 import { LoginService } from './login.service';
 import { Router } from '@angular/router';
+import { ToasterModule, ToasterContainerComponent, ToasterService } from './../../../node_modules/angular5-toaster/angular5-toaster';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',

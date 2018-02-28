@@ -1,0 +1,176 @@
+<p>
+  joboverview works!
+</p>
+<div class="main-panel">
+  <nav class="navbar navbar-default navbar-fixed">
+      <div class="container-fluid">
+          <div class="navbar-header">
+              <a class="navbar-brand hidden-md hidden-lg" href="/employer">
+                  <span>Overview</span>
+              </a>
+              <button class="navbar-toggle" id="navigation-dropdown" data-toggle="dropdown" type="button">
+                  <span class="sr-only">Toggle navigation</span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+              </button>
+              <div class="dropdown-menu pull-right" id="dropdown-nav-menu" aria-labelledby="navigation-dropdown">
+                  <div class="pad20">
+                      <a class="text-bold text-danger" href="/logout">
+                          <i class="fa fa-power-off"></i>
+                          <span>Log out</span>
+                      </a>
+                  </div>
+              </div>
+              <div class="collapse navbar-collapse pad10">
+                  <ul class="nav navbar-nav">
+                      <li>
+                          <a href="/employer/notifications">
+                              <div class="notification-icon">
+                                  <i class="fa fa-bars"></i>
+                              </div>
+                          </a>
+                      </li>
+                      <li>
+                          <a href="/employer" style="margin-top: 0px;">
+                              <img class="pull-left" height="45" length="45" src="../../assets/img/logo.png">
+                              <div class="pull-left left10">
+                                  <strong>Jobbunny</strong>
+                                  <p>Recruiting Assistant</p>
+                              </div>
+                          </a>
+                      </li>
+                      <li class="left20">
+                          <a href="/employer/jobs/new">
+                              <span class="red-icon">Post Job</span>
+                          </a>
+                      </li>
+                      <li class="left20" role="presentation">
+                          <a href="/about">FAQ</a>
+                      </li>
+                      <li class="left20" role="presentation">
+                          <a href="/contact">Contact Us</a>
+                      </li>
+                      <li>
+                          <a class="text-danger" href="/logout">
+                              <i class="fa fa-power-off"></i>
+                              <span> Log out</span>
+                          </a>
+                      </li>
+                  </ul>
+              </div>
+          </div>
+          <div class="pull-right hidden-xs top20">
+              <a class="hover" href="#">
+                  <div class="tooltip pad10">
+                      <div class="strong">Available Carrots: 98</div>
+                      <div class="strong">Pending Carrots: 2</div>
+                      <div class="strong">Total Carrots: 100</div>
+                      <form action="/employer/buy-carrots" method="get">
+                          <button class="btn btn-orange" href="/employer/buy-carrots">Purchase carrots</button>
+                      </form>
+                  </div>
+                  <img class="pull-left" height="50" length="50" src="../../assets/img/carrot.png">
+                  <div class="pull-left right10 black">
+                      <span class="strong">98</span>
+                      <p>Available</p>
+                  </div>
+              </a>
+              <i class="fa fa-2x fa-send pull-left top10"></i>
+              <div class="pull-left left10">
+                  <span class="strong">1</span>
+                  <p>Invited</p>
+              </div>
+          </div>
+      </div>
+  </nav>
+  <div class="content">
+      <div class="clearfix"></div>
+      <!-- <div class="alert alert-success">
+          <p>Employer login Successful</p>
+      </div> -->
+      <div class="container-fluid">
+          <div class="content-wrap">
+              <div class="large strong">Job Overview</div>
+              <p>The status of your job posts</p>
+              <div class="row tile_count">
+                  <div class="col-md-3 col-xs-6">
+                      <a href="/employer/jobs?jobStatus=open">
+                          <div class="panel dash-card-light-green">
+                              <h3 class="strong">1</h3>
+                              <span>Open Jobs</span>
+                          </div>
+                      </a>
+                  </div>
+                  <div class="col-md-3 col-xs-6">
+                      <a href="/employer/jobs?jobStatus=urgent">
+                          <div class="panel dash-card-red">
+                              <h3 class="strong">0</h3>
+                              <span>Urgent Jobs</span>
+                          </div>
+                      </a>
+                  </div>
+                  <div class="col-md-3 col-xs-6">
+                      <a href="/employer/jobs?jobStatus=completed">
+                          <div class="panel dash-card-gray">
+                              <h3 class="strong">1</h3>
+                              <span>Completed Jobs</span>
+                          </div>
+                      </a>
+                  </div>
+                  <div class="col-md-3 col-xs-6">
+                      <a href="/employer">
+                          <div class="panel dash-card-orange">
+                              <h3 class="strong">100</h3>
+                              <span>Carrots Available</span>
+                              <br>
+                              <small class="strong">73 carrots in transit</small>
+                          </div>
+                      </a>
+                  </div>
+              </div>
+              <br>
+              <div class="large strong">Employee Overview</div>
+              <p>The status of your employee activities</p>
+              <div class="row">
+                  <div class="col-md-3 col-xs-6">
+                      <a href="/employer/workers?matchStatus=invited">
+                          <div class="dash-card-white">
+                              <h3 class="strong">1</h3>
+                              <div class="medium">Invitations</div>
+                              <small class="strong">sent</small>
+                          </div>
+                      </a>
+                  </div>
+                  <div class="col-md-3 col-xs-6">
+                      <a href="/employer/workers?matchStatus=applied">
+                          <div class="dash-card-white">
+                              <h3 class="strong">0</h3>
+                              <div class="medium">Applications</div>
+                              <small class="strong">to be accepted</small>
+                          </div>
+                      </a>
+                  </div>
+                  <div class="col-md-3 col-xs-6">
+                      <a href="/employer/workers?matchStatus=shortlisted">
+                          <div class="dash-card-white">
+                              <h3 class="strong">0</h3>
+                              <div class="medium">Shortlisted</div>
+                              <small class="strong">claim 5 carrots back when you update your actions</small>
+                          </div>
+                      </a>
+                  </div>
+                  <div class="col-md-3 col-xs-6">
+                      <a href="">
+                          <div class="dash-card-white">
+                              <h3 class="strong">0</h3>
+                              <div class="medium">Employed</div>
+                              <small class="strong">successfully</small>
+                          </div>
+                      </a>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>

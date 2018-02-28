@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var sassMiddleware = require('node-sass-middleware');
 var flash = require('connect-flash');
+let cors = require('cors');
 // for colored console logs
 require('paint-console');
 
@@ -14,8 +15,9 @@ const session = require('express-session');
 const mongoStore = require('connect-mongo')(session);
 const sessionSecret = 'jobbunny';
 
+console.log('process.env', process.env.NODE_ENV);
 if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').load();
+  require('dotenv').load();
 }
 
 var mongoose;
@@ -26,7 +28,7 @@ if (process.env.NODE_ENV == 'development') {
 }
 
 var app = express();
-
+app.use(cors());
 // flash messages
 app.use(flash());
 
@@ -37,16 +39,16 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
   cookie: {
-    path    : '/',
+    path: '/',
     httpOnly: false,
-    maxAge  : 24*60*60*1000
+    maxAge: 24 * 60 * 60 * 1000
   },
   store: new mongoStore({
     url: mongoose.dbUrl
   })
 }));
 
-app.use(function(req, res, next){
+app.use(function (req, res, next) {
   res.locals.session = req.session;
   res.locals.currentUrl = req.path;
   next();
@@ -71,11 +73,11 @@ app.use(sassMiddleware({
   dest: path.join(__dirname, 'public/css'),
   debug: true,
   outputStyle: 'compressed',
-  prefix:  '/css'  // Where prefix is at <link rel="stylesheets" href="prefix/style.css"/>
+  prefix: '/css'  // Where prefix is at <link rel="stylesheets" href="prefix/style.css"/>
 }));
 
 app.use(express.static(path.join(__dirname, 'public')));
-app.use("/node_modules" , express.static(__dirname + '/node_modules'));
+app.use("/node_modules", express.static(__dirname + '/node_modules'));
 
 // check if user's cookie is still saved in browser but user is not set
 app.use((req, res, next) => {
@@ -90,7 +92,7 @@ app.use((req, res, next) => {
 app.use('/', routes);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
   res.render('error', {
@@ -100,14 +102,14 @@ app.use(function(req, res, next) {
 });
 
 // clear flash messages after loaded once
-app.get('/*', function(req, res, next) {
+app.get('/*', function (req, res, next) {
   req.session.flash = [];
   next();
 });
 
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};

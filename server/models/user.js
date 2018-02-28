@@ -28,6 +28,7 @@ var userSchema = new mongoose.Schema({
   firstName: String,
   lastName: String,
   companyName: String,
+  phoneNumber:Number,
   profilePic: String,
   carrots: {
     total: { type: Number, default: 100 },

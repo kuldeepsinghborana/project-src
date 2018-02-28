@@ -53,8 +53,13 @@ module.exports.createJob = function(req, res) {
   newJob.save(function (err, job) {
     if (err) {
       console.log("Error creating job", err)
-      req.session.error = 'Error creating job';
-      res.redirect(400, '/newjob');
+      res.send({
+        status:400,
+        message:"Error creating job",
+        error:err  
+      })
+      // req.session.error = 'Error creating job';
+      // res.redirect(400, '/newjob');
     } else {
       console.log("Job created ", job);
       req.session.message = 'Job created sucessfully';
@@ -65,8 +70,13 @@ module.exports.createJob = function(req, res) {
           console.log(remote_url);
           Job.findByIdAndUpdate(job._id, { $set: { coverImage: remote_url }}, { new: true }, function(err, job){
             if (err){
-              console.log("Something wrong when updating data!");
-              res.redirect(400, '/newjob');
+              // console.log("Something wrong when updating data!");
+              res.send({
+                status:0,
+                message:"Something Went Wrong",
+                error:message  
+              })
+              // res.redirect(400, '/newjob');
             }
             console.log('Updated job', job);
             res.redirect( getRedirectionPath(req, job._id) );
@@ -74,11 +84,21 @@ module.exports.createJob = function(req, res) {
         })
         .catch(function (err) {
           console.error(err.message);
-          res.redirect(400, '/newjob');
+          res.send({
+            status:0,
+            message:"Something Went Wrong",
+            error:message  
+          })
+          // res.redirect(400, '/newjob');
         });
       } else {
-        req.flash('info', 'Job created successfully');
-        res.redirect( getRedirectionPath(req, job._id) );
+        res.send({
+          status:1,
+          message:"jobs created successfully",
+          data:job
+        })
+        // req.flash('info', 'Job created successfully');
+        // res.redirect( getRedirectionPath(req, job._id) );
       }
     }
   });
@@ -119,47 +139,47 @@ module.exports.updateJob = function(req, res) {
   };
 
   Job
-    .findById(jobId)
-    .exec(function(err, job){
+  .findById(jobId)
+  .exec(function(err, job){
+    if (err) {
+      console.log("Job not found: ", err)
+      res.locals.error = 'Page not found';
+      res.status(400).render('error');
+    }
+    console.log('Found job: ', job._id);
+    job.set(updateJobParams);
+    job.save(function (err, job) {
       if (err) {
-        console.log("Job not found: ", err)
-        res.locals.error = 'Page not found';
-        res.status(400).render('error');
-      }
-      console.log('Found job: ', job._id);
-      job.set(updateJobParams);
-      job.save(function (err, job) {
-        if (err) {
-          console.log("Error updating job", err)
-          req.session.error = 'Error updating job';
-          res.redirect(400, req.header('Referer'));
-        } else {
-          console.log("Job updated >>>>>", job);
-          req.session.message = 'Job updated sucessfully';
-          if (job.coverImage) {
-            imgur.uploadFile('public/uploads/'+job.coverImage).then(function (json) {
-              remote_url = json.data.link;
-              console.log(remote_url);
-              Job.findByIdAndUpdate(job._id, { $set: { coverImage: remote_url }}, { new: true }, function(err, job){
-                if (err){
-                  console.log("Something wrong when updating data!");
-                  res.redirect(400, req.header('Referer'));
-                }
-                console.log('Updated job', job);
-                res.redirect( getRedirectionPath(req, job._id) );
-              });
-            })
-            .catch(function (err) {
-              console.error(err.message);
-              res.redirect(400, req.header('Referer'));
+        console.log("Error updating job", err)
+        req.session.error = 'Error updating job';
+        res.redirect(400, req.header('Referer'));
+      } else {
+        console.log("Job updated >>>>>", job);
+        req.session.message = 'Job updated sucessfully';
+        if (job.coverImage) {
+          imgur.uploadFile('public/uploads/'+job.coverImage).then(function (json) {
+            remote_url = json.data.link;
+            console.log(remote_url);
+            Job.findByIdAndUpdate(job._id, { $set: { coverImage: remote_url }}, { new: true }, function(err, job){
+              if (err){
+                console.log("Something wrong when updating data!");
+                res.redirect(400, req.header('Referer'));
+              }
+              console.log('Updated job', job);
+              res.redirect( getRedirectionPath(req, job._id) );
             });
-          } else {
-            req.flash('info', 'Job updated successfully');
-            res.redirect( getRedirectionPath(req, job._id) );
-          }
+          })
+          .catch(function (err) {
+            console.error(err.message);
+            res.redirect(400, req.header('Referer'));
+          });
+        } else {
+          req.flash('info', 'Job updated successfully');
+          res.redirect( getRedirectionPath(req, job._id) );
         }
-      });
+      }
     });
+  });
 }
 
 // GET /jobs/:id
@@ -168,22 +188,22 @@ module.exports.showJob = function(req, res, next) {
   console.log('GET job with _id: ' + jobId);
 
   Job
-    .findById(jobId)
-    .exec(function(err, job){
-      if (err) {
-        console.log("Job not found: ", err)
-        res.locals.error = 'Page not found';
-        res.status(400).render('error');
-      } else {
-        console.log('Found job: ', job._id);
-        res.status(200).render('jobs/show', { title: 'Jobbunny | Job', job: job, moment: moment, title: 'Jobbunny | Jobs' });
-      }
-    });
+  .findById(jobId)
+  .exec(function(err, job){
+    if (err) {
+      console.log("Job not found: ", err)
+      res.locals.error = 'Page not found';
+      res.status(400).render('error');
+    } else {
+      console.log('Found job: ', job._id);
+      res.status(200).render('jobs/show', { title: 'Jobbunny | Job', job: job, moment: moment, title: 'Jobbunny | Jobs' });
+    }
+  });
 }
 
 
 module.exports.getJob = function(jobId){
-   return Job.findById(jobId);
+ return Job.findById(jobId);
 }
 
 // GET /api/jobs/:jobId/delete
@@ -192,13 +212,13 @@ module.exports.deleteJob = function(req, res, next) {
   console.log('GET job with _id: ' + jobId);
 
   Job
-    .findById(jobId)
-    .exec(function(err, job){
-      if (err) {
-        console.log("Job not found: ", err)
-        res.status(400).render('error');
-      }
-      console.log('Found job: ', job._id);
+  .findById(jobId)
+  .exec(function(err, job){
+    if (err) {
+      console.log("Job not found: ", err)
+      res.status(400).render('error');
+    }
+    console.log('Found job: ', job._id);
       //remove it from db
       job.remove(function (err, job) {
         if (err) {
@@ -215,8 +235,8 @@ module.exports.deleteJob = function(req, res, next) {
             }
           });
         }
+      });
     });
-  });
 }
 
 // GET /api/jobs/mark/:jobId
@@ -226,7 +246,7 @@ module.exports.markJob = function(req, res, next) {
   console.log('GET job with _id: ' + jobId);
 
   Job
-    .findByIdAndUpdate(jobId, {
+  .findByIdAndUpdate(jobId, {
     $set: {
       jobStatus: status
     }
@@ -251,15 +271,15 @@ module.exports.searchJob = function(req, res, next) {
   console.log('searchJob with param: ' + jobQuery);
 
   Job
-    .find( {$text: { $search: jobQuery }}, {score: { $meta: "textScore" }} )
-    .exec(function(err, jobs){
-      if (err || jobs.length < 1) {
-        console.log("Nothing found: ", err)
-        res.locals.error = 'Matching job not found for: '+ jobQuery;
-        return res.status(400).render('jobs/jobsList');
-      }
-      res.locals.jobsCount = jobs.length;
-      res.locals.query = jobQuery;
+  .find( {$text: { $search: jobQuery }}, {score: { $meta: "textScore" }} )
+  .exec(function(err, jobs){
+    if (err || jobs.length < 1) {
+      console.log("Nothing found: ", err)
+      res.locals.error = 'Matching job not found for: '+ jobQuery;
+      return res.status(400).render('jobs/jobsList');
+    }
+    res.locals.jobsCount = jobs.length;
+    res.locals.query = jobQuery;
       // fix UI error, filterjobs also uses the same template
       res.locals.jobFilters = [];
       console.log('Found jobs: ', jobs);
@@ -283,44 +303,44 @@ module.exports.filterJob = function(req, res, next) {
   var filters = [];
   res.locals.jobType = job_type;
 
- Job
-    .find( {$text: { $search: jobQuery }}, {score: { $meta: "textScore" }} )
-    .exec(function(err, jobs){
-      if (err || jobs.length < 1) {
-        console.log("No match found")
-        res.locals.error = 'No match found '+ jobQuery;
-        res.render('jobs/jobsList');
-      } else {
-        console.log('Found jobs: ', jobs.length);
-        res.locals.jobsType = job_type;
-        var jobsList = [];
-        var tmpJobsList = jobs;
-        if (job_type.length > 0) {
-          tmpJobsList = _filterJobs(tmpJobsList, 'jobType', job_type)
-          filters.push({ jobType: job_type });
-        }
-        if (job_industry.length > 0) {
-          tmpJobsList = _filterJobs(tmpJobsList, 'jobIndustry', job_industry)
-          filters.push({ jobIndustry: job_industry });
-        }
-        if (work_region.length > 0) {
-          tmpJobsList = _filterJobs(tmpJobsList, 'workRegion', work_region)
-          filters.push({ workRegion: work_region });
-        }
-        if (work_period.length > 0) {
-          tmpJobsList = _filterJobs(tmpJobsList, 'workPeriod', work_period)
-          filters.push({ workPeriod: work_period });
-        }
-        res.locals.jobFilters = filters;
-        res.locals.jobsCount = tmpJobsList.length;
-        res.status(200).render('jobs/jobsList', {
-          title: 'Jobbynny | Jobs list',
-          jobs: tmpJobsList,
-          query: jobQuery,
-          moment: moment
-        });
+  Job
+  .find( {$text: { $search: jobQuery }}, {score: { $meta: "textScore" }} )
+  .exec(function(err, jobs){
+    if (err || jobs.length < 1) {
+      console.log("No match found")
+      res.locals.error = 'No match found '+ jobQuery;
+      res.render('jobs/jobsList');
+    } else {
+      console.log('Found jobs: ', jobs.length);
+      res.locals.jobsType = job_type;
+      var jobsList = [];
+      var tmpJobsList = jobs;
+      if (job_type.length > 0) {
+        tmpJobsList = _filterJobs(tmpJobsList, 'jobType', job_type)
+        filters.push({ jobType: job_type });
       }
-    });
+      if (job_industry.length > 0) {
+        tmpJobsList = _filterJobs(tmpJobsList, 'jobIndustry', job_industry)
+        filters.push({ jobIndustry: job_industry });
+      }
+      if (work_region.length > 0) {
+        tmpJobsList = _filterJobs(tmpJobsList, 'workRegion', work_region)
+        filters.push({ workRegion: work_region });
+      }
+      if (work_period.length > 0) {
+        tmpJobsList = _filterJobs(tmpJobsList, 'workPeriod', work_period)
+        filters.push({ workPeriod: work_period });
+      }
+      res.locals.jobFilters = filters;
+      res.locals.jobsCount = tmpJobsList.length;
+      res.status(200).render('jobs/jobsList', {
+        title: 'Jobbynny | Jobs list',
+        jobs: tmpJobsList,
+        query: jobQuery,
+        moment: moment
+      });
+    }
+  });
 }
 
 
@@ -346,8 +366,8 @@ var getRedirectionPath = function(req, jobId) {
 
 
 module.exports.getFilteredJobs = function(filters){
-    console.log(JSON.stringify(filters))
-    return Job.find(filters);
+  console.log(JSON.stringify(filters))
+  return Job.find(filters);
 }
 
 // HELPER methods

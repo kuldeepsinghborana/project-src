@@ -10,9 +10,13 @@ import { RegisterServiceService } from './register-service.service';
 export class RegisterComponent implements OnInit {
 
   private toasterService: ToasterService;
-  public username = '';
+  public email = '';
   public password = '';
   public confirmPassword = '';
+  public name = '';
+  public companyname = '';
+  public handphoneNumber = '';
+
   constructor(toasterService: ToasterService, private registerServiceService: RegisterServiceService) {
     this.toasterService = toasterService;
 
@@ -37,7 +41,7 @@ export class RegisterComponent implements OnInit {
 
 
   register() {
-    if (this.username == '') {
+    if (this.email == '') {
       return this.toasterService.pop('error', 'Error', "Username Can't be blank");
     }
 
@@ -52,6 +56,34 @@ export class RegisterComponent implements OnInit {
     if (this.password != this.confirmPassword) {
       return this.toasterService.pop('error', 'Error', "Password and confirm password must be same");
     }
+    if (this.companyname == '') {
+      return this.toasterService.pop('error', 'Error', "Company name Can't be blank");
+    }
+    if (this.handphoneNumber == '') {
+      return this.toasterService.pop('error', 'Error', "Handphone Number Can't be blank");
+    }
+    if (this.name == '') {
+      return this.toasterService.pop('error', 'Error', "Name Can't be blank");
+    }
+    let data = {
+      email: this.email,
+      password: this.password,
+      handphoneNumber: this.handphoneNumber,
+      companyname: this.companyname,
+      name: this.name
+    }
+
+    this.registerServiceService.register(data).subscribe(res => {
+      this.email = '';
+      this.name = '';
+      this.handphoneNumber = '';
+      this.companyname = '';
+      this.confirmPassword = '';
+      this.password = '';
+      return this.toasterService.pop('success', 'Success', 'Registration Successfully done');
+    }, err => {
+      return this.toasterService.pop('error', 'Error', err.message);
+    });
 
   }
 }

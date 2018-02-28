@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { RegisterComponent } from './register/register.component';
 import { RouterModule, Routes } from '@angular/router';
-import { ToasterModule, ToasterService } from './../../node_modules/angular5-toaster/angular5-toaster';
+import { ToasterModule, ToasterContainerComponent, ToasterService } from './../../node_modules/angular5-toaster/angular5-toaster';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgProgressModule, NgProgressBrowserXhr } from 'ngx-progressbar';
 import { BrowserXhr, HttpModule } from '@angular/http';

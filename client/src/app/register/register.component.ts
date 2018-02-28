@@ -1,5 +1,5 @@
 import { Component, NgModule, OnInit } from '@angular/core';
-import { ToasterModule, ToasterService } from 'angular5-toaster';
+import { ToasterModule, ToasterContainerComponent, ToasterService } from './../../../node_modules/angular5-toaster/angular5-toaster';
 import { RegisterServiceService } from './register-service.service';
 
 @Component({

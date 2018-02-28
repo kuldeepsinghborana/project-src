@@ -30,9 +30,6 @@ var database = require('../controllers/mongo').Controller
 var botControl = require('../controllers/api/bot.controller')
 
 /* GET home page. */
-router.get('/', function (req, res, next) {
-res.sendfile('./../public/dist/index.html');
-});
 
 /* GET employee search page. */
 router.get('/employeesearch', function (req, res, next) {

@@ -34,13 +34,13 @@ export class RegisterComponent implements OnInit {
     // })
   }
 
-  popToast() {
+  public popToast() {
     console.log("hello")
     this.toasterService.pop('success', 'Args Title', 'Args Body');
   }
 
 
-  register() {
+  public register() {
     if (this.email == '') {
       return this.toasterService.pop('error', 'Error', "Username Can't be blank");
     }

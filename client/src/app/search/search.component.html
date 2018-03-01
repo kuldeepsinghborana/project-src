@@ -1,17 +1,91 @@
-<div class="row">
+<div class="container-fluid"><div class="clearfix"></div></div>
+<!--  this will give just a search bar -->
   <div class="banner-cover">
-    <div class="container-fluid">
+    <div class="container-fluid" [hidden]="hideSearch">
       <div class="hero">
         <h1 class="strong"> Hop Hop do you need a job?</h1>
-        <h3 class="normal">Meet the ultimate job search assistant. No signup required !</h3>
-        <br>
-        <br>
-        <form class="form-inline" action="/search" accept-charset="UTF-8" method="post">
-          <input class="form-control right10" id="search-field" type="text" size="50" name="query" placeholder="Search here" autofocus [(ngModel)]="query" >
-          <input class="btn btn-md" id="search-button"  name="commit" value="Search" (click)="search()" data-disable-with="Search">
-        </form>
-        <img class="top20" src="../../assets/img/Jobbunny.png" style="height:250px;width:200px;">
+        <h3 class="normal">Meet the ultimate job search assistant. No signup required !</h3><br><br><br>
+        <form class="form-inline" action="/search"
+          accept-charset="UTF-8" method="post"><input class="form-control right10" id="search-field" type="text" size="50" name="query" placeholder="Search here"
+            autofocus=""  [(ngModel)]="query"><input class="btn btn-md" id="search-button" type="submit" name="commit" value="Search" data-disable-with="Search" (click)="search()"></form>
+        <img
+          class="top20" src="./assets/img/Jobbunny.png" style="height:100%;width:200px;" /></div>
+    </div>
+  </div>
+
+  <div class="middle-container" [hidden]="!hideSearch">
+    <div class="container-fluid container">
+      <div class="filter-container">
+        <div class="row">
+          <div class="col-md-2">
+            <p class="large strong">Job Search</p>
+          </div>
+          <div class="col-md-10">
+            <form class="form-inline" accept-charset="UTF-8"><input class="form-control" type="text" name="query" placeholder="Search" [(ngModel)]="query"><button class="form-control btn-orange"
+                (click)="search()">Search</button></form>
+          </div>
+          <div class="row">
+            <div class="col-md-10">
+              <p class="medium strong">{{jobs ? jobs.length : 0}} Matches for " {{query}} "</p><br></div>
+            <div class="col-md-2">
+              <a class="dropdown-toggle" href="#filters" data-toggle="collapse" aria-expanded="">
+                <div class="pull-right"><i class="fa fa-filter"></i><span>FILTER</span></div>
+              </a>
+            </div>
+            <div class="open in" id="filters">
+              <div class="row">
+                <div class="col-md-2"><strong>JOB TYPE</strong>
+                  <ul class="list-unstyled">
+                    <li class="top10"><span class="gray" (onclick)="toggleFilter('jobType','Part-time')">Part-time</span></li>
+                    <li class="top10"><span class="gray" (onclick)="toggleFilter('jobType','Full-time')">Full-time</span></li>
+                  </ul>
+                </div>
+                <div class="col-md-2"><strong>LOCATION</strong>
+                  <ul class="list-unstyled">
+                    <li class="top10"><span class="gray" (onclick)="toggleFilter('workRegion','North')">North</span></li>
+                    <li class="top10"><span class="gray" (onclick)="toggleFilter('workRegion','West')">West</span></li>
+                    <li class="top10"><span class="gray" (onclick)="toggleFilter('workRegion','East')">East</span></li>
+                    <li class="top10"><span class="gray" (onclick)="toggleFilter('workRegion','Central')">Central</span></li>
+                    <li class="top10"><span class="gray" (onclick)="toggleFilter('workRegion','Central Business District')">Central Business District</span></li>
+                  </ul>
+                </div>
+                <div class="col-md-2"><strong>WORKING HOURS</strong>
+                  <ul class="list-unstyled">
+                    <li class="top10"><span class="gray" (onclick)="toggleFilter('workPeriod','Weekdays')">Weekdays</span></li>
+                    <li class="top10"><span class="gray" (onclick)="toggleFilter('workPeriod','Weekends')">Weekends</span></li>
+                    <li class="top10"><span class="gray" (onclick)="toggleFilter('workPeriod','Both weekdays and weekends')">Both weekdays and weekends</span></li>
+                  </ul>
+                </div>
+                <div class="col-md-6"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="jobs-container">
+        <div class="job-item" *ngFor="let job of jobs">
+          <div class="pad10">
+            <div class="row" routerLink="../job/{{job._id}}">
+              <a routerLink="../job/{{job._id}}">
+                <div class="col-md-1"><img height="75" length="75" src="/assets/img/logo.png"></div>
+                <div class="col-md-9">
+                  <div class="large strong capitalize black">{{job.jobTitle}}</div>
+                  <p><span>{{job.companyName}}</span><span> posted by {{job.employerName}}</span></p>
+                  <p>test</p>
+                  <p></p>
+                  <p><i class="fa fa-clock-o"></i><span> posted 23 days ago</span></p>
+                </div>
+              </a>
+              <div class="col-md-2">
+                <div class="align-center">
+                  <a routerLink="../job/{{job._id}}">
+                    <div class="medium"><i class="fa fa-map-marker"></i><br><span>West, Test 1</span></div><br></a><a class="btn btn-blue btn-warning"
+                    routerLink="../job/{{job._id}}">Apply in Messenger</a></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
+

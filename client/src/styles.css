@@ -4062,3 +4062,6 @@ a:focus,a:active,button::-moz-focus-inner,input::-moz-focus-inner,input[type="re
         -webkit-overflow-scrolling: touch
     }
 } */
+.banner-cover{
+    min-height:200px;
+}

@@ -26,6 +26,8 @@ import { EmployeemanagementComponent } from './employeemanagement/employeemanage
 import { PurchasecarrotsComponent } from './purchasecarrots/purchasecarrots.component';
 import { FarmcarrotsComponent } from './farmcarrots/farmcarrots.component';
 import { CreatejobService } from './createjob/createjob.service';
+import { JobComponent } from './job/job.component';
+
 const appRoutes: Routes = [];
 @NgModule({
   declarations: [
@@ -42,7 +44,8 @@ const appRoutes: Routes = [];
     JobmanagementComponent,
     EmployeemanagementComponent,
     PurchasecarrotsComponent,
-    FarmcarrotsComponent
+    FarmcarrotsComponent,
+    JobComponent
   ],
   imports: [
     BrowserModule,

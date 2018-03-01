@@ -9,7 +9,7 @@ export class LoginService {
 
   }
 
-  login(data) {
+  public login(data) {
     return this.commonServiceService.post('/users/login',data)
       .map(res => res.json())
       .catch(this.handleError);

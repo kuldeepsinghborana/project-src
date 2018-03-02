@@ -1,50 +1,136 @@
-<div class="wrapper">
-    <div class="sidebar" data-color="#303135">
-        <div class="sidebar-wrapper">
-            <div class="logo align-center">
-                <img class="img-circle" height="75" length="75" src="https://i.imgur.com/0ifoulJ.jpg">
-                <div class="strong medium">Gary Lim</div>
-                <div class="medium">Jobbunny</div>
-                <a href="/employer/settings">
-                    <i class="small">Edit Account Settings</i>
-                </a>
+<table class="dashboard col-md-12">
+    <tr>
+        <td class="side-bar-menu" *ngIf="toggleSideBar">
+            <div class="sidebar" data-color="#303135">
+                <div class="sidebar-wrapper">
+                    <div class="logo align-center">
+                        <img class="img-circle" height="75" length="75" src="https://i.imgur.com/0ifoulJ.jpg">
+                        <div class="strong medium">Gary Lim</div>
+                        <div class="medium">Jobbunny</div>
+                        <a>
+                            <i class="small small-link">Edit Account Settings </i>
+                        </a>
+                    </div>
+                    <hr>
+                    <ul class="nav list-group hover-test">
+                        <li class="left20">MAIN</li>
+                        <li class="active">
+                            <a>
+                                <i class="fa fa-newspaper-o medium"></i>
+                                <span>Overview</span>
+                            </a>
+                        </li>
+                        <li class="">
+                            <a>
+                                <i class="fa fa-briefcase medium"></i>
+                                <span>Job Management</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a>
+                                <i class="fa fa-users medium"></i>
+                                <span>Employee management</span>
+                            </a>
+                        </li>
+                        <br>
+                        <li class="left20">CARROT</li>
+                        <li>
+                            <a>
+                                <i class="fa fa-credit-card medium"></i>
+                                <span>Purchase Carrots</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a>
+                                <i class="fa fa-coffee medium"></i>
+                                <span>Farm Carrots</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <ul class="nav list-group">
-                <li class="left20">MAIN</li>
-                <li class="active">
-                    <a href="/employer">
-                        <i class="fa fa-newspaper-o medium"></i>
-                        <span>Overview</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="/employer/jobs">
-                        <i class="fa fa-briefcase medium"></i>
-                        <span>Job Management</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="/employer/workers">
-                        <i class="fa fa-users medium"></i>
-                        <span>Employee management</span>
-                    </a>
-                </li>
-                <br>
-                <li class="left20">CARROT</li>
-                <li>
-                    <a href="/employer/buy-carrots">
-                        <i class="fa fa-credit-card medium"></i>
-                        <span>Purchase Carrots</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="/employer/farm-carrots">
-                        <i class="fa fa-coffee medium"></i>
-                        <span>Farm Carrots</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-    <router-outlet></router-outlet>
-</div>
+        </td>
+        <td>
+            <nav class="navbar navbar-default navbar-fixed">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <a class="navbar-brand hidden-md hidden-lg">
+                            <span>Overview</span>
+                        </a>
+                        <button class="navbar-toggle" id="navigation-dropdown" data-toggle="dropdown" type="button">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <div class="dropdown-menu pull-right" id="dropdown-nav-menu" aria-labelledby="navigation-dropdown">
+                            <div class="pad20">
+                                <a class="text-bold text-danger">
+                                    <i class="fa fa-power-off"></i>
+                                    <span>Log out</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="collapse navbar-collapse pad10">
+                            <ul class="nav navbar-nav">
+                                <li (click)="toggleSideBar  = !toggleSideBar">
+                                    <div class="notification-icon">
+                                        <i class="fa fa-bars"></i>
+                                    </div>
+                                </li>
+                                <li>
+                                    <a style="margin-top: 0px;">
+                                        <img class="pull-left" height="45" length="45" src="/assets/img/logo.png">
+                                        <div class="pull-left left10">
+                                            <strong>Jobbunny</strong>
+                                            <p>Recruiting Assistant</p>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="left20">
+                                    <a>
+                                        <span class="red-icon">Post Job</span>
+                                    </a>
+                                </li>
+                                <li class="left20" role="presentation">
+                                    <a>FAQ</a>
+                                </li>
+                                <li class="left20" role="presentation">
+                                    <a>Contact Us</a>
+                                </li>
+                                <li>
+                                    <a class="text-danger">
+                                        <i class="fa fa-power-off"></i>
+                                        <span> Log out</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="pull-right hidden-xs top20">
+                        <a class="hover">
+                            <div class="tooltip pad10">
+                                <div class="strong">Available Carrots: 98</div>
+                                <div class="strong">Pending Carrots: 2</div>
+                                <div class="strong">Total Carrots: 100</div>
+                                <form action="/employer/buy-carrots" method="get">
+                                    <button class="btn btn-orange">Purchase carrots</button>
+                                </form>
+                            </div>
+                            <img class="pull-left" height="50" length="50" src="/assets/img/carrot.png">
+                            <div class="pull-left right10 black">
+                                <span class="strong">98</span>
+                                <p>Available</p>
+                            </div>
+                        </a>
+                        <i class="fa fa-2x fa-send pull-left top10"></i>
+                        <div class="pull-left left10">
+                            <span class="strong">1</span>
+                            <p>Invited</p>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </td>
+    </tr>
+</table>

@@ -10,6 +10,7 @@ import { ContactComponent } from './contact/contact.component';
 import { AboutComponent } from './about/about.component';
 import { CreatejobComponent } from './createjob/createjob.component';
 import { JobComponent } from './job/job.component';
+import { ActivateAccountComponent } from './activate-account/activate-account.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/homepage/search', pathMatch: 'full' },
@@ -23,13 +24,15 @@ export const routes: Routes = [
       { path: 'register', component: RegisterComponent, pathMatch: 'full' },
       { path: 'about', component: AboutComponent, pathMatch: 'full' },
       { path: 'postjob', component: CreatejobComponent, pathMatch: 'full' },
-      { path: 'job/:id', component: JobComponent, pathMatch:'full' }      
+      { path: 'job/:id', component: JobComponent, pathMatch: 'full' }
     ]
   },
  {
     path: 'employer',
     loadChildren: './employer/employer.module#EmployerModule',
- }
+ }, {
+  path: 'activateaccount/:token', component: ActivateAccountComponent
+}
 ];
 
 @NgModule({

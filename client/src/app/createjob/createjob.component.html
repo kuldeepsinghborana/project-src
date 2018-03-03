@@ -24,41 +24,42 @@
         </div>
 
         <br>
-        <form name="postJob" #postJobForm="ngForm" class="form-horizontal" (ngSubmit)="postJob(post)">
+        <form name="postJob" #postJobForm="ngForm" class="form-horizontal">
           <h4 class="strong green-font">1. YOUR BASIC JOB DETAILS</h4>
           <br>
           <div class="form-group" *ngIf="detailedJobPost"><label class="control-label col-sm-2 small">COVER IMAGE</label>
             <div class="col-sm-10">
-              <input class="form-control" type="file" (change)="readFile($event)" name="coverImage">
+              <input class="form-control" type="file" (change)="readFile($event)" name="coverImage" required>
             </div>
           </div>
           <div class="form-group">
-            <label class="control-label col-sm-2 small">JOB TITLE</label>
+              
+            <label class="control-label col-sm-2 small" [ngClass]="{'required': jobTitle.errors && (jobTitle.dirty || jobTitle.touched)}">JOB TITLE</label>
             <div class="col-sm-10">
-              <input class="form-control" type="text" [(ngModel)]="post.jobTitle" placeholder="Enter job title" name="jobTitle" required>
+              <input class="form-control" type="text" [(ngModel)]="post.jobTitle" placeholder="Enter job title" name="jobTitle" #jobTitle="ngModel" required>
             </div>
           </div>
           <div class="form-group">
-            <label class="control-label col-sm-2 small">NUMBER OF HIRES</label>
+            <label class="control-label col-sm-2 small" [ngClass]="{'required': requiredNumber.errors && (requiredNumber.dirty || requiredNumber.touched)}">NUMBER OF HIRES</label>
             <div class="col-sm-10">
-              <input class="form-control" type="number" [(ngModel)]="post.requiredNumber" placeholder="How many people do you need to hire ?"
+              <input class="form-control" type="number" [(ngModel)]="post.requiredNumber" #requiredNumber="ngModel" placeholder="How many people do you need to hire ?"
                 name="requiredNumber" required>
             </div>
           </div>
           <div class="form-group">
-            <label class="control-label col-sm-2 small">JOB TYPE</label>
+            <label class="control-label col-sm-2 small" [ngClass]="{'required': jobType.errors && (jobType.dirty || jobType.touched)}">JOB TYPE</label>
             <div class="col-sm-10">
-              <select class="form-control" name="jobType" id="job-type" [(ngModel)]='post.jobType' required>
+              <select class="form-control" name="jobType" id="job-type" [(ngModel)]='post.jobType' #jobType="ngModel" required>
                 <option value="Full-time">Full-time</option>
                 <option value="Part-time">Part-time</option>
               </select>
             </div>
           </div>
           <div class="form-group">
-            <label class="control-label col-sm-2 small">INDUSTRY</label>
+            <label class="control-label col-sm-2 small" [ngClass]="{'required': jobIndustry.errors && (jobIndustry.dirty || jobIndustry.touched)}">INDUSTRY</label>
             <span></span>
             <div class="col-sm-10">
-              <select class="form-control" name="jobIndustry" id="job-industry" required [(ngModel)]='post.jobIndustry'>
+              <select class="form-control" name="jobIndustry" id="job-industry" required [(ngModel)]='post.jobIndustry' #jobIndustry="ngModel">
                 <option value="Accounting / Finance">Accounting / Finance</option>
                 <option value="Admin / HR">Admin / HR</option>
                 <option value="Sales / Marketing">Sales / Marketing</option>
@@ -71,9 +72,9 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="control-label col-sm-2 small">SALARY TYPE</label>
+            <label class="control-label col-sm-2 small" [ngClass]="{'required': salaryType.errors && (salaryType.dirty || salaryType.touched)}">SALARY TYPE</label>
             <div class="col-sm-10">
-              <select class="form-control" name="salaryType" required [(ngModel)]='post.salaryType'>
+              <select class="form-control" name="salaryType" required [(ngModel)]='post.salaryType' #salaryType="ngModel">
                 <option value="Per Hour">Per Hour</option>
                 <option value="Per Month">Per Month</option>
                 <option value="Per Project">Per Project</option>
@@ -81,18 +82,18 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="control-label col-sm-2 small">SALARY</label>
+            <label class="control-label col-sm-2 small" [ngClass]="{'required': salary.errors && (salary.dirty || salary.touched)}">SALARY</label>
             <div class="col-sm-10">
-              <input class="form-control" type="number" [(ngModel)]='post.salary' placeholder="How much are you willing to pay?" name="salary"
+              <input class="form-control" type="number" [(ngModel)]='post.salary' #salary="ngModel" placeholder="How much are you willing to pay?" name="salary"
                 required>
             </div>
           </div>
           <div class="form-group">
-            <label class="control-label col-sm-2 small">WORKING PERIOD</label>
+            <label class="control-label col-sm-2 small" [ngClass]="{'required': startDate.errors && (startDate.dirty || startDate.touched)}">WORKING PERIOD</label>
             <div class="col-sm-5">
               <small class="strong">START DATE</small>
               <div class="input-group datepicker">
-                <input type="date" name="startDate" [(ngModel)]='post.startDate' id="start-date" required>
+                <input type="date" name="startDate" [(ngModel)]='post.startDate' #startDate="ngModel" id="start-date" required>
               </div>
             </div>
             <option value="Weekends">Weekends</option>
@@ -104,18 +105,18 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="control-label col-sm-2 small">WORKING DAYS</label>
+            <label class="control-label col-sm-2 small" [ngClass]="{'required': workPeriod.errors && (workPeriod.dirty || workPeriod.touched)}">WORKING DAYS</label>
             <div class="col-sm-10">
-              <select class="form-control" name="workPeriod" required [(ngModel)]='post.workPeriod'>
+              <select class="form-control" name="workPeriod" required [(ngModel)]='post.workPeriod' #workPeriod="ngModel">
                 <option value="Weekdays">Weekdays</option>
                 <option value="Both weekdays and weekends">Both weekdays and weekends</option>
               </select>
             </div>
           </div>
           <div class="form-group" id="total-hours-wrap" style="display: none;">
-            <label class="control-label col-sm-2 small">TOTAL HOURS</label>
+            <label class="control-label col-sm-2 small" [ngClass]="{'required': totalHours.errors && (totalHours.dirty || workPeriod.touched)}">TOTAL HOURS</label>
             <div class="col-sm-10">
-              <input class="form-control" type="number" [(ngModel)]='post.totalHours' placeholder="How many manhours total?" id="total-hours"
+              <input class="form-control" type="number" [(ngModel)]='post.totalHours' #totalHours="ngModel" placeholder="How many manhours total?" id="total-hours"
                 name="totalHours">
             </div>
           </div>
@@ -142,9 +143,9 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="control-label col-sm-2 small">EXPIRATION DATE OF JOB</label>
+            <label class="control-label col-sm-2 small" [ngClass]="{'required': jobExpiration.errors && (jobExpiration.dirty || jobExpiration.touched)}">EXPIRATION DATE OF JOB</label>
             <div class="col-sm-10">
-              <select class="form-control" name="jobExpiration" id="job-expiration" required [(ngModel)]='post.jobExpiration'>
+              <select class="form-control" name="jobExpiration" id="job-expiration" required [(ngModel)]='post.jobExpiration' #jobExpiration="ngModel">
                 <option value="start-period">At the start of working period</option>
                 <option value="end-period">At the end of working period</option>
                 <option value="two-months">After 2 months</option>
@@ -152,15 +153,15 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="control-label col-sm-2 small">LOCATION OF WORK</label>
+            <label class="control-label col-sm-2 small" [ngClass]="{'required': location.errors && (location.dirty || location.touched)}">LOCATION OF WORK</label>
             <div class="col-sm-10">
-              <input class="form-control" type="text" [(ngModel)]='post.location' placeholder="Work location" name="location" required>
+              <input class="form-control" type="text" [(ngModel)]='post.location' #location="ngModel" placeholder="Work location" name="location" required>
             </div>
           </div>
           <div class="form-group">
-            <label class="control-label col-sm-2 small">LOCATION REGION</label>
+            <label class="control-label col-sm-2 small" [ngClass]="{'required': workRegion.errors && (workRegion.dirty || workRegion.touched)}">LOCATION REGION</label>
             <div class="col-sm-10">
-              <select class="form-control" name="workRegion" required [(ngModel)]='post.workRegion'>
+              <select class="form-control" name="workRegion" required [(ngModel)]='post.workRegion' #workRegion="ngModel">
                 <option value="North">North</option>
                 <option value="West">West</option>
                 <option value="East">East</option>
@@ -173,65 +174,65 @@
           <h4 class="strong green-font">2. ROLES AND RESPONSIBILITIES</h4>
           <br>
           <div class="form-group">
-            <label class="control-label col-sm-2 small strong">BACKGROUND OF JOB</label>
+            <label class="control-label col-sm-2 small strong" [ngClass]="{'required': description.errors && (description.dirty || description.touched)}">BACKGROUND OF JOB</label>
             <div class="col-sm-10">
-              <textarea class="form-control" [(ngModel)]='post.description' rows="5" placeholder="Give a description of what your company does or a message to attract employees"
+              <textarea class="form-control" [(ngModel)]='post.description' #description="ngModel" rows="5" placeholder="Give a description of what your company does or a message to attract employees"
                 name="description" required></textarea>
             </div>
           </div>
           <div class="form-group">
-            <label class="control-label col-sm-2 small strong">RESPONSIBILITIES</label>
+            <label class="control-label col-sm-2 small strong" [ngClass]="{'required': jobRole.errors && (jobRole.dirty || jobRole.touched)}">RESPONSIBILITIES</label>
             <div class="col-sm-10">
-              <textarea class="form-control" rows="5" placeholder="What are your employees expected to do ?" name="jobRole" [(ngModel)]='post.jobRole'></textarea ></div>
+              <textarea class="form-control" rows="5" placeholder="What are your employees expected to do ?" name="jobRole" [(ngModel)]='post.jobRole' #jobRole="ngModel"></textarea ></div>
 						</div>
 						<div class="form-group">
-							<label class="control-label col-sm-2 small strong">REQUIREMENTS</label>
-							<div class="col-sm-10"><textarea class="form-control" [(ngModel)]='post.requirement' rows="5" placeholder="What basic requirements should your employee have ?" name="requirement"></textarea>
+							<label class="control-label col-sm-2 small strong" [ngClass]="{'required': requirement.errors && (requirement.dirty || requirement.touched)}">REQUIREMENTS</label>
+							<div class="col-sm-10"><textarea class="form-control" [(ngModel)]='post.requirement' rows="5" placeholder="What basic requirements should your employee have ?" name="requirement" #requirement="ngModel"></textarea>
             </div>
           </div>
           <br>
           <h4 class="strong green-font">3. CONTACT INFORMATION</h4>
           <br>
           <div class="form-group">
-            <label class="control-label col-sm-2 small">ARE YOU EMPLOYING FOR YOURSELF?</label>
+            <label class="control-label col-sm-2 small" [ngClass]="{'required': selfEmployer.errors && (selfEmployer.dirty || selfEmployer.touched)}">ARE YOU EMPLOYING FOR YOURSELF?</label>
             <div class="col-sm-10">
-              <select class="form-control" name="selfEmployer" required [(ngModel)]='post.selfEmployer'>
+              <select class="form-control" name="selfEmployer" required [(ngModel)]='post.selfEmployer' #selfEmployer="ngModel">
                 <option value="true">Yes</option>
                 <option value="false">No</option>
               </select>
             </div>
           </div>
           <div class="form-group">
-            <label class="control-label col-sm-2 small strong">COMPANY NAME</label>
+            <label class="control-label col-sm-2 small strong" [ngClass]="{'required': companyName.errors && (companyName.dirty || companyName.touched)}">COMPANY NAME</label>
             <div class="col-sm-10">
-              <input class="form-control" type="text" name="companyName" required [(ngModel)]='post.companyName'>
+              <input class="form-control" type="text" name="companyName" required [(ngModel)]='post.companyName' #companyName="ngModel">
             </div>
           </div>
           <div class="form-group">
-            <label class="control-label col-sm-2 small strong">COMPANY WEBSITE</label>
+            <label class="control-label col-sm-2 small strong" [ngClass]="{'required': companyWebsite.errors && (companyWebsite.dirty || companyWebsite.touched)}">COMPANY WEBSITE</label>
             <div class="col-sm-10">
-              <input class="form-control" type="url" name="companyWebsite" [(ngModel)]='post.companyWebsite'>
+              <input class="form-control" type="url" name="companyWebsite" [(ngModel)]='post.companyWebsite' #companyWebsite="ngModel">
             </div>
           </div>
           <div class="form-group">
-            <label class="control-label col-sm-2 small strong">RECRUITER NAME</label>
+            <label class="control-label col-sm-2 small strong" [ngClass]="{'required': employerName.errors && (employerName.dirty || employerName.touched)}">RECRUITER NAME</label>
             <div class="col-sm-10">
-              <input class="form-control" type="text" name="employerName" [(ngModel)]='post.employerName'>
+              <input class="form-control" type="text" name="employerName" [(ngModel)]='post.employerName' #employerName="ngModel">
             </div>
           </div>
           <div class="form-group">
-            <label class="control-label col-sm-2 small strong">RECRUITER HANDPHONE</label>
+            <label class="control-label col-sm-2 small strong" [ngClass]="{'required': employerPhone.errors && (employerPhone.dirty || employerPhone.touched)}">RECRUITER HANDPHONE</label>
             <div class="col-sm-10">
-              <input class="form-control" type="text" name="employerPhone" [(ngModel)]='post.employerPhone'>
+              <input class="form-control" type="text" name="employerPhone" [(ngModel)]='post.employerPhone' #employerPhone="ngModel">
             </div>
           </div>
           <div class="form-group">
-            <label class="control-label col-sm-2 small strong">RECRUITER EMAIL</label>
+            <label class="control-label col-sm-2 small strong" [ngClass]="{'required': employerEmail.errors && (employerEmail.dirty || employerEmail.touched)}">RECRUITER EMAIL</label>
             <div class="col-sm-10">
-              <input class="form-control" type="email" name="employerEmail" [(ngModel)]='post.employerEmail'>
+              <input class="form-control" type="email" name="employerEmail" [(ngModel)]='post.employerEmail' #employerEmail="ngModel">
             </div>
           </div>
-          <button class="btn-lg btn-warning pull-right" [disabled]="!postJobForm.valid" type="submit">Post and See Available Employees</button>
+          <button class="btn-lg btn-warning pull-right" [disabled]="!postJobForm.valid" (click)="myModal.open()">Post and See Available Employees</button>
         </form>
         <br>
         <br>
@@ -263,3 +264,25 @@
     </div>
   </div>
 </div>
+ <!-- <button (click)="myModal.open()">open my modal</button> -->
+<modal #myModal>
+ <modal-content>
+    <form (ngSubmit)="openModal(myModal)" #verify="ngForm">
+      <p [hidden]="!hidePassword">
+      <label>Please Enter Email:</label>
+      <input  id="email" name="email" [(ngModel)]="user.email" type="text" required>
+      </p>
+      <p [hidden]="hidePassword">
+          <label>Email:{{user.email}}</label>
+      <button class="btn btn-primary" *ngIf="showSubmit" (click)="hidePassword = !hidePassword" type="button">Change</button>  
+         </p>
+    
+      <p [hidden]="hidePassword">
+      <label>Please Enter password:</label>
+      <input id="password" name="password" [(ngModel)]="user.password" type="password">
+      </p>
+      <button class="btn btn-primary" *ngIf="hidePassword" (click)="emailVerify()" [disabled]="!verify.valid" type="button">Next</button>
+      <button class="btn btn-primary" *ngIf="!hidePassword" type="submit">Submit</button>  
+    </form>
+  </modal-content>
+  </modal>

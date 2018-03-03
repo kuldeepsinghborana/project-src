@@ -1,52 +1,178 @@
 var mongoose = require('mongoose');
+let waterfall = require('async-waterfall');
 let jwt = require('../../helper/jwt');
+const crypto = require('crypto');
 var User = mongoose.model('User');
 var Notification = mongoose.model('Notification');
 var bcrypt = require('bcrypt');
 var imgur = require('imgur');
+let utils = require('../../helper/utils');
 
-// POST /api/users/register
-module.exports.register = function (req, res) {
-  console.log('registering user');
 
-  if (req.body.email && req.body.password) {
-    var userData = {
-      email: req.body.email,
-      name: req.body.name,
-      password: req.body.password,
-      // passwordConf: req.body.passwordConf,
-      phoneNumber: req.body.handphoneNumber,
-      companyname: req.body.companyname
+
+//verification
+module.exports.isEmailExist = function (req, res) {
+  console.log(req.body, "sda")
+  let emailId = req.body.email;
+  if (!emailId) {
+    res.send({
+      message: "Please Provide Email"
+    })
+    return false;
+  }
+  User.find({ email: emailId }, function (error, result) {
+    if (error) {
+      res.send({
+        status: 400,
+        message: error
+      })
+      return false;
     }
-    User.create(userData, function (err, user) {
-      if (err) {
-        console.log("Error creating user", err)
-        // res.status(400).render('sessions/register', { error: err });
+    if (result.length > 0) {
+      res.send({
+        status: 200,
+        data: emailId,
+        message: 'User Verified Successfully'
+      })
+      return false;
+    }
+    res.send({
+      status: 201,
+      data: emailId,
+      message: 'User Not Verified'
+    })
+  })
+
+}
+// POST /api/users/register
+// module.exports.register = function (req, res) {
+//   console.log('registering user');
+
+//   if (req.body.email && req.body.password) {
+//     var userData = {
+//       email: req.body.email,
+//       name: req.body.name,
+//       password: req.body.password,
+//       // passwordConf: req.body.passwordConf,
+//       phoneNumber: req.body.handphoneNumber,
+//       companyname: req.body.companyname
+//     }
+//     User.create(userData, function (err, user) {
+//       if (err) {
+//         console.log("Error creating user", err)
+//         // res.status(400).render('sessions/register', { error: err });
+//         let response = {
+//           status: 400,
+//           message: "FAILED"
+//         }
+//         return res.status(200).json(response);
+//       } else {
+//         // console.log("User created ", user);
+//         // res.status(201).render("sessions/login", { message: "Registration Successful. Please login." });
+//         let response = {
+//           status: 200,
+//           message: "SUCCESS"
+//         }
+//         return res.status(200).json(response);
+//       }
+//     });
+//   } else {
+//     console.log('Insufficient data. Cannot register!');
+//     // res.status(400).render('sessions/register', { error: 'Insufficient data. Cannot register!' });
+//     let response = {
+//       status: 400,
+//       message: 'Insufficient data. Cannot register!'
+//     }
+//     return res.status(400).json(response);
+//   }
+// };
+
+module.exports.register = (req, res) => {
+  let token = crypto.randomBytes(20).toString('hex');
+  waterfall([
+    function (callback) {
+      if (req.body.email && req.body.password) {
+        var userData = {
+          email: req.body.email,
+          name: req.body.name,
+          password: req.body.password,
+          // passwordConf: req.body.passwordConf,
+          phoneNumber: req.body.handphoneNumber,
+          companyname: req.body.companyname,
+          token: token
+        }
+        User.create(userData, function (err, user) {
+          if (err) {
+            console.log("Error creating user", err)
+            // res.status(400).render('sessions/register', { error: err });
+            let response = {
+              status: 400,
+              message: "FAILED"
+            }
+            return res.status(200).json(response);
+          } else {
+            callback(null, userData);
+          }
+        });
+      } else {
+        console.log('Insufficient data. Cannot register!');
+        // res.status(400).render('sessions/register', { error: 'Insufficient data. Cannot register!' });
         let response = {
           status: 400,
-          message: "FAILED"
+          message: 'Insufficient data. Cannot register!'
         }
-        return res.status(200).json(response);
-      } else {
-        // console.log("User created ", user);
-        // res.status(201).render("sessions/login", { message: "Registration Successful. Please login." });
-        let response = {
-          status: 200,
-          message: "SUCCESS"
-        }
-        return res.status(200).json(response);
+        return res.status(400).json(response);
       }
-    });
-  } else {
-    console.log('Insufficient data. Cannot register!');
-    // res.status(400).render('sessions/register', { error: 'Insufficient data. Cannot register!' });
-    let response = {
+    }, function (data, callback) {
+      let email = data.email;
+      let token = data.token;
+      let username = data.name ? data.name : '';
+      let subject = 'Verify your Account';
+      let pageName = 'activateaccount/' + token;
+      let fileName = 'accountVerification';
+      let date = new Date();
+      let year = date.getFullYear();
+      let mailTemplatePath = "./mail_content/" + fileName + ".html";
+      utils.getHtmlContent(mailTemplatePath, function (err, content) {
+        if (err) {
+          callback('PLEASE_TRY_AGAIN');
+        }
+        if (content) {
+          let link = config.SITE_URL + pageName;
+          content = content.replace("{LINK}", link);
+          content = content.replace("{USERNAME}", username);
+          content = content.replace("{YEAR}", year);
+
+          utils.sendEmail(email, subject, content, function (err, result) {
+            if (err) {
+              callback('PLEASE_TRY_AGAIN');
+            }
+            if (result) {
+              // callback(null, result);
+              let response = {
+                status: 200,
+                message: "SUCCESS"
+              }
+              return res.status(200).json(response);
+            }
+            else {
+              callback('PLEASE_TRY_AGAIN');
+            }
+          });
+        }
+        else {
+          callback('PLEASE_TRY_AGAIN');
+        }
+      });
+    }
+  ], function (err) {
+    response = {
       status: 400,
-      message: 'Insufficient data. Cannot register!'
+      'error': err
     }
     return res.status(400).json(response);
-  }
-};
+  });
+}
 
 // POST /api/users/login
 module.exports.login = function (req, res) {
@@ -76,7 +202,8 @@ module.exports.login = function (req, res) {
             // req.session.carrots = req.session.user.carrots;
             let response = {
               status: 200,
-              token: secretToken
+              token: secretToken,
+              userType:user.userType
             }
             return res.status(200).json(response);
             // Notification.find({ notifieeId: user._id, seen: false }, function (err, notifications) {
@@ -202,6 +329,43 @@ module.exports.updateUser = function (req, res) {
       });
     });
 }
+
+//Get /api/users/activateaccount/:token
+module.exports.acitvateAccount = (req, res) => {
+  let token = req.params.token;
+  // console.log('token form params', token);
+
+  let filter = { 'token': token };
+  let newData = {
+    token: null,
+    isVerified: true
+  }
+  User.findOneAndUpdate(filter, newData, { new: true }, (error, result) => {
+    if (error) {
+      console.log('error', error);
+      let response = {
+        status: 400,
+        message: 'FAILED'
+      }
+      return res.status(400).json(response);
+    }
+    if (result === null) {
+      let response = {
+        status: 400,
+        message: 'Invalid Token'
+      }
+      return res.status(400).json(response);
+
+    }
+    console.log('result', result);
+    let response = {
+      status: 200,
+      message: 'SUCCESS'
+    }
+    return res.status(200).json(response);
+  });
+}
+
 
 // HELPER methods
 var _getRedirectionPath = function (user_type) {

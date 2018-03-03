@@ -5,13 +5,13 @@ var router = express.Router();
 
 router.use(cors());
 // image upload
-var multer  = require('multer')
+var multer = require('multer')
 var storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, 'public/uploads/')
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.originalname)
+  destination: function (req, file, cb) {
+    cb(null, 'public/uploads/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname)
   }
 })
 
@@ -36,7 +36,7 @@ router.get('/employeesearch', function (req, res, next) {
   //get data of most recently added employees
   database.readRecent().then(employees => {
     console.log(employees);
-    res.render('employeesearch', { title: 'Jobbunny', employees: employees});
+    res.render('employeesearch', { title: 'Jobbunny', employees: employees });
   });
 });
 
@@ -75,13 +75,13 @@ router.get('/personality_test', function (req, res, next) {
 });
 
 router.get('/personality_test/:userId', function (req, res, next) {
-  botControl.personalityExists({"messenger user id" : req.params.userId}).then(user_data => {
-    if(user_data == null || user_data['personality'] == null){
+  botControl.personalityExists({ "messenger user id": req.params.userId }).then(user_data => {
+    if (user_data == null || user_data['personality'] == null) {
       res.redirect('https://m.me/jobbunny?ref=personality_quiz');
-    }else{
-      res.render('personality_test',  {title : user_data['first name'] + '\'s personality trait is -  ' + user_data['personality']['primary']['name'].toUpperCase() , userData : user_data } );
+    } else {
+      res.render('personality_test', { title: user_data['first name'] + '\'s personality trait is -  ' + user_data['personality']['primary']['name'].toUpperCase(), userData: user_data });
     }
-});
+  });
 });
 
 
@@ -123,7 +123,7 @@ router.post('/offerjob', function (req, res, next) {
 // });
 
 // cookie check for logged-in users
-var isAuthenticated = function(req, res, next) {
+var isAuthenticated = function (req, res, next) {
   console.log('User in session --> ' + req.session.userId);
   // console.log(req.session.user);
   if (req.session.userId && req.cookies.userId) {
@@ -133,8 +133,8 @@ var isAuthenticated = function(req, res, next) {
   }
 };
 
-var rootPathFor = function(user_type) {
-  switch(user_type){
+var rootPathFor = function (user_type) {
+  switch (user_type) {
     case 'employer':
       return '/employer';
     case 'admin':
@@ -144,7 +144,7 @@ var rootPathFor = function(user_type) {
   }
 }
 
-var isAdmin = function(req, res, next) {
+var isAdmin = function (req, res, next) {
   if (req.session.user) {
     var user_type = req.session.user.userType;
     if (req.session.user.userType == 'admin') {
@@ -159,20 +159,20 @@ var isAdmin = function(req, res, next) {
   }
 };
 
-var _seenNotification = function(notification_id) {
+var _seenNotification = function (notification_id) {
   console.log('UPDATE notification as seen');
   Notification
-    .findOneAndUpdate({ _id: notification_id }, { seen: true }, { upsert:true })
-    .exec(function(err, notification){
-    if (err) {
-      console.log('Error', err, notifiee_id, job_id, message);
-      return err;
-    }
-    return notification;
-  });
+    .findOneAndUpdate({ _id: notification_id }, { seen: true }, { upsert: true })
+    .exec(function (err, notification) {
+      if (err) {
+        console.log('Error', err, notifiee_id, job_id, message);
+        return err;
+      }
+      return notification;
+    });
 }
 
-var isEmployer = function(req, res, next) {
+var isEmployer = function (req, res, next) {
   var current_user = req.session.user;
   if (current_user) {
     var user_type = current_user.userType;
@@ -187,20 +187,25 @@ var isEmployer = function(req, res, next) {
     res.status(401).redirect('/login');
   }
 };
-
-
 // Session routes
-router.get('/register', function(req, res, next){
+router.get('/register', function (req, res, next) {
   res.render('sessions/register', { title: 'Jobbunny | Register' });
 });
 
-router.get('/login', function(req, res, next){
+router.get('/login', function (req, res, next) {
   res.render('sessions/login', { title: 'Jobbunny | Login', error: req.flash('error') });
 });
+
+
 
 router
   .route('/logout')
   .get(ctrlUsers.logout)
+
+//account activation
+router
+  .route('/api/users/accountactivate/:token')
+  .get(ctrlUsers.acitvateAccount);
 
 // employer routes
 router
@@ -216,8 +221,8 @@ router
   .route('/employer/jobs/new')
   .get(isAuthenticated, isEmployer, ctrlEmployer.newJob);
 router
-.route('/employer/jobs/:jobId')
-.get(isAuthenticated, isEmployer, ctrlEmployer.showJob);
+  .route('/employer/jobs/:jobId')
+  .get(isAuthenticated, isEmployer, ctrlEmployer.showJob);
 router
   .route('/employer/jobs/:jobId/edit')
   .get(isAuthenticated, isEmployer, ctrlEmployer.editJob);
@@ -234,10 +239,10 @@ router
   .route('/employer/notifications')
   .get(isAuthenticated, isEmployer, ctrlEmployer.notifications);
 
-router.get('/employer/farm-carrots', function(req, res, next){
+router.get('/employer/farm-carrots', function (req, res, next) {
   res.render('employer/farmCarrots', { title: 'Jobbunny | Employer > Carrots' });
 });
-router.get('/employer/buy-carrots', function(req, res, next){
+router.get('/employer/buy-carrots', function (req, res, next) {
   res.render('employer/buyCarrots', { title: 'Jobbunny | Employer > Carrots' });
 });
 
@@ -281,6 +286,10 @@ router
 router
   .route('/newjob')
   .get(ctrlJobs.newJob)
+router
+router
+  .route('/api/isEmailExist')
+  .post(ctrlUsers.isEmailExist)
 router
   .route('/api/jobs')
   .post(upload.single('coverImage'), ctrlJobs.createJob)

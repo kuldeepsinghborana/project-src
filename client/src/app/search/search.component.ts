@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { CommonServiceService } from '../common/common-service.service';
+import * as moment from 'moment';
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
@@ -16,8 +17,10 @@ export class SearchComponent implements OnInit {
   public filter: object = {};
   public filterCount: number = 0;
   public toggleFilterOptions: boolean = false;
+  public moment :any;
   constructor(private commonServiceService: CommonServiceService, private Router: Router) {
     this.router = Router;
+    this.moment = moment;
   }
 
   ngOnInit() {

@@ -27,8 +27,7 @@ import { PurchasecarrotsComponent } from './purchasecarrots/purchasecarrots.comp
 import { FarmcarrotsComponent } from './farmcarrots/farmcarrots.component';
 import { CreatejobService } from './createjob/createjob.service';
 import { JobComponent } from './job/job.component';
-import { AmazingTimePickerModule } from 'amazing-time-picker'; // this line you need
-
+import { AmazingTimePickerModule } from 'amazing-time-picker';
 const appRoutes: Routes = [];
 @NgModule({
   declarations: [

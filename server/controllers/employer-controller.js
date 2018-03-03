@@ -44,6 +44,10 @@ module.exports.dashboard = function (req, res, next) {
         stats['notificationsCount'] = notifications.length;
         // set stats as session variable
         req.session.stats = stats;
+        res.json({
+          notification : notifications,
+          data : res.locals,
+        });
         res.render('employer/dashboard', {
           title: 'Jobbunny | Employer',
           error: req.flash('error'),
@@ -64,19 +68,16 @@ module.exports.settings = function (req, res, next) {
     .exec(function(err, user){
       if (err) {
         console.log(err);
+        return res.json({
+          message : err.message,
+          err : err
+        })
       }
       console.log('User found: ', user._id)
       res.locals.user = user;
-      res.format({
-        html: function(){
-          res.render('employer/settings', {
-            title: 'Jobbunny | Employer',
-            error: req.flash('error'),
-            info: req.flash('info'),
-            message: req.flash('message')
-          });
-        }
-      });
+      res.json({
+        user : user
+      })
   });
 };
 

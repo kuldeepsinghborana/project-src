@@ -11,10 +11,9 @@
       <br>
       <br>
       <form class="form-inline" action="/search" accept-charset="UTF-8" method="post">
-        <input class="form-control right10" id="search-field" type="text" size="50" name="query" placeholder="Search here"
-          autofocus="" [(ngModel)]="query">
-        <input class="btn btn-md" id="search-button" type="submit" name="commit" value="Search" data-disable-with="Search"
-          (click)="search()">
+        <input class="form-control right10" id="search-field" type="text" size="50" name="query" placeholder="Search here" autofocus=""
+          [(ngModel)]="query">
+        <input class="btn btn-md" id="search-button" type="submit" name="commit" value="Search" data-disable-with="Search" (click)="search()">
       </form>
       <img class="top20" src="./assets/img/Jobbunny.png" style="height:100%;width:200px;" />
     </div>
@@ -28,39 +27,46 @@
         <div class="col-md-2">
           <p class="large strong">Job Search</p>
         </div>
-        <div class="col-md-10">
+        <div class="col-md-8">
           <form class="form-inline" accept-charset="UTF-8">
             <input class="form-control" type="text" name="query" placeholder="Search" [(ngModel)]="query">
             <button class="form-control btn-orange" (click)="search()">Search</button>
           </form>
         </div>
         <div class="row">
-          <div class="col-md-10">
+          <div class="col-md-6 clearfix">
             <p class="medium strong">{{jobs ? jobs.length : 0}} Matches for " {{query}}{{filter['jobType'] ? ', '+ filter['jobType'] : ''}}{{filter['jobIndustry']
               ? ', '+ filter['jobIndustry'] : ''}}{{filter['workRegion'] ? ', '+ filter['workRegion'] : ''}}{{filter['workPeriod']
               ? ', '+ filter['workPeriod'] : ''}}"</p>
             <br>
           </div>
-          <div class="col-md-2">
-            <a class="dropdown-toggle">
-              <div>
-                <span>Sort by&nbsp;</span>
-                <select [(ngModel)]="sortOption" (change)="sort(sortOption)">
-                  <option selected value=""></option>
-                  <option value="Salary: Low to High">Salary: Low to High</option>
-                  <option value="Salary: High to Low">Salary: High to Low</option>
-                </select>
-              </div>
-              <div [hidden]="filterCount === 0" (click)="clearFilter()">
-                <span>Clear Filters
-                  <i class="fa fa-times"></i>
-                </span>
-              </div>
-              <div class="pull-right" (click)="toggleFilterOptions = !toggleFilterOptions">
-                <i class="fa fa-filter"></i>
-                <span> FILTER</span>
-              </div>
-            </a>
+          <div class="col-md-6">
+            <div class="filter-sort">
+              <ul class="right-nav">
+                <li>
+                  <div [hidden]="filterCount === 0" (click)="clearFilter()">
+                    <span>Clear Filters
+                      <i class="fa fa-times"></i>
+                    </span>
+                  </div>
+                </li>
+                <li>
+                  <span>Sort By</span>
+                  <select [(ngModel)]="sortOption" (change)="sort(sortOption)">
+                    <option selected value=""></option>
+                    <option value="Salary: Low to High">Salary: Low to High</option>
+                    <option value="Salary: High to Low">Salary: High to Low</option>
+                  </select>
+                </li>
+                <li>
+                  <div (click)="toggleFilterOptions = !toggleFilterOptions">
+                    <i class="fa fa-filter"></i>
+                    <span> FILTER</span>
+                  </div>
+                </li>
+
+              </ul>
+            </div>
           </div>
           <div class="open in" id="filters" [hidden]="toggleFilterOptions">
             <div class="row">

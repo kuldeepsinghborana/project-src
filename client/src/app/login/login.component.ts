@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
     this.loginService.login(data).subscribe(res => {
       console.log('res', res);
       localStorage.setItem('loginInfo', res.token);
-      this.router.navigateByUrl('/dashboard');
+      this.router.navigateByUrl('/employer');
       return this.toasterService.pop('success', 'Success', 'You are Successfully Logged in');
     }, (err) => {
       console.log('err', err);

@@ -8,15 +8,8 @@ import { SearchComponent } from './search/search.component';
 import { LoginComponent } from './login/login.component';
 import { ContactComponent } from './contact/contact.component';
 import { AboutComponent } from './about/about.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
 import { CreatejobComponent } from './createjob/createjob.component';
-import { JoboverviewComponent } from './joboverview/joboverview.component';
-import { JobmanagementComponent } from './jobmanagement/jobmanagement.component';
-import { EmployeemanagementComponent } from './employeemanagement/employeemanagement.component';
-import { PurchasecarrotsComponent } from './purchasecarrots/purchasecarrots.component';
-import { FarmcarrotsComponent } from './farmcarrots/farmcarrots.component';
 import { JobComponent } from './job/job.component';
-
 
 export const routes: Routes = [
   { path: '', redirectTo: '/homepage/search', pathMatch: 'full' },
@@ -33,21 +26,15 @@ export const routes: Routes = [
       { path: 'job/:id', component: JobComponent, pathMatch:'full' }      
     ]
   },
-  {
-    path: 'dashboard', canActivate: [AuthGuard], component: DashboardComponent,
-    children: [
-      { path: '', redirectTo: 'overview', pathMatch: 'full' },
-      { path: 'overview', component: JoboverviewComponent },
-      { path: 'jobmanagement', component: JobmanagementComponent },
-      { path: 'employeemanagement', component: EmployeemanagementComponent },
-      { path: 'purchasecarrots', component: PurchasecarrotsComponent },
-      { path: 'farmcarrot', component: FarmcarrotsComponent }
-    ]
-  }
+ {
+    path: 'employer',
+    loadChildren: './employer/employer.module#EmployerModule',
+ }
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
+
 })
 export class AppRoutingModule { }

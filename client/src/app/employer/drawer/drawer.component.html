@@ -1,0 +1,66 @@
+<div class="overlay" [@showOverlay]="showOverlay">
+
+</div>
+
+<div class="">
+  <div class="row">
+
+    <div class="col-md-12">
+      <!-- <h2 class="text-center span6 heading">Navigation drawer using angular 2 animation</h2> -->
+      <header>
+        <div class="nav">
+          <div class="openDrawer" (click)="navigationDrawer()">
+            <span class="glyphicon glyphicon-menu-hamburger"></span>
+          </div>
+          <div class="collapse navbar-collapse pad10">
+            <ul class="nav navbar-nav">
+               <li>
+                    <a style="margin-top: 0px;">
+                        <img class="pull-left" height="45" length="45" src="/assets/img/logo.png">
+                        <div class="pull-left left10">
+                            <strong>Jobbunny</strong>
+                            <p>Recruiting Assistant</p>
+                        </div>
+                    </a>
+                </li>
+                <li class="left20">
+                    <a>
+                        <span class="red-icon">Post Job</span>
+                    </a>
+                </li>
+                <li class="left20" role="presentation">
+                    <a>FAQ</a>
+                </li>
+                <li class="left20" role="presentation">
+                    <a>Contact Us</a>
+                </li>
+                <li>
+                    <a class="text-danger">
+                        <i class="fa fa-power-off"></i>
+                        <span> Log out</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        </div>
+      </header>
+    </div>
+  </div>
+  <br/>
+  <div class="resource-provider">Find more cool stuff at
+    <a href="http://www.codershood.info/">www.codershood.info</a>
+  </div>
+</div>
+
+<div class="navigation" [@navigation]="navigation">
+  <div class="close-nav" (click)="navigationDrawer()">
+    <span class="glyphicon glyphicon-menu-left"></span>
+  </div>
+  <ul>
+    <li>Home</li>
+    <li>Posts</li>
+    <li>Ideas</li>
+    <li>Contacts</li>
+    <li>About</li>
+  </ul>
+</div>

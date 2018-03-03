@@ -18,6 +18,7 @@ export class SearchComponent implements OnInit {
   public filterCount: number = 0;
   public toggleFilterOptions: boolean = false;
   public moment :any;
+  public sortOption : string = '';
   constructor(private commonServiceService: CommonServiceService, private Router: Router) {
     this.router = Router;
     this.moment = moment;
@@ -63,7 +64,7 @@ export class SearchComponent implements OnInit {
   private applyFilter() {
     var self = this;
     if (Object.keys(this.filter).length === 0) {
-      self.jobs = self.jobsList;
+      self.jobs = Object.assign([], this.jobsList);
       return;
     }
     this.jobs = this.jobsList.filter(function (job) {
@@ -78,6 +79,20 @@ export class SearchComponent implements OnInit {
   clearFilter() {
     this.filter = {};
     this.filterCount = 0;
-    this.jobs = this.jobsList;
+    this.jobs = Object.assign([], this.jobsList);
+  }
+  sort(option){
+    let order = 0;
+    if(option === 'Salary: Low to High'){
+      order = 1;
+    } else if(option === 'Salary: High to Low'){
+      order = -1;
+    }
+    if(order === 0){
+      return this.applyFilter();
+    }
+    this.jobs.sort((a,b)=>{
+      return order*(a['salary'] - b['salary']);
+    })
   }
 }

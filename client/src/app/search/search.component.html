@@ -6,11 +6,18 @@
   <div class="container-fluid" [hidden]="hideSearch">
     <div class="hero">
       <h1 class="strong"> Hop Hop do you need a job?</h1>
-      <h3 class="normal">Meet the ultimate job search assistant. No signup required !</h3><br><br><br>
-      <form class="form-inline" action="/search" accept-charset="UTF-8" method="post"><input class="form-control right10" id="search-field" type="text" size="50" name="query" placeholder="Search here"
-          autofocus="" [(ngModel)]="query"><input class="btn btn-md" id="search-button" type="submit" name="commit" value="Search"
-          data-disable-with="Search" (click)="search()"></form>
-      <img class="top20" src="./assets/img/Jobbunny.png" style="height:100%;width:200px;" /></div>
+      <h3 class="normal">Meet the ultimate job search assistant. No signup required !</h3>
+      <br>
+      <br>
+      <br>
+      <form class="form-inline" action="/search" accept-charset="UTF-8" method="post">
+        <input class="form-control right10" id="search-field" type="text" size="50" name="query" placeholder="Search here"
+          autofocus="" [(ngModel)]="query">
+        <input class="btn btn-md" id="search-button" type="submit" name="commit" value="Search" data-disable-with="Search"
+          (click)="search()">
+      </form>
+      <img class="top20" src="./assets/img/Jobbunny.png" style="height:100%;width:200px;" />
+    </div>
   </div>
 </div>
 
@@ -22,27 +29,50 @@
           <p class="large strong">Job Search</p>
         </div>
         <div class="col-md-10">
-          <form class="form-inline" accept-charset="UTF-8"><input class="form-control" type="text" name="query" placeholder="Search" [(ngModel)]="query"><button class="form-control btn-orange"
-              (click)="search()">Search</button></form>
+          <form class="form-inline" accept-charset="UTF-8">
+            <input class="form-control" type="text" name="query" placeholder="Search" [(ngModel)]="query">
+            <button class="form-control btn-orange" (click)="search()">Search</button>
+          </form>
         </div>
         <div class="row">
           <div class="col-md-10">
-            <p class="medium strong">{{jobs ? jobs.length : 0}} Matches for " {{query}} {{filter['jobType'] ? ', '+ filter['jobType'] : ''}} {{filter['jobIndustry'] ? ', '+ filter['jobIndustry'] : ''}} {{filter['workRegion'] ? ', '+ filter['workRegion'] : ''}} {{filter['workPeriod'] ? ', '+ filter['workPeriod'] : ''}}"</p><br></div>
+            <p class="medium strong">{{jobs ? jobs.length : 0}} Matches for " {{query}}{{filter['jobType'] ? ', '+ filter['jobType'] : ''}}{{filter['jobIndustry']
+              ? ', '+ filter['jobIndustry'] : ''}}{{filter['workRegion'] ? ', '+ filter['workRegion'] : ''}}{{filter['workPeriod']
+              ? ', '+ filter['workPeriod'] : ''}}"</p>
+            <br>
+          </div>
           <div class="col-md-2">
             <a class="dropdown-toggle">
-              <div class="pull-right" (click)="toggleFilterOptions = !toggleFilterOptions"><i class="fa fa-filter"></i><span> FILTER</span></div>
-              <div [hidden]="filterCount === 0" (click)="clearFilter()"><span>Clear Filters <i class="fa fa-times"></i></span></div>
+              <div>
+                <span>Sort by&nbsp;</span>
+                <select [(ngModel)]="sortOption" (change)="sort(sortOption)">
+                  <option selected value=""></option>
+                  <option value="Salary: Low to High">Salary: Low to High</option>
+                  <option value="Salary: High to Low">Salary: High to Low</option>
+                </select>
+              </div>
+              <div [hidden]="filterCount === 0" (click)="clearFilter()">
+                <span>Clear Filters
+                  <i class="fa fa-times"></i>
+                </span>
+              </div>
+              <div class="pull-right" (click)="toggleFilterOptions = !toggleFilterOptions">
+                <i class="fa fa-filter"></i>
+                <span> FILTER</span>
+              </div>
             </a>
           </div>
           <div class="open in" id="filters" [hidden]="toggleFilterOptions">
             <div class="row">
-              <div class="col-md-2 clearfix filterType"><strong>JOB TYPE</strong>
+              <div class="col-md-2 clearfix filterType">
+                <strong>JOB TYPE</strong>
                 <ul class="list-unstyled">
                   <li class="top10" [ngClass]="{'active': filter['jobType'] && filter['jobType'] === 'Part-time'}" (click)="toggleFilter('jobType','Part-time')">Part-time</li>
                   <li class="top10" [ngClass]="{'active': filter['jobType'] && filter['jobType'] === 'Full-time'}" (click)="toggleFilter('jobType','Full-time')">Full-time</li>
                 </ul>
               </div>
-              <div class="col-md-2" [hidden]="!filter['jobType']"><strong>INDUSTRY</strong>
+              <div class="col-md-2" [hidden]="!filter['jobType']">
+                <strong>INDUSTRY</strong>
                 <ul class="list-unstyled" [hidden]="filter['jobType'] !== 'Part-time'">
                   <li class="top10" [ngClass]="{'active': filter['jobIndustry'] && filter['jobIndustry'] === 'Events'}" (click)="toggleFilter('jobIndustry','Events')">Events</li>
                   <li class="top10" [ngClass]="{'active': filter['jobIndustry'] && filter['jobIndustry'] === 'Sales'}" (click)="toggleFilter('jobIndustry','Sales')">Sales</li>
@@ -62,7 +92,8 @@
                   <li class="top10" [ngClass]="{'active': filter['jobIndustry'] && filter['jobIndustry'] === 'Service / Logistics'}" (click)="toggleFilter('jobIndustry','Service / Logistics')">Service / Logistics</li>
                 </ul>
               </div>
-              <div class="col-md-2"><strong>LOCATION</strong>
+              <div class="col-md-2">
+                <strong>LOCATION</strong>
                 <ul class="list-unstyled">
                   <li class="top10" [ngClass]="{'active': filter['workRegion'] && filter['workRegion'] === 'North'}" (click)="toggleFilter('workRegion','North')">North</li>
                   <li class="top10" [ngClass]="{'active': filter['workRegion'] && filter['workRegion'] === 'West'}" (click)="toggleFilter('workRegion','West')">West</li>
@@ -71,7 +102,8 @@
                   <li class="top10" [ngClass]="{'active': filter['workRegion'] && filter['workRegion'] === 'Central Business District'}" (click)="toggleFilter('workRegion','Central Business District')">Central Business District</li>
                 </ul>
               </div>
-              <div class="col-md-2"><strong>WORKING HOURS</strong>
+              <div class="col-md-2">
+                <strong>WORKING HOURS</strong>
                 <ul class="list-unstyled">
                   <li class="top10" [ngClass]="{'active': filter['workPeriod'] && filter['workPeriod'] === 'Weekdays'}" (click)="toggleFilter('workPeriod','Weekdays')">Weekdays</li>
                   <li class="top10" [ngClass]="{'active': filter['workPeriod'] && filter['workPeriod'] === 'Weekends'}" (click)="toggleFilter('workPeriod','Weekends')">Weekends</li>
@@ -90,19 +122,35 @@
           <!-- <div class="pad10" > -->
           <div class="row">
             <a>
-              <div class="col-md-1"><img height="75" length="75" src="/assets/img/logo.png"></div>
+              <div class="col-md-1">
+                <img height="75" length="75" src="/assets/img/logo.png">
+              </div>
               <div class="col-md-9">
                 <div class="large strong capitalize black">{{job.jobTitle}}</div>
-                <p><span>{{job.companyName}}</span><span> posted by {{job.employerName}}</span></p>
+                <p>
+                  <span>{{job.companyName}}</span>
+                  <span> posted by {{job.employerName}}</span>
+                </p>
                 <p>{{job['description']}}</p>
                 <p>${{job['salary']}} {{job['salaryType']}}</p>
-                <p><i class="fa fa-clock-o"></i><span> {{moment(job['createdAt']).fromNow()}}</span></p>
+                <p>
+                  <i class="fa fa-clock-o"></i>
+                  <span> {{moment(job['createdAt']).fromNow()}}</span>
+                </p>
               </div>
             </a>
             <div class="col-md-2">
               <div class="align-center">
                 <a>
-                  <div class="medium"><i class="fa fa-map-marker"></i><br><span>{{job['location']}}</span></div><br></a><a class="btn btn-blue btn-warning">Apply in Messenger</a></div>
+                  <div class="medium">
+                    <i class="fa fa-map-marker"></i>
+                    <br>
+                    <span>{{job['workRegion']}}, {{job['location']}}</span>
+                  </div>
+                  <br>
+                </a>
+                <a class="btn btn-blue btn-warning">Apply in Messenger</a>
+              </div>
             </div>
           </div>
         </div>

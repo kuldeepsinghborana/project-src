@@ -29,3 +29,6 @@
 .filterType{
     margin-left:35px;
 }
+.dropdown-toggle{
+    display : inline;
+}

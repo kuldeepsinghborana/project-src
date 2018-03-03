@@ -94,15 +94,15 @@
               <div class="col-md-9">
                 <div class="large strong capitalize black">{{job.jobTitle}}</div>
                 <p><span>{{job.companyName}}</span><span> posted by {{job.employerName}}</span></p>
-                <p>test</p>
-                <p></p>
-                <p><i class="fa fa-clock-o"></i><span> posted 23 days ago</span></p>
+                <p>{{job['description']}}</p>
+                <p>${{job['salary']}} {{job['salaryType']}}</p>
+                <p><i class="fa fa-clock-o"></i><span> {{moment(job['createdAt']).fromNow()}}</span></p>
               </div>
             </a>
             <div class="col-md-2">
               <div class="align-center">
                 <a>
-                  <div class="medium"><i class="fa fa-map-marker"></i><br><span>West, Test 1</span></div><br></a><a class="btn btn-blue btn-warning">Apply in Messenger</a></div>
+                  <div class="medium"><i class="fa fa-map-marker"></i><br><span>{{job['location']}}</span></div><br></a><a class="btn btn-blue btn-warning">Apply in Messenger</a></div>
             </div>
           </div>
         </div>

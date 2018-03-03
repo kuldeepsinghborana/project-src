@@ -12,7 +12,7 @@
           <div class="col-md-10">
             <p><i class="fa fa-map-marker"></i><span> {{job['workRegion']}}, </span><span>{{job['location']}}</span></p>
             <p><i class="fa fa-clock-o"></i><span> {{job['jobType']}}, </span><span>{{job['startTime']}}-{{job['endTime']}}, </span><span>Weekdays</span></p>
-            <p><i class="fa fa-calendar"></i><span> Starts on {{job['startDate'] | date : 'MM/dd/yyyy'}}, </span><span>Ends on {{job['endDate'] | date : 'MM/dd/yyyy'}}</span></p><br>
+            <p><i class="fa fa-calendar"></i><span> Starts on {{ moment(job['startDate']).format('MM/DD/YYYY') }}, </span><span>Ends on {{moment(job['endDate']).format('MM/DD/YYYY')}}</span></p><br>
             <h4>Job Description</h4>
             <p>{{job['description']}}</p><br>
             <h4>Duties and Responsibilities</h4>
@@ -29,7 +29,7 @@
             </div>
           </div>
           <div class="col-md-2">
-            <h4 class="green-font">${{job['salary']}}/{{job['salaryType']}}</h4>
+            <h4 class="green-font">${{job['salary']}} {{job['salaryType']}}</h4>
           </div>
         </div>
         <div class="col-md-3">

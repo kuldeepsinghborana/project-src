@@ -34,7 +34,12 @@ var userSchema = new mongoose.Schema({
     total: { type: Number, default: 100 },
     available: Number,
     pending: Number
-  }
+  },
+  isVerified:{
+    type:Boolean,
+    default:false
+  },
+  token:String
 },
 { timestamps: true });
 

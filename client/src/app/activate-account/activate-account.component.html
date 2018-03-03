@@ -1,0 +1,55 @@
+<div *ngIf="verified" class="app flex-row align-items-center">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card-group">
+          <div class="card p-4">
+            <div class="card-body text-center">
+              <!-- <h1>Smart Donate</h1> -->
+              <img class="verify" src="assets/img/logo.png">
+              <div>
+                <i class="fa fa-check-circle" style="font-size:55px; color:rgb(2, 73, 2);    margin: 10px 0;"></i>
+              </div>
+              <h1>Your Account is successfully verified</h1>
+              <div class="input-group mb-3">
+              </div>
+              <div class="input-group mb-4">
+              </div>
+              <div class="row">
+                <div class="col-6">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="invalidToken" class="app flex-row align-items-center">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-12">
+        <div class="card-group">
+          <div class="card p-4">
+            <div class="card-body text-center">
+              <img class="verify" src="assets/img/logo.png">
+              <div>
+                <i class="fa fa-times-circle" style="font-size:55px; color:rgb(243, 0, 0);    margin: 10px 0;"></i>
+              </div>
+              <h1 class="invalid">Invalid token please try again</h1>
+              <div class="input-group mb-3">
+              </div>
+              <div class="input-group mb-4">
+              </div>
+              <div class="row">
+                <div class="col-6">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

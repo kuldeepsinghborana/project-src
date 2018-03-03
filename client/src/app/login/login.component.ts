@@ -11,7 +11,7 @@ import { ToasterModule, ToasterContainerComponent, ToasterService } from './../.
 export class LoginComponent implements OnInit {
   public username = '';
   public password = '';
-  constructor(public toasterService: ToasterService, private router: Router,private loginService: LoginService) { }
+  constructor(public toasterService: ToasterService, private router: Router, private loginService: LoginService) { }
 
   ngOnInit() {
   }
@@ -31,8 +31,13 @@ export class LoginComponent implements OnInit {
     }
     this.loginService.login(data).subscribe(res => {
       console.log('res', res);
-      localStorage.setItem('loginInfo', res.token);
-      this.router.navigateByUrl('/dashboard');
+      if (res.userType === 'admin') {
+        localStorage.setItem('adminLoginInfo', res.token);
+        this.router.navigateByUrl('/');
+      } else {
+        localStorage.setItem('loginInfo', res.token);
+        this.router.navigateByUrl('/dashboard');
+      }
       return this.toasterService.pop('success', 'Success', 'You are Successfully Logged in');
     }, (err) => {
       console.log('err', err);

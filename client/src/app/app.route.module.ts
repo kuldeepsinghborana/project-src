@@ -16,6 +16,7 @@ import { EmployeemanagementComponent } from './employeemanagement/employeemanage
 import { PurchasecarrotsComponent } from './purchasecarrots/purchasecarrots.component';
 import { FarmcarrotsComponent } from './farmcarrots/farmcarrots.component';
 import { JobComponent } from './job/job.component';
+import { ActivateAccountComponent } from './activate-account/activate-account.component';
 
 
 export const routes: Routes = [
@@ -30,7 +31,7 @@ export const routes: Routes = [
       { path: 'register', component: RegisterComponent, pathMatch: 'full' },
       { path: 'about', component: AboutComponent, pathMatch: 'full' },
       { path: 'postjob', component: CreatejobComponent, pathMatch: 'full' },
-      { path: 'job/:id', component: JobComponent, pathMatch:'full' }      
+      { path: 'job/:id', component: JobComponent, pathMatch: 'full' }
     ]
   },
   {
@@ -43,6 +44,8 @@ export const routes: Routes = [
       { path: 'purchasecarrots', component: PurchasecarrotsComponent },
       { path: 'farmcarrot', component: FarmcarrotsComponent }
     ]
+  }, {
+    path: 'activateaccount/:token', component: ActivateAccountComponent
   }
 ];
 

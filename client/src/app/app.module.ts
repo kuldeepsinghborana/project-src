@@ -10,6 +10,7 @@ import { BrowserXhr, HttpModule } from '@angular/http';
 import { CommonServiceService } from './common/common-service.service';
 import { RegisterServiceService } from './register/register-service.service';
 import { AuthGuard } from './common/auth-gaurd.service';
+import { AuthGuardAdmin } from './common/auth-gaurd-admin.service';
 import { AppRoutingModule } from './app.route.module';
 import { HomeComponent } from './home/home.component';
 import { SearchComponent } from './search/search.component';
@@ -27,8 +28,10 @@ import { PurchasecarrotsComponent } from './purchasecarrots/purchasecarrots.comp
 import { FarmcarrotsComponent } from './farmcarrots/farmcarrots.component';
 import { CreatejobService } from './createjob/createjob.service';
 import { JobComponent } from './job/job.component';
-import { AmazingTimePickerModule } from 'amazing-time-picker'; // this line you need
-
+import { AmazingTimePickerModule } from 'amazing-time-picker';
+import { ModalModule } from "ngx-modal";
+import { ActivateAccountComponent } from './activate-account/activate-account.component';
+import { ActivateAccountService } from './activate-account/activate-account.service';
 const appRoutes: Routes = [];
 @NgModule({
   declarations: [
@@ -44,9 +47,11 @@ const appRoutes: Routes = [];
     JoboverviewComponent,
     JobmanagementComponent,
     EmployeemanagementComponent,
-  PurchasecarrotsComponent,
+    PurchasecarrotsComponent,
     FarmcarrotsComponent,
-    JobComponent
+    JobComponent,
+    ActivateAccountComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -58,7 +63,9 @@ const appRoutes: Routes = [];
     HttpModule,
     AppRoutingModule,
     FormsModule,
-    AmazingTimePickerModule
+    AmazingTimePickerModule,
+    ModalModule
+
     // HttpClientModule,
     // RouterModule.forRoot(
     //   appRoutes,
@@ -70,7 +77,9 @@ const appRoutes: Routes = [];
     RegisterServiceService,
     LoginService,
     AuthGuard,
-    CreatejobService
+    AuthGuardAdmin,
+    CreatejobService,
+    ActivateAccountService
   ],
   bootstrap: [AppComponent]
 })

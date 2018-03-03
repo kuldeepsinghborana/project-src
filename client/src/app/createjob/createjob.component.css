@@ -1,0 +1,10 @@
+.control-label.required:after { 
+    color: #d00;
+    content: "*";
+    position: absolute;
+    margin-left: 15px;
+    top:7px;
+  }
+  .dirty.touched{
+    border:1px solid red
+  }

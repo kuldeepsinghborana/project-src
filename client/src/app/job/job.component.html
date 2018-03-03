@@ -10,9 +10,9 @@
           <h1>{{job['jobTitle']}}</h1>
           <p>{{job['companyName']}}</p>
           <div class="col-md-10">
-            <p><i class="fa fa-map-marker"></i><span>{{job['workRegion']}}, </span><span>{{job['location']}}</span></p>
-            <p><i class="fa fa-clock-o"></i><span>{{job['jobType']}}, </span><span>{{job['startTime']}}-{{job['endTime']}}, </span><span>Weekdays</span></p>
-            <p><i class="fa fa-calendar"></i><span>Starts on {{job['startDate'] | date : 'MM/dd/yyyy'}}, </span><span>Ends on {{job['endDate'] | date : 'MM/dd/yyyy'}}</span></p><br>
+            <p><i class="fa fa-map-marker"></i><span> {{job['workRegion']}}, </span><span>{{job['location']}}</span></p>
+            <p><i class="fa fa-clock-o"></i><span> {{job['jobType']}}, </span><span>{{job['startTime']}}-{{job['endTime']}}, </span><span>Weekdays</span></p>
+            <p><i class="fa fa-calendar"></i><span> Starts on {{job['startDate'] | date : 'MM/dd/yyyy'}}, </span><span>Ends on {{job['endDate'] | date : 'MM/dd/yyyy'}}</span></p><br>
             <h4>Job Description</h4>
             <p>{{job['description']}}</p><br>
             <h4>Duties and Responsibilities</h4>
@@ -39,7 +39,7 @@
           <h4 class="align-center">How to Apply?</h4>Talk to our jobbunny chatbot to apply directly, no account creation needed! Simply enter the
           job id below when asked in the bot.<br><br>
           <h5 class="align-center">Job ID</h5>
-          <p class="align-center">{{job['_id']}}</p><a class="btn btn-block btn-blue" href="//m.me/jobbunny?ref=applyToJob" target="_blank"> Apply on Messenger</a>
+          <p class="align-center">{{job['_id']}}</p><a class="btn btn-block btn-blue" href="//m.me/jobbunny?ref=applyToJob,{{job['_id']}}" target="_blank">Apply on Messenger</a>
           <p></p>
         </div>
       </div>

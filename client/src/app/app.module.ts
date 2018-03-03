@@ -27,6 +27,7 @@ import { PurchasecarrotsComponent } from './purchasecarrots/purchasecarrots.comp
 import { FarmcarrotsComponent } from './farmcarrots/farmcarrots.component';
 import { CreatejobService } from './createjob/createjob.service';
 import { JobComponent } from './job/job.component';
+import { AmazingTimePickerModule } from 'amazing-time-picker'; // this line you need
 
 const appRoutes: Routes = [];
 @NgModule({
@@ -43,7 +44,7 @@ const appRoutes: Routes = [];
     JoboverviewComponent,
     JobmanagementComponent,
     EmployeemanagementComponent,
-    PurchasecarrotsComponent,
+  PurchasecarrotsComponent,
     FarmcarrotsComponent,
     JobComponent
   ],
@@ -56,7 +57,8 @@ const appRoutes: Routes = [];
     NgProgressModule,
     HttpModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    AmazingTimePickerModule
     // HttpClientModule,
     // RouterModule.forRoot(
     //   appRoutes,

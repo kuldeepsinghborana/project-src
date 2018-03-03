@@ -6,6 +6,26 @@
 .middle-container a{
     color:black;
 }
+.list-unstyled li.top10{
+    cursor: pointer;
+}
 .job-item{
     background-color: #ffffff;
+}
+.pad10{
+    cursor: pointer;
+}
+.clearfix{
+    clear:both;
+}
+.active{
+    padding: 9px;
+    background: #ffc500;
+    color: #fff;
+}
+.top10{
+    margin-bottom: 20px; 
+}
+.filterType{
+    margin-left:35px;
 }

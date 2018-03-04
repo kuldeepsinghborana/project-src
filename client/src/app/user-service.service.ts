@@ -9,8 +9,8 @@ export class UserService {
 
   }
 
-  public getUserSettings(userType : string) {
-    return this.commonServiceService.get('/'+userType + '/settings')
+  public getDashboardDetail(userType : string) {
+    return this.commonServiceService.get('/'+userType )
       .map(res => res.json())
       .catch(this.handleError);
   }

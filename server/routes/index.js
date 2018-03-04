@@ -210,7 +210,7 @@ router
 
 // employer routes
 router
-  .route('/employer')
+  .route('/api/employer')
   .get(auth.requiresEmployerLogin, ctrlEmployer.dashboard);
 router
   .route('/api/employer/settings')

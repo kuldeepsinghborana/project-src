@@ -22,20 +22,17 @@ module.exports.dashboard = function (req, res, next) {
       console.log(err);
     }
     // console.log(countJobs(jobs, 'open'))
-    res.locals.openJobsCount = countJobs(jobs, 'open');
-    res.locals.urgentJobsCount = countJobs(jobs, 'urgent');
-    res.locals.completedJobsCount = countJobs(jobs, 'completed');
+    let openJobsCount = countJobs(jobs, 'open');
+    let urgentJobsCount = countJobs(jobs, 'urgent');
+    let completedJobsCount = countJobs(jobs, 'completed');
     Match.find({ employerId: user_id }, function (err, matches) {
       if (err) {
         console.log(err);
       }
-      res.locals.invitedWorkersCount = countMatches(matches, 'invited');
-      res.locals.acceptedWorkersCount = countMatches(matches, 'accepted');
-      res.locals.shortlistedWorkersCount = countMatches(matches, 'shortlisted');;
-      res.locals.hiredWorkersCount = countEmployedMatches(matches);
-      // set invitationsCount on stats
-      stats['invitationsCount'] = countMatches(matches, 'invited');
-
+      let invitedWorkersCount = countMatches(matches, 'invited');
+      let acceptedWorkersCount = countMatches(matches, 'accepted');
+      let shortlistedWorkersCount = countMatches(matches, 'shortlisted');;
+      let hiredWorkersCount = countEmployedMatches(matches);
       // get all notifications
       Notification.find({ notifieeId: user_id, seen: false }, function (err, notifications) {
         if (err) {
@@ -43,18 +40,21 @@ module.exports.dashboard = function (req, res, next) {
           res.render('error');
         }
         console.log('Notifications found');
-        res.locals.notifications = notifications;
-        stats['notificationsCount'] = notifications.length;
+        let notificationCount = notifications.length;
         // set stats as session variable
         req.session.stats = stats;
         res.json({
+          openJobsCount : openJobsCount,
+          urgentJobsCount : urgentJobsCount,
+          completedJobsCount : completedJobsCount,
           notification: notifications,
-          data: res.locals,
-        });
-        res.render('employer/dashboard', {
-          title: 'Jobbunny | Employer',
-          error: req.flash('error'),
-          message: req.flash('message')
+          notificationCount : notificationCount,
+          jobCount: {
+          invitedWorkersCount : invitedWorkersCount,
+          hiredWorkersCount : hiredWorkersCount,
+          acceptedWorkersCount : acceptedWorkersCount,
+          shortlistedWorkersCount : shortlistedWorkersCount,
+        },
         });
       }).sort({ 'createdAt': -1 });
     });

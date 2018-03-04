@@ -232,8 +232,10 @@
               <input class="form-control" type="email" name="employerEmail" [(ngModel)]='post.employerEmail' #employerEmail="ngModel">
             </div>
           </div>
-          <button class="btn-lg btn-warning pull-right" [disabled]="!postJobForm.valid" (click)="myModal.open()">Post and See Available Employees</button>
-        </form>
+        <button class="btn-lg btn-warning pull-right" [disabled]="!postJobForm.valid" (click)="myModal.open()">Post and See Available Employees</button>
+        <!-- <button class="btn-lg btn-warning pull-right"  (click)="myModal.open()">Post and See Available Employees</button> -->
+      
+      </form>
         <br>
         <br>
       </div>
@@ -270,19 +272,24 @@
     <form (ngSubmit)="openModal(myModal)" #verify="ngForm">
       <p [hidden]="!hidePassword">
       <label>Please Enter Email:</label>
-      <input  id="email" name="email" [(ngModel)]="user.email" type="text" required>
+      <input type="email" id="email" name="email" [(ngModel)]="user.email" required>
       </p>
       <p [hidden]="hidePassword">
           <label>Email:{{user.email}}</label>
       <button class="btn btn-primary" *ngIf="showSubmit" (click)="hidePassword = !hidePassword" type="button">Change</button>  
          </p>
     
-      <p [hidden]="hidePassword">
+      <p *ngIf="showPassword">
       <label>Please Enter password:</label>
       <input id="password" name="password" [(ngModel)]="user.password" type="password">
       </p>
-      <button class="btn btn-primary" *ngIf="hidePassword" (click)="emailVerify()" [disabled]="!verify.valid" type="button">Next</button>
-      <button class="btn btn-primary" *ngIf="!hidePassword" type="submit">Submit</button>  
+      <p [hidden]="hideConfirmPassword">
+          <label>Please Enter Confirm password:</label>
+          <input id="password" name="confirm password" [(ngModel)]="user.Confirmpassword" type="password">
+          </p>
+      <button class="btn btn-primary" *ngIf="next" (click)="emailVerify()" [disabled]="!verify.valid" type="button">Next</button>
+      <button class="btn btn-primary" *ngIf="!hidePassword" type="submit">Submit</button>
+      <button class="btn btn-primary" *ngIf="showSignup" type="button" (click)="signUp()">Signup</button>  
     </form>
   </modal-content>
   </modal>

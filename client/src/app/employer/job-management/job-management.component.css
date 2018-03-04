@@ -1,0 +1,17 @@
+.row .col-md-3:first-child{
+    clear: both;
+}
+
+.row {
+    margin-right: -15px;
+    margin-left: -15px;
+}
+.active{
+    padding: 7% 7%;
+    background: #ffc500;
+    color: #fff;
+    word-break:break-word;
+}
+.active .gray {
+    color:#fff;
+}

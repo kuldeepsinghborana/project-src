@@ -216,8 +216,8 @@ router
   .route('/api/employer/settings')
   .get(auth.requiresEmployerLogin, ctrlEmployer.settings);
 router
-  .route('/employer/jobs')
-  .get(auth.requiresEmployerLogin, ctrlEmployer.jobsList);
+  .route('/api/employer/jobs')
+  .get(ctrlEmployer.jobsList);
 router
   .route('/employer/jobs/new')
   .get(auth.requiresEmployerLogin, ctrlEmployer.newJob);

@@ -8,7 +8,7 @@
         <div class="col-md-3 col-xs-6">
           <a >
             <div class="panel dash-card-light-green">
-              <h3 class="strong">2</h3>
+              <h3 class="strong">{{jobCount["openJobsCount"]}}</h3>
               <span>Open Jobs</span>
             </div>
           </a>
@@ -16,7 +16,7 @@
         <div class="col-md-3 col-xs-6">
           <a >
             <div class="panel dash-card-red">
-              <h3 class="strong">0</h3>
+              <h3 class="strong">{{jobCount["urgentJobsCount"]}}</h3>
               <span>Urgent Jobs</span>
             </div>
           </a>
@@ -24,7 +24,7 @@
         <div class="col-md-3 col-xs-6">
           <a >
             <div class="panel dash-card-gray">
-              <h3 class="strong">1</h3>
+              <h3 class="strong">{{jobCount["completedJobsCount"]}}</h3>
               <span>Completed Jobs</span>
             </div>
           </a>
@@ -47,7 +47,7 @@
         <div class="col-md-3 col-xs-6">
           <a >
             <div class="dash-card-white">
-              <h3 class="strong">1</h3>
+              <h3 class="strong">{{jobCount["invitedWorkersCount"]}}</h3>
               <div class="medium">Invitations</div>
               <small class="strong">sent</small>
             </div>
@@ -56,7 +56,7 @@
         <div class="col-md-3 col-xs-6">
           <a >
             <div class="dash-card-white">
-              <h3 class="strong">0</h3>
+              <h3 class="strong">1</h3>
               <div class="medium">Applications</div>
               <small class="strong">to be accepted</small>
             </div>
@@ -65,7 +65,7 @@
         <div class="col-md-3 col-xs-6">
           <a >
             <div class="dash-card-white">
-              <h3 class="strong">0</h3>
+              <h3 class="strong">{{jobCount["shortlistedWorkersCount"]}}</h3>
               <div class="medium">Shortlisted</div>
               <small class="strong">claim 5 carrots back when you update your actions</small>
             </div>
@@ -74,7 +74,7 @@
         <div class="col-md-3 col-xs-6">
           <a >
             <div class="dash-card-white">
-              <h3 class="strong">0</h3>
+              <h3 class="strong">{{jobCount["acceptedWorkersCount"]}}</h3>
               <div class="medium">Employed</div>
               <small class="strong">successfully</small>
             </div>

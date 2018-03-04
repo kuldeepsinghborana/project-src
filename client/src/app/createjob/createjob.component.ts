@@ -4,9 +4,8 @@ import { ToasterModule, ToasterContainerComponent, ToasterService } from './../.
 import { AmazingTimePickerService } from 'amazing-time-picker'; // this line you need
 import { ModalModule, Modal } from "ngx-modal";
 import { LoginService } from '../login/login.service';
-
-
-
+import { RegisterServiceService } from '../register/register-service.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-createjob',
@@ -18,11 +17,14 @@ export class CreatejobComponent implements OnInit {
   public startTime = '18:33';
   public endTime = '18:33';
   detailedJobPost: boolean = false;
+  hideConfirmPassword: boolean = true;
+  showSignup: boolean = false;
+  showPassword: boolean = false;
   coverImage: any;
   hidePassword: boolean = true;
   showSubmit: boolean = false;
-
-  email: any;
+  next: boolean = true;
+ email: any;
   user = {};
   post = {
     jobTitle: "",
@@ -57,7 +59,7 @@ export class CreatejobComponent implements OnInit {
 
 
   };
-  constructor(public createJobService: CreatejobService, public toasterService: ToasterService, public atp: AmazingTimePickerService, private loginService: LoginService) {
+  constructor(public createJobService: CreatejobService, public toasterService: ToasterService, public atp: AmazingTimePickerService, private loginService: LoginService, public registerServiceService: RegisterServiceService,public router:Router) {
     this.toasterService = toasterService;
   }
 
@@ -124,36 +126,54 @@ export class CreatejobComponent implements OnInit {
     let data = {
       email: emailId
     }
-    console.log("data",data)
     this.createJobService.isEmailExist(data).subscribe(res => {
       if (res.status == 200) {
-        console.log("i am here")
+        this.showPassword = true;
+        this.next = false;
         this.hidePassword = false;
         this.showSubmit = true;
       }
-      else if(res.status == 201){
+      else if (res.status == 201) {
+        this.showPassword = true;
+        this.showSignup = true;
+        this.hideConfirmPassword = false;
+        this.hidePassword = true;
+        this.next = false;
         return this.toasterService.pop('error', 'Error', res.message);
       }
     }, err => {
-      console.log("err",err)
+      console.log("err", err)
       return this.toasterService.pop('error', 'Error', err.message);
     });
   }
 
 
   openModal(myModal) {
-    console.log("this.emal", this.user["email"])
-    console.log("this.password", this.user["password"])
     if (this.user["email"] != undefined && this.user["password"] != undefined) {
       this.loginService.login(this.user).subscribe(res => {
         myModal.close();
         this.user = {};
-        return this.toasterService.pop('success', 'Success', 'You post is successfuly registered');
-        
+        this.toasterService.pop('success', 'Success', 'You post is successfuly registered');
+        this.router.navigate(["/employer/overview"]);
       }, (err) => {
         console.log('err', err);
         return this.toasterService.pop('error', 'Error', err.message);
       });
     }
+  }
+  signUp() {
+    if (this.user["email"] == '') {
+      return this.toasterService.pop('error', 'Error', "Email Can't be blank");
+    }
+    if (this.user['password'] != this.user['Confirmpassword']) {
+      return this.toasterService.pop('error', 'Error', "Password and confirm password must be same");
+    }
+    this.registerServiceService.register(this.user).subscribe(res => {
+      this.user = {};
+      this.toasterService.pop('success', 'Success', 'Registration Successfully done');
+      this.router.navigate(["/employer/overview"]);
+    }, err => {
+      return this.toasterService.pop('error', 'Error', err.message);
+    });
   }
 }

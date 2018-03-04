@@ -33,18 +33,18 @@
 }
 /*           Font Smoothing      */
 body,
-h1, .h1,
-h2, .h2,
-h3, .h3,
-h4, .h4,
-h5, .h5,
-h6, .h6,
+:host ::ng-deep h1, .h1,
+:host ::ng-deep h2, .h2,
+:host ::ng-deep h3, .h3,
+:host ::ng-deep h4, .h4,
+:host ::ng-deep h5, .h5,
+:host ::ng-deep h6, .h6,
 p,
 :host ::ng-deep .navbar,
 :host ::ng-deep .brand,
 :host ::ng-deep .btn-simple,
 :host ::ng-deep .alert,
-a,
+:host ::ng-deep a,
 :host ::ng-deep .td-name,
 td,
 button.close {
@@ -57,35 +57,35 @@ button.close {
   background-color: #fff;
 }
 
-h1, .h1, h2, .h2, h3, .h3, h4, .h4 {
+:host ::ng-deep h1, .h1, h2, .h2, h3, .h3, h4, .h4 {
   font-weight: 300;
   margin: 30px 0 15px;
 }
 
-h1, .h1 {
+:host ::ng-deep h1, .h1 {
   font-size: 52px;
 }
 
-h2, .h2 {
+:host ::ng-deep h2, .h2 {
   font-size: 36px;
 }
 
-h3, .h3 {
+:host ::ng-deep h3, .h3 {
   font-size: 28px;
   margin: 20px 0 10px;
 }
 
-h4, .h4 {
+:host ::ng-deep h4, .h4 {
   font-size: 22px;
   line-height: 30px;
 }
 
-h5, .h5 {
+:host ::ng-deep h5, .h5 {
   font-size: 16px;
   margin-bottom: 15px;
 }
 
-h6, .h6 {
+:host ::ng-deep h6, .h6 {
   font-size: 14px;
   font-weight: 600;
   text-transform: uppercase;
@@ -96,17 +96,17 @@ p {
   line-height: 1.5;
 }
 
-h1 small, h2 small, h3 small, h4 small, h5 small, h6 small, .h1 small, .h2 small, .h3 small, .h4 small, .h5 small, .h6 small, h1 .small, h2 .small, h3 .small, h4 .small, h5 .small, h6 .small, .h1 .small, .h2 .small, .h3 .small, .h4 .small, .h5 .small, .h6 .small {
+:host ::ng-deep h1 small, h2 small, h3 small, h4 small, h5 small, h6 small, .h1 small, .h2 small, .h3 small, .h4 small, .h5 small, .h6 small, h1 .small, h2 .small, h3 .small, h4 .small, h5 .small, h6 .small, .h1 .small, .h2 .small, .h3 .small, .h4 .small, .h5 .small, .h6 .small {
   color: #9A9A9A;
   font-weight: 300;
   line-height: 1.5;
 }
 
-h1 small, h2 small, h3 small, h1 .small, h2 .small, h3 .small {
+:host ::ng-deep h1 small, h2 small, h3 small, h1 .small, h2 .small, h3 .small {
   font-size: 60%;
 }
 
-h1 .subtitle {
+:host ::ng-deep h1 .subtitle {
   display: block;
   margin: 0 0 30px;
 }
@@ -352,15 +352,15 @@ body,
   position: relative;
 }
 
-a {
+:host ::ng-deep a {
   color: #1DC7EA;
 }
-a:hover, a:focus {
+:host ::ng-deep a:hover, a:focus {
   color: #42d0ed;
   text-decoration: none;
 }
 
-a:focus, a:active,
+:host ::ng-deep a:focus, a:active,
 button::-moz-focus-inner,
 input::-moz-focus-inner,
 input[type="reset"]::-moz-focus-inner,

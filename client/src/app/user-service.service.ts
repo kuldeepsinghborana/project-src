@@ -14,7 +14,12 @@ export class UserService {
       .map(res => res.json())
       .catch(this.handleError);
   }
-  
+  public getUserJobDetails() {
+    return this.commonServiceService.get('/employer/jobs' )
+      .map(res => res.json())
+      .catch(this.handleError);
+  }
+
   handleError(error: Response | any) {
     const body = JSON.parse(JSON.stringify(error)) || '';
     return Observable.throw(body);

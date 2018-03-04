@@ -1,0 +1,87 @@
+.middle-container{
+    background-color: #FCF7F7;
+    padding:20px 0px;
+    color:black;
+}
+.middle-container a{
+    color:black;
+}
+.list-unstyled li.top10{
+    cursor: pointer;
+}
+.job-item{
+    background-color: #ffffff;
+}
+.pad10{
+    cursor: pointer;
+}
+.clearfix{
+    clear:both;
+}
+.active{
+    padding: 9px;
+    background: #ffc500;
+    color: #fff;
+}
+.top10{
+    margin-bottom: 20px; 
+}
+.filterType{
+    margin-left:35px;
+}
+.dropdown-toggle{
+    display : inline;
+}
+.display-inline{
+    display :inline-block;
+}
+
+.right-nav{
+    list-style: none;
+}
+.right-nav > li{
+    float: left;
+    margin-left: 10px;
+}
+.filter-sort{
+    float: right;
+}
+
+$jb-light-yellow: #FDBF2D;
+$jb-dark-yellow: #FAAB31;
+$light-green: #2CAA1F;
+$dark-green: #257F19;
+$button-gray: #A5A5A5;
+$blue: #1ca4fc;
+$orange: #fb9047;
+$gray: #e3e3e3;
+.hero {
+    color:#ffffff;
+    text-align: center;
+    margin-bottom: 3em;
+  }
+  #search-button {
+    width: 150px;
+    height: 50px;
+    font-size: 1.2em;
+    background-color: #FD9C28;
+    color: #FFF7E5;
+  }
+  #search-field {
+    height: 50px;
+    border-color: #FFF7E5;
+    background-color: $jb-dark-yellow;
+  }
+  #search-field::placeholder {
+    font-size: 1.4em;
+    color: #FFF7E5;
+  }
+  .job-item {
+    padding: 20px;
+    margin-bottom: 10px;
+    border: 1px solid $gray;
+    a {
+      color: red;
+      &:hover { color: #196aae; }
+    }
+  }

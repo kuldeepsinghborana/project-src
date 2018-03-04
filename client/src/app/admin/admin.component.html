@@ -1,0 +1,106 @@
+<div class="wrapper">
+  <div class="sidebar" data-color="#303135">
+    <div class="sidebar-wrapper">
+      <div class="logo align-center">
+        <img height="75" length="75" src="assets/img/logo.png">
+        <div class="top10 strong medium">Administrator</div>
+        <div class="medium"></div>
+        <a >
+          <i class="small">Edit Account Settings</i>
+        </a>
+      </div>
+      <ul class="nav list-group">
+        <li class="left20">OPERATIONS</li>
+        <li>
+          <a  routerLink='/admin/employer-management'>
+            <i class="fa fa-building medium"></i>
+            <span>Employer Management</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink='/admin/employee-management'>
+            <i class="fa fa-users medium"></i>
+            <span>Employee management</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink='/admin/job-management'>
+            <i class="fa fa-briefcase medium"></i>
+            <span>Job Management</span>
+          </a>
+        </li>
+        <br>
+        <li  class="left20">ANALYTICS</li>
+        <li class="active">
+          <a routerLink='/admin/mission'>
+            <i class="fa fa-newspaper-o medium"></i>
+            <span>Misson Control</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink='/admin/carrot-analytics'>
+            <i class="fa fa-usd medium"></i>
+            <span>Carrot Analytics</span>
+          </a>
+        </li>
+        <li>
+          <a routerLink='/admin/chatbot-analytics'>
+            <i class="fa fa-comments-o medium"></i>
+            <span>Chatbot Analytics</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="main-panel">
+    <nav class="navbar navbar-default navbar-fixed">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand hidden-md hidden-lg" >
+            <span>Overview</span>
+          </a>
+          <button class="navbar-toggle" id="navigation-dropdown" data-toggle="dropdown" type="button">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <div class="dropdown-menu pull-right" id="dropdown-nav-menu" aria-labelledby="navigation-dropdown">
+            <div class="pad20">
+              <a class="text-bold text-danger" >
+                <i class="fa fa-power-off"></i>
+                <span>Log out</span>
+              </a>
+            </div>
+          </div>
+          <div class="collapse navbar-collapse pad10">
+            <ul class="nav navbar-nav">
+              <li>
+                <a  style="margin-top: 0px;">
+                  <img class="pull-left" height="45" length="45" src="assets/img/logo.png">
+                  <div class="pull-left left10">
+                    <strong>Jobbunny</strong>
+                    <p>Recruiting Assistant</p>
+                  </div>
+                </a>
+              </li>
+              <li class="left20" role="presentation">
+                <a >FAQ</a>
+              </li>
+              <li class="left20" role="presentation">
+                <a >Contact Us</a>
+              </li>
+              <li>
+                <a class="text-danger" >
+                  <i class="fa fa-power-off"></i>
+                  <span> Log out</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </nav>
+   <router-outlet></router-outlet>
+  </div>
+</div>

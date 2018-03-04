@@ -44,16 +44,16 @@ module.exports.dashboard = function (req, res, next) {
         // set stats as session variable
         req.session.stats = stats;
         res.json({
-          openJobsCount : openJobsCount,
-          urgentJobsCount : urgentJobsCount,
-          completedJobsCount : completedJobsCount,
-          notification: notifications,
+           notification: notifications,
           notificationCount : notificationCount,
           jobCount: {
           invitedWorkersCount : invitedWorkersCount,
           hiredWorkersCount : hiredWorkersCount,
           acceptedWorkersCount : acceptedWorkersCount,
           shortlistedWorkersCount : shortlistedWorkersCount,
+          openJobsCount : openJobsCount,
+          urgentJobsCount : urgentJobsCount,
+          completedJobsCount : completedJobsCount
         },
         });
       }).sort({ 'createdAt': -1 });
@@ -118,7 +118,6 @@ module.exports.jobsList = function (req, res, next) {
   console.log('GET Employer jobsList');
   // var current_user = req.session.user;
   let user_id = jwt.getCurrentUserId(req);
-
   var job_type = req.query.jobType;
   var job_status = req.query.jobStatus;
   var job_industry = req.query.jobIndustry;
@@ -183,14 +182,13 @@ module.exports.jobsList = function (req, res, next) {
         // console.log(job_clone);
         jobsList.push(job_clone);
       }
-      res.status(200).render('employer/jobsList', {
+      res.send({
         title: 'Jobbunny | Employer > Jobs',
         jobs: jobsList,
-        moment: moment,
-        message: req.flash('message'),
-        error: req.flash('error')
-      });
-    });
+        moment: moment, 
+      })
+      return false;
+     });
   });
 };
 

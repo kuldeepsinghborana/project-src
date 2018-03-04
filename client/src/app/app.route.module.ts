@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, Component } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthGuard } from './common/auth-gaurd.service';
@@ -11,6 +11,8 @@ import { AboutComponent } from './about/about.component';
 import { CreatejobComponent } from './createjob/createjob.component';
 import { JobComponent } from './job/job.component';
 import { ActivateAccountComponent } from './activate-account/activate-account.component';
+import { EmployerComponent } from './employer/employer.component'
+import { AdminComponent } from './admin/admin.component'
 
 export const routes: Routes = [
   { path: '', redirectTo: '/homepage/search', pathMatch: 'full' },
@@ -28,9 +30,12 @@ export const routes: Routes = [
     ]
   },
  {
-    path: 'employer',
+    path: 'employer', component : EmployerComponent,
     loadChildren: './employer/employer.module#EmployerModule',
- }, {
+ },{
+  path: 'admin', component : AdminComponent,
+  loadChildren: './admin/admin.module#AdminModule',
+}, {
   path: 'activateaccount/:token', component: ActivateAccountComponent
 }
 ];

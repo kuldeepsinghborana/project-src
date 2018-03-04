@@ -26,6 +26,9 @@ import { AmazingTimePickerModule } from 'amazing-time-picker';
 import { ModalModule } from "ngx-modal";
 import { ActivateAccountComponent } from './activate-account/activate-account.component';
 import { ActivateAccountService } from './activate-account/activate-account.service';
+import { UserService } from './user-service.service';
+import { EmployerComponent } from './employer/employer.component';
+import { AdminComponent } from './admin/admin.component';
 const appRoutes: Routes = [];
 @NgModule({
   declarations: [
@@ -39,6 +42,8 @@ const appRoutes: Routes = [];
     CreatejobComponent,
     JobComponent,
     ActivateAccountComponent,
+    EmployerComponent,
+    AdminComponent
   ],
   imports: [
     BrowserModule,
@@ -66,7 +71,8 @@ const appRoutes: Routes = [];
     AuthGuard,
     AuthGuardAdmin,
     CreatejobService,
-    ActivateAccountService
+    ActivateAccountService,
+    UserService
   ],
   bootstrap: [AppComponent]
 })

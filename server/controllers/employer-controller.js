@@ -4,17 +4,20 @@ var User = mongoose.model('User');
 var Worker = require('../models/worker');
 var Match = mongoose.model('Match');
 var Notification = mongoose.model('Notification');
-
+let jwt = require('../helper/jwt');
+let utils = require('../helper/utils');
 var moment = require('moment');
 
 // GET /employer
 module.exports.dashboard = function (req, res, next) {
   console.log('GET Employer dashboard', req.session.userId);
+  let user_id = jwt.getCurrentUserId(req);
+
   var current_user = req.session.user;
   // init stats object for storing site-wide stats to use in nav header
   var stats = {};
 
-  Job.find({ employerId: req.session.user._id }, function(err, jobs) {
+  Job.find({ employerId: user_id }, function (err, jobs) {
     if (err) {
       console.log(err);
     }
@@ -22,7 +25,7 @@ module.exports.dashboard = function (req, res, next) {
     res.locals.openJobsCount = countJobs(jobs, 'open');
     res.locals.urgentJobsCount = countJobs(jobs, 'urgent');
     res.locals.completedJobsCount = countJobs(jobs, 'completed');
-    Match.find({ employerId: req.session.user._id }, function(err, matches) {
+    Match.find({ employerId: user_id }, function (err, matches) {
       if (err) {
         console.log(err);
       }
@@ -34,7 +37,7 @@ module.exports.dashboard = function (req, res, next) {
       stats['invitationsCount'] = countMatches(matches, 'invited');
 
       // get all notifications
-      Notification.find({ notifieeId: current_user._id, seen: false }, function(err, notifications) {
+      Notification.find({ notifieeId: user_id, seen: false }, function (err, notifications) {
         if (err) {
           console.log(err);
           res.render('error');
@@ -45,77 +48,83 @@ module.exports.dashboard = function (req, res, next) {
         // set stats as session variable
         req.session.stats = stats;
         res.json({
-          notification : notifications,
-          data : res.locals,
+          notification: notifications,
+          data: res.locals,
         });
         res.render('employer/dashboard', {
           title: 'Jobbunny | Employer',
           error: req.flash('error'),
           message: req.flash('message')
         });
-      }).sort({ 'createdAt' : -1 });
+      }).sort({ 'createdAt': -1 });
     });
   });
 };
 
 // GET /employer/settings
 module.exports.settings = function (req, res, next) {
-  var user_id = req.session.userId;
+  // var user_id = req.session.userId;
+  let user_id = jwt.getCurrentUserId(req);
+  let currentUser = utils.getCurrentUser(req);
+  console.log('currentUser', currentUser);
   console.log('GET Employer settings', user_id);
-
-  User
-    .findById(user_id)
-    .exec(function(err, user){
-      if (err) {
-        console.log(err);
-        return res.json({
-          message : err.message,
-          err : err
-        })
-      }
-      console.log('User found: ', user._id)
-      res.locals.user = user;
-      res.json({
-        user : user
+  // let user_id1 = '5a94785630c7bf43f8b359ab';
+  // console.log('user_id', user_id1);
+  User.findById(user_id).exec((err, user) => {
+    if (err) {
+      console.log(err);
+      return res.json({
+        message: err.message,
+        err: err
       })
+    }
+    // console.log('User found: ', user);
+    res.locals.user = user;
+    res.json({
+      user: user
+    });
   });
 };
 
 // GET /employer/notifications
 module.exports.notifications = function (req, res, next) {
-  var current_user_id = req.session.user._id;
-  console.log('GET notifications', current_user_id);
+  // var current_user_id = req.session.user._id;
+  let user_id = jwt.getCurrentUserId(req);
+
+  // console.log('GET notifications', current_user_id);
 
   Notification
-    .find({ notifieeId: current_user_id })
+    .find({ notifieeId: user_id })
     .sort({ createdAt: -1 })
-    .exec(function(err, notifications){
+    .exec(function (err, notifications) {
       if (err) {
         console.log(err);
       }
       console.log('Notifications found', notifications.length);
       res.locals.notifications = notifications;
       res.format({
-        html: function(){
+        html: function () {
           res.render('employer/notifications', {
             title: 'Jobbunny | Employer > Notifications',
             moment: moment
           });
         }
       });
-  });
+    });
 };
 
 // GET /employer/jobs
 module.exports.jobsList = function (req, res, next) {
   console.log('GET Employer jobsList');
-  var current_user = req.session.user;
+  // var current_user = req.session.user;
+  let user_id = jwt.getCurrentUserId(req);
+
   var job_type = req.query.jobType;
   var job_status = req.query.jobStatus;
   var job_industry = req.query.jobIndustry;
   res.locals.jobType = req.query.jobType;
   // get employer's joblist
-  Job.find({ employerId: req.session.user._id }, function(err, jobs) {
+  Job.find({ employerId: user_id }, function (err, jobs) {
     var tmpJobsList = jobs;
     var filters = [];
     if (err) {
@@ -139,7 +148,7 @@ module.exports.jobsList = function (req, res, next) {
 
     // add data for UI
     var jobsList = [];
-    Match.find({ employerId: current_user._id  }).exec(function(err, matches){
+    Match.find({ employerId: user_id }).exec(function (err, matches) {
       if (err) {
         console.log(err);
         error = err;
@@ -157,7 +166,7 @@ module.exports.jobsList = function (req, res, next) {
         console.log(matches_list)
         for (m in matches_list) {
           match = matches_list[m];
-          switch(match.matchStatus) {
+          switch (match.matchStatus) {
             case 'invited':
               job_clone.invited.push(match);
               break;
@@ -186,7 +195,7 @@ module.exports.jobsList = function (req, res, next) {
 };
 
 // GET /employer/jobs/new
-module.exports.newJob = function(req, res, next) {
+module.exports.newJob = function (req, res, next) {
   console.log('Creating new job');
   res.locals.jobProfile = req.query.profile;
 
@@ -194,21 +203,23 @@ module.exports.newJob = function(req, res, next) {
 }
 
 // GET /employer/jobs/:jobId
-module.exports.showJob = function(req, res, next) {
+module.exports.showJob = function (req, res, next) {
   var job_id = req.params.jobId;
   var current_user = req.session.user;
+  let user_id = jwt.getCurrentUserId(req);
+
   console.log('GET job with _id: ' + job_id);
 
   Job
     .findById(job_id)
-    .exec(function(err, job){
+    .exec(function (err, job) {
       if (err) {
         console.log("Job not found: ", err)
         res.locals.error = 'Page not found';
         res.status(400).render('error');
       }
       console.log('Found job: ', job._id);
-      Match.find({ employerId: req.session.user._id, jobId: job._id }, function(err, matches) {
+      Match.find({ employerId: user_id, jobId: job._id }, function (err, matches) {
         if (err) {
           console.log(err);
         }
@@ -216,7 +227,7 @@ module.exports.showJob = function(req, res, next) {
         res.locals.pendingAcceptanceWorkersCount = countMatches(matches, 'matched');
         res.locals.shortListedWorkersCount = countMatches(matches, 'shortlisted');
         res.locals.declinedWorkersCount = countMatches(matches, 'declined');
-        _appendMatchesMetricsToJob(job, current_user, function(err, job_with_stats){
+        _appendMatchesMetricsToJob(job, current_user, function (err, job_with_stats) {
           if (err) {
             console.log(err);
           }
@@ -234,14 +245,14 @@ module.exports.showJob = function(req, res, next) {
 }
 
 // GET /employer/jobs/:jobId/edit
-module.exports.editJob = function(req, res, next) {
+module.exports.editJob = function (req, res, next) {
   var jobId = req.params.jobId;
   console.log('GET job with _id: ' + jobId);
   res.locals.jobProfile = 'advanced';
 
   Job
     .findById(jobId)
-    .exec(function(err, job){
+    .exec(function (err, job) {
       if (err) {
         console.log("Job not found: ", err)
         res.locals.error = 'Page not found';
@@ -257,7 +268,10 @@ module.exports.editJob = function(req, res, next) {
 // GET /employer/workers?jobId=123
 module.exports.workersList = function (req, res, next) {
   console.log('GET Employer workersList');
+
   var current_user = req.session.user;
+  let user_id = jwt.getCurrentUserId(req);
+
   var gender_type = req.query.gender;
   var match_status = req.query.matchStatus;
   var job_id = req.query.jobId;
@@ -265,7 +279,7 @@ module.exports.workersList = function (req, res, next) {
   if (job_id) {
     Job
       .findById(job_id)
-      .exec(function(err, job){
+      .exec(function (err, job) {
         if (err) {
           console.log(err);
           req.flash('error', 'Job not found');
@@ -276,7 +290,7 @@ module.exports.workersList = function (req, res, next) {
         }
         res.locals.job = job;
         // get all workers invited/shortlisted/hired by the employer
-        Match.find({ employerId: current_user._id, jobId: job_id }, function(err, matches) {
+        Match.find({ employerId: user_id, jobId: job_id }, function (err, matches) {
           if (err) {
             console.log(err);
             res.redirect('/employer')
@@ -318,19 +332,21 @@ module.exports.workersList = function (req, res, next) {
 module.exports.inviteWorkers = function (req, res, next) {
   console.log('GET Employer invite workersList');
   var current_user = req.session.user;
+  let user_id = jwt.getCurrentUserId(req);
+
   var job_id = req.params.jobId;
 
   Job
     .findById(job_id)
-    .exec(function(err, job){
+    .exec(function (err, job) {
       if (err) {
         console.log(err);
         res.redirect('/employer')
       }
       console.log('Job found :' + job._id);
       res.locals.job = job;
-      getMatchedWorkers(job, function(err, workers) {
-        if(err){
+      getMatchedWorkers(job, function (err, workers) {
+        if (err) {
           console.log(err);
           res.redirect('/employer')
         }
@@ -347,18 +363,18 @@ module.exports.inviteWorkers = function (req, res, next) {
     })
 };
 
-Object.getPrototypeOf(moment()).toBSON = function() {
-    return this.toDate();
-  };
+Object.getPrototypeOf(moment()).toBSON = function () {
+  return this.toDate();
+};
 
-var getMatchedWorkers = async function(job, callback){
+var getMatchedWorkers = async function (job, callback) {
   var query = {}
   var applicationKey
 
-  var applied_users_raw = await Match.find({'jobId' : job['_id']});
+  var applied_users_raw = await Match.find({ 'jobId': job['_id'] });
   var applied_users = []
-  for(x=0; x < applied_users_raw.length; x++){
-      applied_users.push(applied_users_raw[x]['worker']['_id'])
+  for (x = 0; x < applied_users_raw.length; x++) {
+    applied_users.push(applied_users_raw[x]['worker']['_id'])
   }
 
 
@@ -366,108 +382,108 @@ var getMatchedWorkers = async function(job, callback){
 
   console.log('GSFGHJGSJHGHJSGS')
 
-  switch(job['jobType']){
+  switch (job['jobType']) {
     case 'Part-time':
-      applicationKey = "Part-timer."+job['jobIndustry']
+      applicationKey = "Part-timer." + job['jobIndustry']
 
       var startDate = moment(job['startDate'])
       var endDate = moment(job["endDate"])
 
-      if(startDate.isBefore(endDate)){
-        query[applicationKey+".dateStart"] = { "$lte" : startDate.toDate() } 
+      if (startDate.isBefore(endDate)) {
+        query[applicationKey + ".dateStart"] = { "$lte": startDate.toDate() }
       }
 
-      if(endDate.isAfter(startDate)){
-        query[applicationKey+".dateEnd"] = { "$gte" : endDate.toDate() }
+      if (endDate.isAfter(startDate)) {
+        query[applicationKey + ".dateEnd"] = { "$gte": endDate.toDate() }
       }
 
       var workdays = job['workPeriod']
-      switch(workdays){
+      switch (workdays) {
         case "Weekend":
-          query[applicationKey+".preferred_workdays"] = "Weekend" 
+          query[applicationKey + ".preferred_workdays"] = "Weekend"
           break;
 
-          case "Weekdays":
-            query[applicationKey+".preferred_workdays"] = "Weekdays" 
-            break;
+        case "Weekdays":
+          query[applicationKey + ".preferred_workdays"] = "Weekdays"
+          break;
 
-          case "Both":
-            //no need to put this filter
+        case "Both":
+        //no need to put this filter
 
-          default:
-            break;
+        default:
+          break;
       }
 
       break;
 
     case 'Full-time':
-      applicationKey = "Full-timer."+job['jobIndustry']
+      applicationKey = "Full-timer." + job['jobIndustry']
       var startDate = moment(job['startDate'])//.toDate()
       console.log('primt me')
       console.log(typeof startDate)
-      query[applicationKey+".dateStart"] = { "$lte" : startDate.toDate() }
+      query[applicationKey + ".dateStart"] = { "$lte": startDate.toDate() }
 
       break;
   }
 
-  query[applicationKey+".preferred_location"] = job['workRegion'] 
-  query[applicationKey]  = { '$exists' : true } 
+  query[applicationKey + ".preferred_location"] = job['workRegion']
+  query[applicationKey] = { '$exists': true }
 
-  var match_query ={ "$or" : [ {'_id' : {'$in' : applied_users } }, query ] }
+  var match_query = { "$or": [{ '_id': { '$in': applied_users } }, query] }
 
   console.log(JSON.stringify(query))
   //return {'filter': query, 'project'  : {  }]\
   var pipeline = [
-            {"$match" : match_query },
-            { "$addFields": { 'application' : '$'+applicationKey }},
-            {
-              "$lookup":
-                 {
-                   "from": "matches",
-                   "localField" : "_id",
-                   "foreignField" : "worker._id",
-                   "as": "matches"
-                 }
-            },
-            //{ "$addFields": { 'match' : { "$arrayElemAt": [ "$match", 0 ] } }},
-            //
-            /*{
-               "$addFields":
-                 {
-                   "match":
-                     {
-                       "$cond": { "if": { "$eq" :[ "$match.jobId" , job['_id'].toString() ] }, then: "$match", else: null }
-                     }
-                 }
-            },
-            { "$unwind" : {"path": "$match", "preserveNullAndEmptyArrays": true} },
-            /*{ "$match" : {
-                           "$or" : [
-                             { "match" : { "$exists" : false } }, 
-                             { "match.jobId" : job['_id'].toString() }
-                            ]
-                           }
-            }*/
-          ] 
+    { "$match": match_query },
+    { "$addFields": { 'application': '$' + applicationKey } },
+    {
+      "$lookup":
+        {
+          "from": "matches",
+          "localField": "_id",
+          "foreignField": "worker._id",
+          "as": "matches"
+        }
+    },
+    //{ "$addFields": { 'match' : { "$arrayElemAt": [ "$match", 0 ] } }},
+    //
+    /*{
+       "$addFields":
+         {
+           "match":
+             {
+               "$cond": { "if": { "$eq" :[ "$match.jobId" , job['_id'].toString() ] }, then: "$match", else: null }
+             }
+         }
+    },
+    { "$unwind" : {"path": "$match", "preserveNullAndEmptyArrays": true} },
+    /*{ "$match" : {
+                   "$or" : [
+                     { "match" : { "$exists" : false } }, 
+                     { "match.jobId" : job['_id'].toString() }
+                    ]
+                   }
+    }*/
+  ]
   console.log(JSON.stringify(pipeline))
-  Worker.aggregate( pipeline, function(err, data) {
+  Worker.aggregate(pipeline, function (err, data) {
     var workers = []
     console.log(data.length);
-    for (l = 0; l < data.length; l++){
-       var item = data[l]
-       var matches =  item['matches']
-       for(k=0; k< matches.length; k++){
+    for (l = 0; l < data.length; l++) {
+      var item = data[l]
+      var matches = item['matches']
+      for (k = 0; k < matches.length; k++) {
         var match = matches[k]
-        if(match['jobId'] == job['_id']){
+        if (match['jobId'] == job['_id']) {
           item['match'] = match;
           break;
         }
-       }
+      }
 
-       workers.push(item);
+      workers.push(item);
 
     }
-    
+
     callback(err, workers)
     //}
   });
@@ -475,10 +491,12 @@ var getMatchedWorkers = async function(job, callback){
 
 
 // GET /employer/workers/:workerId
-module.exports.showWorker = function(req, res, next) {
+module.exports.showWorker = function (req, res, next) {
   var worker_id = req.params.workerId;
   console.log('GET worker with _id: ' + worker_id);
   var current_user = req.session.user;
+  let user_id = jwt.getCurrentUserId(req);
+
   var job_id = req.query.jobId;
   res.locals.jobId = job_id;
 
@@ -492,7 +510,7 @@ module.exports.showWorker = function(req, res, next) {
 
   Worker
     .findById(worker_id)
-    .exec(function(err, worker){
+    .exec(function (err, worker) {
       if (err) {
         console.log("worker not found: ", err)
         res.locals.error = 'Page not found';
@@ -501,7 +519,7 @@ module.exports.showWorker = function(req, res, next) {
 
       console.log('Found worker: ', worker._id);
       // append matches related to the worker for UI
-      Match.find({ employerId: current_user._id, jobId: job_id }, function(err, matches){
+      Match.find({ employerId: user_id, jobId: job_id }, function (err, matches) {
         if (err) {
           console.log("matches not found: ", err)
           res.status(400).render('error');
@@ -525,22 +543,22 @@ module.exports.showWorker = function(req, res, next) {
 }
 
 // HELPER methods
-var countJobs = function(jobs_list, job_status) {
-  var count = jobs_list.filter(function(job) {
+var countJobs = function (jobs_list, job_status) {
+  var count = jobs_list.filter(function (job) {
     return job.jobStatus == job_status
   }).length;
   return count;
 }
 
-var countMatches = function(matches_list, match_status) {
-  var count = matches_list.filter(function(match) {
+var countMatches = function (matches_list, match_status) {
+  var count = matches_list.filter(function (match) {
     return match.matchStatus == match_status
   }).length;
   return count;
 }
 
-var countEmployedMatches = function(matches_list) {
-  var count = matches_list.filter(function(match) {
+var countEmployedMatches = function (matches_list) {
+  var count = matches_list.filter(function (match) {
     return match.employed == true
   }).length;
   return count;
@@ -552,11 +570,13 @@ var countEmployedMatches = function(matches_list) {
 
 // returns job object with these metrics added to the object:
 // { invited: [invited workers], applied: [applied workers], shortlisted: [shortlisted workers] }
-var _appendMatchesMetricsToJob = function(job, current_user, callback) {
+var _appendMatchesMetricsToJob = function (job, current_user, callback) {
   // add each job's invited, shortlisted matches
+  let user_id = jwt.getCurrentUserId(req);
+
   var tmp_matches, error;
   var jobsList = [];
-  Match.find({ employerId: current_user._id, jobId: job._id  }).exec(function(err, matches){
+  Match.find({ employerId: user_id, jobId: job._id }).exec(function (err, matches) {
     if (err) {
       console.log(err);
       error = err;
@@ -570,7 +590,7 @@ var _appendMatchesMetricsToJob = function(job, current_user, callback) {
     job_clone.shortlisted = [];
     for (m in matches) {
       match = matches[m];
-      switch(match.matchStatus) {
+      switch (match.matchStatus) {
         case 'invited':
           job_clone.invited.push(match.worker);
           break;
@@ -589,7 +609,7 @@ var _appendMatchesMetricsToJob = function(job, current_user, callback) {
 }
 
 // returns array of JSON; list of filtered jobs
-var filterJobs = function(jobs, filter_type, filter_query) {
+var filterJobs = function (jobs, filter_type, filter_query) {
   var jobsList = [];
   for (i in jobs) {
     var job = jobs[i];
@@ -599,7 +619,7 @@ var filterJobs = function(jobs, filter_type, filter_query) {
 }
 
 // list of filtered workers
-var filterWorkers = function(workers, filter_type, filter_query) {
+var filterWorkers = function (workers, filter_type, filter_query) {
   var workersList = [];
   for (i in workers) {
     var worker = workers[i];
@@ -608,7 +628,7 @@ var filterWorkers = function(workers, filter_type, filter_query) {
   return workersList;
 }
 
-var _filterMatchesForJob = function(matches, job_id) {
+var _filterMatchesForJob = function (matches, job_id) {
   var matches_list = [], match;
   for (i in matches) {
     match = matches[i];
@@ -617,7 +637,7 @@ var _filterMatchesForJob = function(matches, job_id) {
   return matches_list;
 }
 
-var _getWorkersListFromMatchesList = function(matches) {
+var _getWorkersListFromMatchesList = function (matches) {
   var match, worker;
   var workersList = [];
   for (m in matches) {
@@ -625,19 +645,19 @@ var _getWorkersListFromMatchesList = function(matches) {
     worker = match.worker;
     worker.match = { _id: match._id, status: match.matchStatus }
     workersList.push(match.worker);
-   }
+  }
   return workersList;
 }
 
-var _seenNotification = function(notification_id) {
+var _seenNotification = function (notification_id) {
   console.log('UPDATE notification as seen');
   Notification
-    .findOneAndUpdate({ _id: notification_id }, { seen: true }, { upsert:true })
-    .exec(function(err, notification){
-    if (err) {
-      console.log('Error', err, notifiee_id, job_id, message);
-      return err;
-    }
-    return notification;
-  });
+    .findOneAndUpdate({ _id: notification_id }, { seen: true }, { upsert: true })
+    .exec(function (err, notification) {
+      if (err) {
+        console.log('Error', err, notifiee_id, job_id, message);
+        return err;
+      }
+      return notification;
+    });
 }

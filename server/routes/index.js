@@ -212,8 +212,8 @@ router
   .route('/employer')
   .get(isAuthenticated, isEmployer, ctrlEmployer.dashboard);
 router
-  .route('/employer/settings')
-  .get(isAuthenticated, isEmployer, ctrlEmployer.settings);
+  .route('/api/employer/settings')
+  .get( ctrlEmployer.settings);
 router
   .route('/employer/jobs')
   .get(isAuthenticated, isEmployer, ctrlEmployer.jobsList);

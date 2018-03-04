@@ -1,7 +1,9 @@
 let fs = require('fs');
 const nodemailer = require("nodemailer");
 let bcrypt = require('bcrypt');
-
+let mongoose = require('mongoose');
+let User = mongoose.model('User');
+let jwt = require('./jwt');
 let utilsfunction = {};
 utilsfunction.isDefined = (variable) => {
     if (typeof variable == 'boolean') return true;
@@ -124,5 +126,36 @@ utilsfunction.sendEmail = (toEmail, subject, body, callback) => {
         }
         callback(null, isEmailSent);
     });
+}
+
+utilsfunction.getCurrentUser = (req) => {
+    let token = (req.headers && req.headers['x-auth-token']);
+    let userId = jwt.getCurrentUserId(req);
+    if (utilsfunction.empty(token) || utilsfunction.empty(userId)) {
+        let response = {
+            status: 401,
+            message: req.t("NOT_AUTHORIZED")
+        }
+        return res.status(401).json(response);
+    }
+    else {
+        let filter = {
+            _id: userId,
+            userType: 'employer'
+        }
+        let data = {};
+        User.findOne(filter, (err, result) => {
+            if (!result) {
+                let response = {
+                    status: 401,
+                    message: "NOT_AUTHORIZED"
+                }
+                return res.status(401).json(response);
+            } else {
+                data = result;
+                return data;
+            }
+        });
+    }
 }
 module.exports = utilsfunction

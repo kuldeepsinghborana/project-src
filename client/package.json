@@ -25,8 +25,8 @@
     "angular5-toaster": "^1.0.2",
     "bootstrap": "^4.0.0",
     "core-js": "^2.4.1",
-    "ngx-modal": "0.0.29",
     "moment": "^2.21.0",
+    "ngx-modal": "0.0.29",
     "ngx-progressbar": "^2.1.1",
     "rxjs": "^5.5.6",
     "zone.js": "^0.8.19"

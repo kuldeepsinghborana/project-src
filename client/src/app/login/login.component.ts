@@ -30,6 +30,7 @@ export class LoginComponent implements OnInit {
       password: this.password
     }
     this.loginService.login(data).subscribe(res => {
+      localStorage.clear();
       console.log('res', res);
       if (res.userType === 'admin') {
         localStorage.setItem('adminLoginInfo', res.token);

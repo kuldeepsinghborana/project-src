@@ -17,11 +17,18 @@ export class CommonServiceService {
 
     getHeader(headerOptions, params = {}, doNotSendAuthorizationParam) {
         // var headerParams = { 'Content-Type': 'application/json' };
-        var headerParams = {  };
+        var headerParams = {};
 
         if (doNotSendAuthorizationParam !== true) {
             //send authorization param
             // headerParams['x-auth-token'] = localStorage.getSessionId();
+
+            if (localStorage.getItem('loginInfo')) {
+                headerParams['x-auth-token'] = localStorage.getItem('loginInfo')
+            }
+            else if(localStorage.getItem('adminLoginInfo')){
+                headerParams['x-auth-token'] = localStorage.getItem('adminLoginInfo')
+            }
         }
         if (headerOptions) {
             Object.assign(headerParams, headerOptions);
@@ -47,7 +54,7 @@ export class CommonServiceService {
         let options = this.getHeader(headerOptions, {}, doNotSendAuthorizationParam);
         return this.http.post(this.hostUrl + url, params, options).catch(this.handleError(this));
     }
-    
+
     put(url, params: any = {}, headerOptions: any = {}, doNotSendAuthorizationParam: boolean = false) {
         let options = this.getHeader(headerOptions, {}, doNotSendAuthorizationParam);
         return this.http.put(this.hostUrl + url, params, options).catch(this.handleError(this));

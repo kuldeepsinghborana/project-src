@@ -1,5 +1,5 @@
 let jwt = require('jwt-simple');
-let config= require('./config');
+let config = require('./config');
 let jwtUtil = {};
 
 /*
@@ -53,4 +53,5 @@ jwtUtil.getCurrentUserId = (req) => {
     }
     return userID;
 }
+
 module.exports = jwtUtil

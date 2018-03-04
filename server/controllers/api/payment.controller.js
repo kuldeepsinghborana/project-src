@@ -2,9 +2,13 @@ let braintree = require("braintree");
 let config = require('../../config/config');
 let waterfall = require('async-waterfall');
 let jwt = require('../../helper/jwt');
-var mongoose = require('mongoose');
-var Payment = mongoose.model('Payment');
+let mongoose = require('mongoose');
+let Payment = mongoose.model('Payment');
 let User = mongoose.model('User');
+let utils = require('../../helper/utils');
+
+
+
 let gateway = braintree.connect({
     environment: braintree.Environment.Sandbox,
     merchantId: config.BRAINTREE_MERCHANT_ID,
@@ -15,10 +19,9 @@ let gateway = braintree.connect({
 let paymentCtr = {};
 
 paymentCtr.getClientToken = (req, res) => {
-    console.log('getClientToken');
     gateway.clientToken.generate({}, function (err, response) {
-        console.log('err', err);
-        console.log('response', response);
+        // console.log('err', err);
+        // console.log('response', response);
         res.status(200).json(response);
     });
 }
@@ -61,6 +64,7 @@ paymentCtr.paymentMethod = (req, res) => {
             }, (err, result) => {
                 if (err) {
                     console.log('err', err);
+                    callback(err);
                 }
                 let user_id = jwt.getCurrentUserId(req);
                 let newObj = {
@@ -69,7 +73,6 @@ paymentCtr.paymentMethod = (req, res) => {
                     transaction_status: result.transaction.status,
                     user_id: user_id
                 }
-                console.log('newObj', newObj);
                 callback(null, selectedPlan, newObj, result);
             });
         }, function (selectedPlan, newData, result, callback) {
@@ -82,7 +85,7 @@ paymentCtr.paymentMethod = (req, res) => {
                 else {
                     // console.log('result save of transaction', result);
                     if (result && result.success === true) {
-                        callback(null, selectedPlan, newData, result);
+                        callback(null, selectedPlan, newData, result, paymentResult);
                     } else {
                         let response = {
                             status: 400,
@@ -92,21 +95,17 @@ paymentCtr.paymentMethod = (req, res) => {
                     }
                 }
             });
-        }, function (selectedPlan, newData, result, callback) {
+        }, function (selectedPlan, newData, result, paymentResult, callback) {
             let user_id = newData.user_id;
             User.findById(user_id, function (err, userData) {
                 if (err) {
                     callback(err);
                 } else {
-                    console.log("userData", userData);
                     let purchasedCarrot = selectedPlan.carrots;
-                    console.log('purchasedCarrot', purchasedCarrot);
                     let oldTotalCarrots = userData.carrots.total;
                     let oldAvailableCarrots = userData.carrots.available;
                     let updatedTotalCarrot = parseInt(oldTotalCarrots) + parseInt(purchasedCarrot);
                     let updatedAvailableCarrot = parseInt(oldAvailableCarrots) + parseInt(purchasedCarrot);
-                    console.log('updatedTotalCarrot', updatedTotalCarrot);
-                    console.log('updatedAvailableCarrot', updatedAvailableCarrot);
                     let userNewData = {
                         carrots: {
                             total: updatedTotalCarrot,
@@ -118,9 +117,67 @@ paymentCtr.paymentMethod = (req, res) => {
                         if (err) {
                             callback(err);
                         } else {
-                            console.log('updatedUserData', updatedUserData);
+                            // console.log('updatedUserData', updatedUserData);
+
+                            callback(null, updatedUserData, paymentResult)
                         }
                     });
+                }
+            });
+        }, function (updatedUserData, paymentResult, callback) {
+            let newStatus = {
+                carrotStatus: true
+            }
+            Payment.findByIdAndUpdate(paymentResult._id, newStatus, function (err, carrotStatusResponse) {
+                if (err) {
+                    callback(err);
+                } else {
+                    // let response = {
+                    //     status: 200,
+                    //     message: 'SUCCESS',
+                    //     carrots: updatedUserData.carrots
+                    // }
+                    // return res.status(200).json(response);
+                    callback(null, updatedUserData)
+                }
+            });
+        }, function (updatedUserData, callback) {
+            let email = updatedUserData.email;
+            let username = data.name ? data.name : '';
+            let subject = 'Carrot Purchased Successfully';
+            // let pageName = 'activateaccount/' + token;
+            let fileName = 'purchaseSuccess';
+            let date = new Date();
+            let year = date.getFullYear();
+            let mailTemplatePath = "./mail_content/" + fileName + ".html";
+            utils.getHtmlContent(mailTemplatePath, function (err, content) {
+                if (err) {
+                    callback('PLEASE_TRY_AGAIN');
+                }
+                if (content) {
+                    let link = config.SITE_URL + pageName;
+                    content = content.replace("{LINK}", link);
+                    content = content.replace("{USERNAME}", username);
+                    content = content.replace("{YEAR}", year);
+                    utils.sendEmail(email, subject, content, function (err, result) {
+                        if (err) {
+                            callback('PLEASE_TRY_AGAIN');
+                        }
+                        if (result) {
+                            // callback(null, result);
+                            let response = {
+                                status: 200,
+                                message: "SUCCESS"
+                            }
+                            return res.status(200).json(response);
+                        }
+                        else {
+                            callback('PLEASE_TRY_AGAIN');
+                        }
+                    });
+                }
+                else {
+                    callback('PLEASE_TRY_AGAIN');
                 }
             });
         }

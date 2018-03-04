@@ -9,6 +9,7 @@ import { JobManagementComponent } from './job-management/job-management.componen
 import { EmployeeManagementComponent } from './employee-management/employee-management.component';
 import { BuyCarrotsComponent } from './buy-carrots/buy-carrots.component';
 import { FarmCarrotsComponent } from './farm-carrots/farm-carrots.component';
+import { BuyCarrotsService } from './buy-carrots/buy-carrots.service';
 
 @NgModule({
   imports: [
@@ -23,6 +24,7 @@ import { FarmCarrotsComponent } from './farm-carrots/farm-carrots.component';
     ])
   ],
   exports:[RouterModule],
-  declarations: [JobOverviewComponent, JobManagementComponent, EmployeeManagementComponent, BuyCarrotsComponent, FarmCarrotsComponent]
+  declarations: [JobOverviewComponent, JobManagementComponent, EmployeeManagementComponent, BuyCarrotsComponent, FarmCarrotsComponent],
+  providers:[BuyCarrotsService]
 })
 export class EmployerModule { }

@@ -1,6 +1,7 @@
 var express = require('express');
 var cookieParser = require('cookie-parser');
 var cors = require('cors');
+let auth = require('../helper/auth');
 var router = express.Router();
 
 router.use(cors());
@@ -24,7 +25,7 @@ var ctrlEmployer = require('../controllers/employer-controller');
 var ctrlUsers = require('../controllers/api/users.controllers');
 var ctrlJobs = require('../controllers/api/jobs.controllers');
 var ctrlMatches = require('../controllers/api/matches.controllers');
-
+let ctrlPayment = require('../controllers/api/payment.controller');
 var database = require('../controllers/mongo').Controller
 
 var botControl = require('../controllers/api/bot.controller')
@@ -210,34 +211,34 @@ router
 // employer routes
 router
   .route('/employer')
-  .get(isAuthenticated, isEmployer, ctrlEmployer.dashboard);
+  .get(auth.requiresEmployerLogin, ctrlEmployer.dashboard);
 router
   .route('/api/employer/settings')
-  .get( ctrlEmployer.settings);
+  .get(auth.requiresEmployerLogin, ctrlEmployer.settings);
 router
   .route('/employer/jobs')
-  .get(isAuthenticated, isEmployer, ctrlEmployer.jobsList);
+  .get(auth.requiresEmployerLogin, ctrlEmployer.jobsList);
 router
   .route('/employer/jobs/new')
-  .get(isAuthenticated, isEmployer, ctrlEmployer.newJob);
+  .get(auth.requiresEmployerLogin, ctrlEmployer.newJob);
 router
   .route('/employer/jobs/:jobId')
-  .get(isAuthenticated, isEmployer, ctrlEmployer.showJob);
+  .get(auth.requiresEmployerLogin, ctrlEmployer.showJob);
 router
   .route('/employer/jobs/:jobId/edit')
-  .get(isAuthenticated, isEmployer, ctrlEmployer.editJob);
+  .get(auth.requiresEmployerLogin, ctrlEmployer.editJob);
 router
   .route('/employer/workers')
-  .get(isAuthenticated, isEmployer, ctrlEmployer.workersList);
+  .get(auth.requiresEmployerLogin, ctrlEmployer.workersList);
 router
   .route('/employer/workers/:workerId')
-  .get(isAuthenticated, isEmployer, ctrlEmployer.showWorker);
+  .get(auth.requiresEmployerLogin, ctrlEmployer.showWorker);
 router
   .route('/employer/workers/invite/:jobId')
-  .get(isAuthenticated, isEmployer, ctrlEmployer.inviteWorkers);
+  .get(auth.requiresEmployerLogin, ctrlEmployer.inviteWorkers);
 router
   .route('/employer/notifications')
-  .get(isAuthenticated, isEmployer, ctrlEmployer.notifications);
+  .get(auth.requiresEmployerLogin, ctrlEmployer.notifications);
 
 router.get('/employer/farm-carrots', function (req, res, next) {
   res.render('employer/farmCarrots', { title: 'Jobbunny | Employer > Carrots' });
@@ -250,37 +251,37 @@ router.get('/employer/buy-carrots', function (req, res, next) {
 // admin routes
 router
   .route('/admin')
-  .get(isAuthenticated, isAdmin, ctrlAdmin.dashboard)
+  .get(auth.requiresAdminLogin, ctrlAdmin.dashboard)
 router
   .route('/admin/settings')
-  .get(isAuthenticated, isAdmin, ctrlAdmin.settings);
+  .get(auth.requiresAdminLogin, ctrlAdmin.settings);
 router
   .route('/admin/employers')
-  .get(isAuthenticated, isAdmin, ctrlAdmin.employersList);
+  .get(auth.requiresAdminLogin, ctrlAdmin.employersList);
 router
   .route('/admin/employers/search')
-  .get(isAuthenticated, isAdmin, ctrlAdmin.searchEmployers);
+  .get(auth.requiresAdminLogin, ctrlAdmin.searchEmployers);
 router
   .route('/admin/employers/:employerId')
-  .get(isAuthenticated, isAdmin, ctrlAdmin.showEmployer);
+  .get(auth.requiresAdminLogin, ctrlAdmin.showEmployer);
 router
   .route('/admin/jobs')
-  .get(isAuthenticated, isAdmin, ctrlAdmin.jobsList);
+  .get(auth.requiresAdminLogin, ctrlAdmin.jobsList);
 router
   .route('/admin/jobs/:jobId')
-  .get(isAuthenticated, isAdmin, ctrlAdmin.showJob);
+  .get(auth.requiresAdminLogin, ctrlAdmin.showJob);
 router
   .route('/admin/workers')
-  .get(isAuthenticated, isAdmin, ctrlAdmin.workersList);
+  .get(auth.requiresAdminLogin, ctrlAdmin.workersList);
 router
   .route('/admin/workers/:workerId')
-  .get(isAuthenticated, isAdmin, ctrlAdmin.showWorker);
+  .get(auth.requiresAdminLogin, ctrlAdmin.showWorker);
 router
   .route('/admin/carrots')
-  .get(isAuthenticated, isAdmin, ctrlAdmin.carrotAnalytics);
+  .get(auth.requiresAdminLogin, ctrlAdmin.carrotAnalytics);
 router
   .route('/admin/bot')
-  .get(isAuthenticated, isAdmin, ctrlAdmin.botAnalytics);
+  .get(auth.requiresAdminLogin, ctrlAdmin.botAnalytics);
 // jobs routes
 /* GET newjob page. */
 router
@@ -338,7 +339,15 @@ router
   .post(ctrlUsers.login);
 router
   .route('/api/users/update')
-  .post(upload.single('profilePic'), isAuthenticated, ctrlUsers.updateUser)
+  .post(upload.single('profilePic'), auth.requiresEmployerLogin, ctrlUsers.updateUser)
+
+
+//PAYMENT ROUTES
+router
+  .route('/api/employer/payment')
+  .get(auth.requiresEmployerLogin, ctrlPayment.getClientToken);
+
+router.route('/api/employer/payment/checkout').post(auth.requiresEmployerLogin, ctrlPayment.paymentMethod);
 
 module.exports = router;
 

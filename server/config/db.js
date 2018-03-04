@@ -44,4 +44,5 @@ require('../models/job');
 require('../models/worker');
 require('../models/match');
 require('../models/notification');
+require('../models/payment');
 

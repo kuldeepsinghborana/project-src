@@ -99,7 +99,11 @@ module.exports.register = (req, res) => {
           // passwordConf: req.body.passwordConf,
           phoneNumber: req.body.handphoneNumber,
           companyname: req.body.companyname,
-          token: token
+          token: token,
+          carrots: {
+            available: 100,
+            pending:0
+          }
         }
         User.create(userData, function (err, user) {
           if (err) {
@@ -203,7 +207,7 @@ module.exports.login = function (req, res) {
             let response = {
               status: 200,
               token: secretToken,
-              userType:user.userType
+              userType: user.userType
             }
             return res.status(200).json(response);
             // Notification.find({ notifieeId: user._id, seen: false }, function (err, notifications) {

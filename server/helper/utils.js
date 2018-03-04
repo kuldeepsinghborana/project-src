@@ -134,7 +134,7 @@ utilsfunction.getCurrentUser = (req) => {
     if (utilsfunction.empty(token) || utilsfunction.empty(userId)) {
         let response = {
             status: 401,
-            message: req.t("NOT_AUTHORIZED")
+            message: "NOT_AUTHORIZED"
         }
         return res.status(401).json(response);
     }

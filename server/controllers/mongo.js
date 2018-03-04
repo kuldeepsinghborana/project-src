@@ -5,7 +5,7 @@ var User = require('../models/user');
 var Job = require('../models/job');
 var Match = require('../models/match');
 var Notification = require('../models/notification');
-
+var Payment = require('../models/payment');
 var Controller = {};
 
 // set up connection to DB

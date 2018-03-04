@@ -1,4 +1,5 @@
 let utils = require('../helper/utils.js');
+let mongoose = require('mongoose');
 var User = mongoose.model('User');
 let jwt = require('./jwt');
 let auth = {};
@@ -16,76 +17,11 @@ auth.checkToken = (req, res, next) => {
 
 
 auth.requiresAdminLogin = (req, res, next) => {
-    let token = (req.headers && req.headers['x-auth-token']);
-    console.log('admin token', token);
-    let adminId = jwt.getCurrentUserId(req);
-    if (utils.empty(token) || utils.empty(adminId)) {
-        let response = {
-            status: 401,
-            message: req.t("NOT_AUTHORIZED")
-        }
-        return res.status(401).json(response);
-    }
-    else {
-        let filter = {
-            _id: adminId,
-            userType: 'admin'
-        }
-        User.findOne(filter, (err, result) => {
-            if (!result) {
-                let response = {
-                    status: 401,
-                    message: req.t("NOT_AUTHORIZED")
-                }
-                return res.status(401).json(response);
-            } else {
-                next();
-            }
-        });
-    }
+    checkAuth(req, res, next, 'admin');
 }
 
-auth.requiresUserLogin = (req, res, next) => {
-    let token = (req.headers && req.headers['x-auth-token']);
-    console.log('user token', token);
-    let userId = jwt.getCurrentUserId(req);
-    if (utils.empty(token) || utils.empty(userId)) {
-        let response = {
-            status: 401,
-            message: req.t("NOT_AUTHORIZED")
-        }
-        return res.status(401).json(response);
-    }
-    else {
-        let filter = {
-            _id: userId,
-            userType: 'employer'
-        }
-        // userModel.getUserDetails(filter, (result) => {
-        //     if (!result) {
-        //         let response = {
-        //             status: 401,
-        //             message: req.t("NOT_AUTHORIZED")
-        //         }
-        //         return res.status(401).json(response);
-        //     }
-        //     else {
-        //         next();
-        //     }
-        // });
-
-        User.findOne(filter, (err, result) => {
-            if (!result) {
-                let response = {
-                    status: 401,
-                    message: "NOT_AUTHORIZED"
-                }
-                return res.status(401).json(response);
-            } else {
-                next();
-            }
-        });
-    }
+auth.requiresEmployerLogin = (req, res, next) => {
+    checkAuth(req, res, next, 'employer');
 }
 
 auth.getCurrentUser = (req) => {
@@ -118,5 +54,33 @@ auth.getCurrentUser = (req) => {
     }
 }
 
+function checkAuth(req, res, next, userType) {
+    let token = (req.headers && req.headers['x-auth-token']);
+    let adminId = jwt.getCurrentUserId(req);
+    if (utils.empty(token) || utils.empty(adminId)) {
+        let response = {
+            status: 401,
+            message: "NOT_AUTHORIZED"
+        }
+        return res.status(401).json(response);
+    }
+    else {
+        let filter = {
+            _id: adminId,
+            userType: userType
+        }
+        User.findOne(filter, (err, result) => {
+            if (!result) {
+                let response = {
+                    status: 401,
+                    message: "NOT_AUTHORIZED"
+                }
+                return res.status(401).json(response);
+            } else {
+                next();
+            }
+        });
+    }
+}
 
 module.exports = auth

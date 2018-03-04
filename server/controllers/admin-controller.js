@@ -8,20 +8,22 @@ var moment = require('moment');
 
 // GET /admin
 module.exports.dashboard = function (req, res, next) {
-  console.log('GET admin dashboard', req.session.userId);
-  Job.find({}, function(err, jobs) {
+  // console.log('GET admin dashboard', req.session.userId);
+  let user_id = jwt.getCurrentUserId(req);
+
+  Job.find({}, function (err, jobs) {
     if (err) {
       console.log(err);
     }
-    Worker.find({}, function(err, workers) {
+    Worker.find({}, function (err, workers) {
       if (err) {
         console.log(err);
       }
-      User.find({}, function(err, users) {
+      User.find({}, function (err, users) {
         if (err) {
           console.log(err);
         }
-        Match.find({}, function(err, matches){
+        Match.find({}, function (err, matches) {
           if (err) {
             console.log(err);
           }
@@ -31,11 +33,11 @@ module.exports.dashboard = function (req, res, next) {
           res.locals.totalInvitationsCount = matches.length;
           res.locals.totalMatchesCount = matches.length;
           res.locals.matchesStats = {
-              invited: _filterMatches(matches, 'invited').length,
-              applied: _filterMatches(matches, 'applied').length,
-              accepted: _filterMatches(matches, 'accepted').length,
-              shortlisted: _filterMatches(matches, 'shortlisted').length
-            }
+            invited: _filterMatches(matches, 'invited').length,
+            applied: _filterMatches(matches, 'applied').length,
+            accepted: _filterMatches(matches, 'accepted').length,
+            shortlisted: _filterMatches(matches, 'shortlisted').length
+          }
           res.render('admin/dashboard', {
             title: 'Jobbunny | Admin',
             error: req.flash('error'),
@@ -70,19 +72,21 @@ module.exports.botAnalytics = function (req, res, next) {
 
 // GET /admin/settings
 module.exports.settings = function (req, res, next) {
-  var user_id = req.session.userId;
+  // var user_id = req.session.userId;
+  let user_id = jwt.getCurrentUserId(req);
+
   console.log('GET Admin settings', user_id);
 
   User
     .findById(user_id)
-    .exec(function(err, user){
+    .exec(function (err, user) {
       if (err) {
         console.log(err);
       }
       console.log('User found: ', user._id)
       res.locals.user = user;
       res.format({
-        html: function(){
+        html: function () {
           res.render('admin/settings', {
             title: 'Jobbunny | Admin > Settings',
             error: req.flash('error'),
@@ -90,7 +94,7 @@ module.exports.settings = function (req, res, next) {
           });
         }
       });
-  });
+    });
 };
 
 // GET /admin/jobs
@@ -98,7 +102,7 @@ module.exports.jobsList = function (req, res, next) {
   console.log('GET Admin jobsList');
   // var job_type = req.query.jobType;
   // var job_status = req.query.jobStatus;
-  Job.find({}, function(err, jobs) {
+  Job.find({}, function (err, jobs) {
     var tmpJobsList = jobs;
     res.locals.jobsCount = tmpJobsList.length;
     res.status(200).render('admin/jobsList', {
@@ -112,14 +116,14 @@ module.exports.jobsList = function (req, res, next) {
 };
 
 // GET /admin/jobs/:jobId
-module.exports.showJob = function(req, res, next) {
+module.exports.showJob = function (req, res, next) {
   var job_id = req.params.jobId;
-  var current_user = req.session.user;
+  // var current_user = req.session.user;
   console.log('GET job with _id: ' + job_id);
 
   Job
     .findById(job_id)
-    .exec(function(err, job){
+    .exec(function (err, job) {
       if (err) {
         console.log("Job not found: ", err)
         res.locals.error = 'Page not found';
@@ -140,7 +144,9 @@ module.exports.showJob = function(req, res, next) {
 // GET /admin/workers
 module.exports.workersList = function (req, res, next) {
   console.log('GET Admin workersList');
-  var current_user = req.session.user;
+  let user_id = jwt.getCurrentUserId(req);
+  
+  // var current_user = req.session.user;
   var search_query = req.query.searchQuery;
   var date_created = req.query.createdAt;
   var job_type = req.query.jobType;
@@ -153,7 +159,7 @@ module.exports.workersList = function (req, res, next) {
   gender && filters.push({ gender: gender });
 
   res.locals.searchQuery = search_query;
-  _searchAndSortWrokers(search_query, filters, function(err, workers){
+  _searchAndSortWrokers(search_query, filters, function (err, workers) {
     if (err) {
       console.log(err);
       res.redirect('/admin')
@@ -169,13 +175,13 @@ module.exports.workersList = function (req, res, next) {
 };
 
 // GET /admin/workers/:workerId
-module.exports.showWorker = function(req, res, next) {
+module.exports.showWorker = function (req, res, next) {
   var workerId = req.params.workerId;
   console.log('GET worker with _id: ' + workerId);
 
   Worker
     .findById(workerId)
-    .exec(function(err, worker){
+    .exec(function (err, worker) {
       if (err) {
         console.log("worker not found: ", err)
         res.locals.error = 'Page not found';
@@ -195,7 +201,9 @@ module.exports.showWorker = function(req, res, next) {
 // GET /admin/employers
 module.exports.employersList = function (req, res, next) {
   console.log('GET Admin employersList');
-  var current_user = req.session.user;
+  let user_id = jwt.getCurrentUserId(req);
+  
+  // var current_user = req.session.user;
   var search_query = req.query.searchQuery;
   var date_created = req.query.createdAt;
   var last_activity = req.query.updatedAt;
@@ -206,7 +214,7 @@ module.exports.employersList = function (req, res, next) {
   last_activity && filters.push({ updatedAt: last_activity });
 
   res.locals.searchQuery = search_query;
-  _searchAndSortEmployers(search_query, filters, function(err, employers){
+  _searchAndSortEmployers(search_query, filters, function (err, employers) {
     if (err) {
       console.log(err);
       res.redirect('/admin')
@@ -228,21 +236,21 @@ module.exports.searchEmployers = function (req, res, next) {
   console.log('search Users with param: ' + search_query);
 
   User
-    .find( {$text: { $search: search_query }}, { score: { $meta: "textScore" }} )
-    .exec(function(err, employers){
-    if (err) {
-      console.log(err);
-      res.redirect('/admin')
-    }
-    res.locals.searchQuery = search_query;
-    res.locals.employersCount = employers.length;
-    res.locals.employerFilters = [];
-    res.status(200).render('admin/employersList', {
-      title: 'Jobbunny | Admin > Employers',
-      employers: employers,
-      moment: moment
+    .find({ $text: { $search: search_query } }, { score: { $meta: "textScore" } })
+    .exec(function (err, employers) {
+      if (err) {
+        console.log(err);
+        res.redirect('/admin')
+      }
+      res.locals.searchQuery = search_query;
+      res.locals.employersCount = employers.length;
+      res.locals.employerFilters = [];
+      res.status(200).render('admin/employersList', {
+        title: 'Jobbunny | Admin > Employers',
+        employers: employers,
+        moment: moment
+      });
     });
-  });
 };
 
 // GET /admin/employers/:employerId
@@ -252,18 +260,18 @@ module.exports.showEmployer = function (req, res, next) {
 
   User
     .findById(employer_id)
-    .exec(function(err, employer){
+    .exec(function (err, employer) {
       if (err) {
         console.log("employer not found: ", err)
         res.locals.error = 'Page not found';
         res.status(400).render('error');
       }
       console.log('Found employer: ', employer._id);
-      Job.find({ employerId: employer_id }, function(err, jobs){
-        if(err){ console.log(err) }
+      Job.find({ employerId: employer_id }, function (err, jobs) {
+        if (err) { console.log(err) }
         res.locals.jobsCount = jobs.length
-        Match.find({ employerId: employer_id, initiatorId: employer_id }, function(err, matches){
-          if(err){ console.log(err) }
+        Match.find({ employerId: employer_id, initiatorId: employer_id }, function (err, matches) {
+          if (err) { console.log(err) }
           res.locals.invitationsCount = matches.length;
           res.locals.shortlistedCount = _filterMatches(matches, 'shortlisted').length;
           res.status(200).render('admin/showEmployer', {
@@ -280,7 +288,7 @@ module.exports.showEmployer = function (req, res, next) {
 
 
 // HELPER methods
-var _filterUsers = function(users, user_type) {
+var _filterUsers = function (users, user_type) {
   var usersList = [];
   var user;
   for (i in users) {
@@ -290,17 +298,17 @@ var _filterUsers = function(users, user_type) {
   return usersList;
 }
 
-var _searchAndSortEmployers = function(search_query, filters, callback) {
+var _searchAndSortEmployers = function (search_query, filters, callback) {
   var error;
   var employersList;
   var sort_by = {};
 
-  filters.forEach(function (filter){
-    for(var key in filter){
+  filters.forEach(function (filter) {
+    for (var key in filter) {
       var filter_type = key;
       var filter_val = filter[key];
       console.log(filter_val);
-      switch(filter_type) {
+      switch (filter_type) {
         case 'createdAt':
           if (filter_val == 'latest') {
             sort_by['createdAt'] = -1; // descending
@@ -324,16 +332,16 @@ var _searchAndSortEmployers = function(search_query, filters, callback) {
   console.log(sort_by);
   if (search_query) {
     User
-      .find({ userType: 'employer', $text: { $search: search_query }}, { score: { $meta: "textScore" }}, function(err, employers){
-      if (err) {
-        console.log(err);
-        error = err;
-      }
-      employersList = employers;
-      callback(error, employersList);
-    }).sort(sort_by);
+      .find({ userType: 'employer', $text: { $search: search_query } }, { score: { $meta: "textScore" } }, function (err, employers) {
+        if (err) {
+          console.log(err);
+          error = err;
+        }
+        employersList = employers;
+        callback(error, employersList);
+      }).sort(sort_by);
   } else {
-    User.find({ userType: 'employer' }, function(err, employers) {
+    User.find({ userType: 'employer' }, function (err, employers) {
       if (err) {
         console.log(err);
         error = err;
@@ -344,19 +352,19 @@ var _searchAndSortEmployers = function(search_query, filters, callback) {
   }
 }
 
-var _searchAndSortWrokers = function(search_query, filters, callback){
+var _searchAndSortWrokers = function (search_query, filters, callback) {
   var error;
   var workersList;
   var db_query_hash = {};
   var sort_by = {};
 
-  filters.forEach(function (filter){
-    for(var key in filter){
+  filters.forEach(function (filter) {
+    for (var key in filter) {
       var filter_type = key;
       var filter_val = filter[key];
       console.log(filter_val);
       if (filter_type == 'createdAt') {
-        switch(filter_type) {
+        switch (filter_type) {
           case 'createdAt':
             if (filter_val == 'latest') {
               sort_by['createdAt'] = -1; // descending
@@ -368,7 +376,7 @@ var _searchAndSortWrokers = function(search_query, filters, callback){
             break;
         }
       } else {
-        switch(filter_type) {
+        switch (filter_type) {
           case 'jobType':
             if (filter_val == 'Part-timer') {
               db_query_hash['Part-timer'] = { $exists: true }
@@ -389,16 +397,16 @@ var _searchAndSortWrokers = function(search_query, filters, callback){
   console.log(search_query)
   if (search_query) {
     Worker
-      .find({$text: { $search: search_query }}, { score: { $meta: "textScore" }}, function(err, workers){
-      if (err) {
-        console.log(err);
-        error = err;
-      }
-      workersList = workers;
-      callback(error, workersList);
-    }).sort(sort_by);
+      .find({ $text: { $search: search_query } }, { score: { $meta: "textScore" } }, function (err, workers) {
+        if (err) {
+          console.log(err);
+          error = err;
+        }
+        workersList = workers;
+        callback(error, workersList);
+      }).sort(sort_by);
   } else {
-    Worker.find(db_query_hash, function(err, workers) {
+    Worker.find(db_query_hash, function (err, workers) {
       if (err) {
         console.log(err);
         error = err;
@@ -409,7 +417,7 @@ var _searchAndSortWrokers = function(search_query, filters, callback){
   }
 }
 
-var _filterMatches = function(matches, match_status) {
+var _filterMatches = function (matches, match_status) {
   var matchesList = [];
   var match;
   for (i in matches) {

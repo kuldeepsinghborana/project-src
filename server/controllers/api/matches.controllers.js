@@ -119,7 +119,8 @@ module.exports.createMatch = function(req, res) {
 // GET /api/matches/update/:matchId?matchStatus=shortlisted
 module.exports.updateMatch = function(req, res) {
   console.log('UPDATE match');
-  var current_user = req.session.user;
+  // var current_user = req.session.user;
+  let user_id = jwt.getCurrentUserId(req);
   var match_id = req.params.matchId.toString();
   var match_status = req.query.matchStatus;
   console.log(match_id)
@@ -132,7 +133,7 @@ module.exports.updateMatch = function(req, res) {
       res.redirect(req.header('Referer'));
     } else {
       // respond
-      if (current_user) { // respond a redirect for employerCMS request
+      if (user_id) { // respond a redirect for employerCMS request
         // update session stats
         req.session.stats.notificationsCount = req.session.stats.notificationsCount + 1;
         req.flash('message', 'Worker '+ match_status + ' successfully');
@@ -160,7 +161,8 @@ module.exports.updateMatch = function(req, res) {
 // /api/matches/employed/:matchId
 module.exports.employedMatch = function(req, res) {
   console.log('UPDATE match');
-  var current_user = req.session.user;
+  // var current_user = req.session.user;
+  let user_id = jwt.getCurrentUserId(req);
   var match_id = req.params.matchId.toString();
 
   Match

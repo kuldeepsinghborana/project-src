@@ -2,11 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { CommonServiceService } from '../common/common-service.service';
+import { CommaSepratedObjectPropertyValuesPipe} from '../comma-seprated-object-property-values.pipe'
 import * as moment from 'moment';
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
-  styleUrls: ['./search.component.scss']
+  styleUrls: ['./search.component.scss'],
+  providers:[CommaSepratedObjectPropertyValuesPipe]
 })
 export class SearchComponent implements OnInit {
   public jobsList: Array<object>;
@@ -17,9 +19,9 @@ export class SearchComponent implements OnInit {
   public filter: object = {};
   public filterCount: number = 0;
   public toggleFilterOptions: boolean = false;
-  public moment :any;
-  public sortOption : string = '';
-  constructor(private commonServiceService: CommonServiceService, private Router: Router) {
+  public moment: any;
+  public sortOption: string = '';
+  constructor(private commonServiceService: CommonServiceService, private Router: Router, CommaSepratedObjectPropertyValuesPipe : CommaSepratedObjectPropertyValuesPipe) {
     this.router = Router;
     this.moment = moment;
   }
@@ -43,7 +45,7 @@ export class SearchComponent implements OnInit {
     return Observable.throw(body);
   }
   toggleFilter(key, value) {
-    if(key === 'jobType' && this.filter['jobIndustry']){
+    if (key === 'jobType' && this.filter['jobIndustry']) {
       delete this.filter['jobIndustry'];
       this.filterCount--;
     }
@@ -51,11 +53,11 @@ export class SearchComponent implements OnInit {
       delete this.filter[key];
       this.filterCount--;
     } else {
-      if(!this.filter[key]){
-        this.filterCount++;        
+      if (!this.filter[key]) {
+        this.filterCount++;
       }
       this.filter[key] = value;
-    }    
+    }
     this.applyFilter();
   }
   jobDetail(data) {
@@ -81,18 +83,25 @@ export class SearchComponent implements OnInit {
     this.filterCount = 0;
     this.jobs = Object.assign([], this.jobsList);
   }
-  sort(option){
+  sort(option) {
     let order = 0;
-    if(option === 'Salary: Low to High'){
+    if (option === 'Salary: Low to High') {
       order = 1;
-    } else if(option === 'Salary: High to Low'){
+    } else if (option === 'Salary: High to Low') {
       order = -1;
     }
-    if(order === 0){
+    if (order === 0) {
       return this.applyFilter();
     }
-    this.jobs.sort((a,b)=>{
-      return order*(a['salary'] - b['salary']);
+    this.jobs.sort((a, b) => {
+      return order * (a['salary'] - b['salary']);
     })
+  }
+  showFilterValue() {
+    var valArray = [];
+    for (var key in this.filter) {
+      valArray.push(this.filter[key]);
+    }
+    return valArray.join(',');
   }
 }

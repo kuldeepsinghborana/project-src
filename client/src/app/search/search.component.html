@@ -35,9 +35,7 @@
         </div>
         <div class="row">
           <div class="col-md-6 clearfix">
-            <p class="medium strong">{{jobs ? jobs.length : 0}} Matches for " {{query}}{{filter['jobType'] ? ', '+ filter['jobType'] : ''}}{{filter['jobIndustry']
-              ? ', '+ filter['jobIndustry'] : ''}}{{filter['workRegion'] ? ', '+ filter['workRegion'] : ''}}{{filter['workPeriod']
-              ? ', '+ filter['workPeriod'] : ''}}"</p>
+            <p class="medium strong">{{jobs ? jobs.length : 0}} Matches for " {{query}} {{ filter | commaSepratedObjectPropertyValues}}"</p>
             <br>
           </div>
           <div class="col-md-6">

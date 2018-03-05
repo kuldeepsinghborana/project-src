@@ -29,6 +29,7 @@ paymentCtr.getClientToken = (req, res) => {
 paymentCtr.paymentMethod = (req, res) => {
     var nonceFromTheClient = req.body.payment_method_nonce;
     let planType = req.body.planType;
+    console.log('req.body', req.body);
     let plan = [
         {
             planType: 'PROFESSIONAL',
@@ -104,17 +105,19 @@ paymentCtr.paymentMethod = (req, res) => {
                     let purchasedCarrot = selectedPlan.carrots;
                     let oldTotalCarrots = userData.carrots.total;
                     let oldAvailableCarrots = userData.carrots.available;
-                    let updatedTotalCarrot = parseInt(oldTotalCarrots) + parseInt(purchasedCarrot);
-                    let updatedAvailableCarrot = parseInt(oldAvailableCarrots) + parseInt(purchasedCarrot);
+                    let updatedTotalCarrot = Number(oldTotalCarrots) + Number(purchasedCarrot);
+                    let updatedAvailableCarrot = Number(oldAvailableCarrots) + Number(purchasedCarrot);
                     let userNewData = {
                         carrots: {
-                            total: updatedTotalCarrot,
-                            available: updatedAvailableCarrot,
+                            total: Number(updatedTotalCarrot),
+                            available: Number(updatedAvailableCarrot),
                             pending: userData.carrots.pending
                         }
                     }
+                    console.log('userNewData', userNewData);
                     User.findByIdAndUpdate(user_id, userNewData, { new: true }, function (err, updatedUserData) {
                         if (err) {
+                            console.log('err', err);
                             callback(err);
                         } else {
                             // console.log('updatedUserData', updatedUserData);
@@ -130,6 +133,7 @@ paymentCtr.paymentMethod = (req, res) => {
             }
             Payment.findByIdAndUpdate(paymentResult._id, newStatus, function (err, carrotStatusResponse) {
                 if (err) {
+                    console.log('err', err);
                     callback(err);
                 } else {
                     // let response = {
@@ -143,7 +147,9 @@ paymentCtr.paymentMethod = (req, res) => {
             });
         }, function (updatedUserData, callback) {
             let email = updatedUserData.email;
-            let username = data.name ? data.name : '';
+            // let username = data.name ? data.name : '';
+            let username = '';
+
             let subject = 'Carrot Purchased Successfully';
             // let pageName = 'activateaccount/' + token;
             let fileName = 'purchaseSuccess';

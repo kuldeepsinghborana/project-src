@@ -24,6 +24,7 @@
     "amazing-time-picker": "^1.5.2",
     "angular5-toaster": "^1.0.2",
     "bootstrap": "^4.0.0",
+    "braintree-web-drop-in": "^1.9.4",
     "core-js": "^2.4.1",
     "moment": "^2.21.0",
     "ngx-modal": "0.0.29",

@@ -7,8 +7,8 @@ import * as moment from 'moment';
 @Component({
   selector: 'app-search',
   templateUrl: './search.component.html',
-  styleUrls: ['./search.component.scss'],
-  providers:[CommaSepratedObjectPropertyValuesPipe]
+  styleUrls: ['./search.component.scss']
+  
 })
 export class SearchComponent implements OnInit {
   public jobsList: Array<object>;
@@ -21,13 +21,15 @@ export class SearchComponent implements OnInit {
   public toggleFilterOptions: boolean = false;
   public moment: any;
   public sortOption: string = '';
-  constructor(private commonServiceService: CommonServiceService, private Router: Router, CommaSepratedObjectPropertyValuesPipe : CommaSepratedObjectPropertyValuesPipe) {
+  constructor(private commonServiceService: CommonServiceService, private Router: Router,public commaSepratedObjectPropertyValuesPipe:CommaSepratedObjectPropertyValuesPipe) {
     this.router = Router;
     this.moment = moment;
   }
 
   ngOnInit() {
+    console.log(this.commaSepratedObjectPropertyValuesPipe.transform)
   }
+
   search() {
     let self = this;
     this.commonServiceService.get('/search?query=' + this.query)

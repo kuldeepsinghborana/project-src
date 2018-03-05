@@ -74,7 +74,8 @@ const appRoutes: Routes = [];
     AuthGuardAdmin,
     CreatejobService,
     ActivateAccountService,
-    UserService
+    UserService,
+    CommaSepratedObjectPropertyValuesPipe
   ],
   bootstrap: [AppComponent]
 })

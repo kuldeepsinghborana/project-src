@@ -3,6 +3,7 @@ import { ToasterModule, ToasterContainerComponent, ToasterService } from './../.
 import { Router } from '@angular/router';
 import { BuyCarrotsService } from './buy-carrots.service';
 declare var braintree: any;
+declare var paypal: any;
 // var dropin = require('braintree-web-drop-in');
 
 @Component({
@@ -23,7 +24,7 @@ export class BuyCarrotsComponent implements OnInit {
       this.clientToken = res.clientToken;
     }, err => {
       console.log('err', err);
-    })
+    });
   }
 
   buyNow(planType) {
@@ -51,13 +52,45 @@ export class BuyCarrotsComponent implements OnInit {
     //   }
     // });
 
+    let plan = [
+      {
+        planType: 'PROFESSIONAL',
+        amount: 350.00,
+        carrots: 1000
+      },
+      {
+        planType: 'VALUE',
+        amount: 90.00,
+        carrots: 200
+      },
+      {
+        planType: 'CASUAL',
+        amount: 25.00,
+        carrots: 50
+      }
+    ];
+
+    let selectedPlan = plan.filter(function (obj) {
+      return obj.planType === planType;
+    });
+    let newSelectedPlan;
+    if (selectedPlan && Array.isArray(selectedPlan) && selectedPlan.length > 0) {
+      newSelectedPlan = selectedPlan[0].amount;
+    }
+
+    console.log('newSelectedPlan', newSelectedPlan);
     self.showCard = true;
     let button = document.querySelector('#submit-button');
     braintree.dropin.create({
       authorization: this.clientToken,
       container: '#dropin-container',
-      paypal: {
-        container: "paypal-button"
+      // paypal: {
+      //   container: "paypal-button"
+      // },
+      paypalCredit: {
+        flow: 'checkout',
+        amount: newSelectedPlan,
+        currency: 'USD'
       }
     }, function (createErr, instance) {
       button.addEventListener('click', function () {
@@ -67,19 +100,42 @@ export class BuyCarrotsComponent implements OnInit {
           // Submit payload.nonce to your server
           if (payload) {
             let data = {
-              payment_method_nonce:payload.nonce,
-              planType:planType
+              payment_method_nonce: payload.nonce,
+              planType: planType
             }
+            console.log('data', data);
             self.buyCarrotsService.checkout(data).subscribe(res => {
               if (res) {
                 console.log('res', res);
               }
             }, err => {
               console.log('err', err);
-            })
+            });
           }
         });
       });
     });
+
+
+    // paypal.Button.render({
+    //   braintree: braintree,
+    //   client: {
+    //     // production: 'CLIENT_TOKEN_FROM_SERVER',
+    //     sandbox: this.clientToken
+    //   },
+    //   env: 'sandbox', // or 'sandbox' 'production'
+    //   commit: true,
+    //   payment: function (data, actions) {
+    //     return actions.braintree.create({
+    //       flow: 'checkout',
+    //       amount: newSelectedPlan,
+    //       currency: 'USD'
+    //     });
+    //   },
+    //   onAuthorize: function (payload) {
+    //     console.log('payload', payload);
+    //     // Submit `payload.nonce` to your server.
+    //   },
+    // }, '#paypal-button');
   }
 }

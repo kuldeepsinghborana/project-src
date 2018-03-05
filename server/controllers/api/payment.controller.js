@@ -55,7 +55,7 @@ paymentCtr.paymentMethod = (req, res) => {
             if (selectedPlan && Array.isArray(selectedPlan) && selectedPlan.length > 0) {
                 selectedPlan = selectedPlan[0];
             }
-            console.log('selectedPlan', selectedPlan);
+            // console.log('selectedPlan', selectedPlan);
             gateway.transaction.sale({
                 amount: selectedPlan.amount,
                 paymentMethodNonce: nonceFromTheClient,
@@ -67,14 +67,21 @@ paymentCtr.paymentMethod = (req, res) => {
                     console.log('err', err);
                     callback(err);
                 }
-                let user_id = jwt.getCurrentUserId(req);
-                let newObj = {
-                    amount: result.transaction.amount,
-                    transaction_id: result.transaction.id,
-                    transaction_status: result.transaction.status,
-                    user_id: user_id
+
+                if (result && result.success === true) {
+                    console.log('result1', result);
+                    let user_id = jwt.getCurrentUserId(req);
+                    let newObj = {
+                        amount: result.transaction.amount,
+                        transaction_id: result.transaction.id,
+                        transaction_status: result.transaction.status,
+                        user_id: user_id
+                    }
+                    callback(null, selectedPlan, newObj, result);
+                } else {
+                    console.log('test 2 re', result);
+                    callback(result.message);
                 }
-                callback(null, selectedPlan, newObj, result);
             });
         }, function (selectedPlan, newData, result, callback) {
             let newObj = Payment(newData);
@@ -86,6 +93,7 @@ paymentCtr.paymentMethod = (req, res) => {
                 else {
                     // console.log('result save of transaction', result);
                     if (result && result.success === true) {
+                        console.log('test');
                         callback(null, selectedPlan, newData, result, paymentResult);
                     } else {
                         let response = {
@@ -102,6 +110,7 @@ paymentCtr.paymentMethod = (req, res) => {
                 if (err) {
                     callback(err);
                 } else {
+                    console.log('userData', userData);
                     let purchasedCarrot = selectedPlan.carrots;
                     let oldTotalCarrots = userData.carrots.total;
                     let oldAvailableCarrots = userData.carrots.available;
@@ -128,6 +137,7 @@ paymentCtr.paymentMethod = (req, res) => {
                 }
             });
         }, function (updatedUserData, paymentResult, callback) {
+            console.log('paymentResult', paymentResult);
             let newStatus = {
                 carrotStatus: true
             }
@@ -147,9 +157,8 @@ paymentCtr.paymentMethod = (req, res) => {
             });
         }, function (updatedUserData, callback) {
             let email = updatedUserData.email;
-            // let username = data.name ? data.name : '';
-            let username = '';
-
+            let username = updatedUserData.name ? updatedUserData.name : '';
+            // let username = '';
             let subject = 'Carrot Purchased Successfully';
             // let pageName = 'activateaccount/' + token;
             let fileName = 'purchaseSuccess';
@@ -158,15 +167,17 @@ paymentCtr.paymentMethod = (req, res) => {
             let mailTemplatePath = "./mail_content/" + fileName + ".html";
             utils.getHtmlContent(mailTemplatePath, function (err, content) {
                 if (err) {
+                    console.log('get html err', err);
                     callback('PLEASE_TRY_AGAIN');
                 }
                 if (content) {
-                    let link = config.SITE_URL + pageName;
-                    content = content.replace("{LINK}", link);
+                    // let link = config.SITE_URL + pageName;
+                    // content = content.replace("{LINK}", link);
                     content = content.replace("{USERNAME}", username);
                     content = content.replace("{YEAR}", year);
                     utils.sendEmail(email, subject, content, function (err, result) {
                         if (err) {
+                            console.log('mail err', err);
                             callback('PLEASE_TRY_AGAIN');
                         }
                         if (result) {
@@ -178,11 +189,13 @@ paymentCtr.paymentMethod = (req, res) => {
                             return res.status(200).json(response);
                         }
                         else {
+                            console.log('test');
                             callback('PLEASE_TRY_AGAIN');
                         }
                     });
                 }
                 else {
+                    console.log('test2');
                     callback('PLEASE_TRY_AGAIN');
                 }
             });

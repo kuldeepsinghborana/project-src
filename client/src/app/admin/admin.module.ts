@@ -24,10 +24,4 @@ import { ChatbotAnalyticsComponent } from './chatbot-analytics/chatbot-analytics
   exports:[RouterModule],
   declarations: [OverviewComponent, EmployerManagementComponent, EmployeeManagementComponent, JobManagementComponent, CarrotAnalyticsComponent, ChatbotAnalyticsComponent]
 })
-@NgModule({
-  imports: [
-    CommonModule
-  ],
-  declarations: []
-})
 export class AdminModule { }

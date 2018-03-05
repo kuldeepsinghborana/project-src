@@ -96,7 +96,6 @@
                 <input type="date" name="startDate" [(ngModel)]='post.startDate' #startDate="ngModel" id="start-date" required>
               </div>
             </div>
-            <option value="Weekends">Weekends</option>
             <div class="col-sm-5" id="end-date-wrapper" style="display: none;">
               <small class="strong">END DATE</small>
               <div class="input-group datepicker">
@@ -108,7 +107,8 @@
             <label class="control-label col-sm-2 small" [ngClass]="{'required': workPeriod.errors && (workPeriod.dirty || workPeriod.touched)}">WORKING DAYS</label>
             <div class="col-sm-10">
               <select class="form-control" name="workPeriod" required [(ngModel)]='post.workPeriod' #workPeriod="ngModel">
-                <option value="Weekdays">Weekdays</option>
+                  <option value="Weekends">Weekends</option>
+                  <option value="Weekdays">Weekdays</option>
                 <option value="Both weekdays and weekends">Both weekdays and weekends</option>
               </select>
             </div>
@@ -272,20 +272,20 @@
     <form (ngSubmit)="openModal(myModal)" #verify="ngForm">
       <p [hidden]="!hidePassword">
       <label>Please Enter Email:</label>
-      <input type="email" id="email" name="email" [(ngModel)]="user.email" required>
+      <input type="email" id="email" name="email" [(ngModel)]="user['email']" required>
       </p>
       <p [hidden]="hidePassword">
-          <label>Email:{{user.email}}</label>
+          <label>Email:{{user['email']}}</label>
       <button class="btn btn-primary" *ngIf="showSubmit" (click)="hidePassword = !hidePassword" type="button">Change</button>  
          </p>
     
       <p *ngIf="showPassword">
       <label>Please Enter password:</label>
-      <input id="password" name="password" [(ngModel)]="user.password" type="password">
+      <input id="password" name="password" [(ngModel)]="user['password']" type="password">
       </p>
       <p [hidden]="hideConfirmPassword">
           <label>Please Enter Confirm password:</label>
-          <input id="password" name="confirm password" [(ngModel)]="user.Confirmpassword" type="password">
+          <input id="password" name="confirm password" [(ngModel)]="user['Confirmpassword']" type="password">
           </p>
       <button class="btn btn-primary" *ngIf="next" (click)="emailVerify()" [disabled]="!verify.valid" type="button">Next</button>
       <button class="btn btn-primary" *ngIf="!hidePassword" type="submit">Submit</button>

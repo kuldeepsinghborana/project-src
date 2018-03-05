@@ -29,6 +29,7 @@ import { ActivateAccountService } from './activate-account/activate-account.serv
 import { UserService } from './user-service.service';
 import { EmployerComponent } from './employer/employer.component';
 import { AdminComponent } from './admin/admin.component';
+import { CommaSepratedObjectPropertyValuesPipe } from './comma-seprated-object-property-values.pipe';
 const appRoutes: Routes = [];
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ const appRoutes: Routes = [];
     JobComponent,
     ActivateAccountComponent,
     EmployerComponent,
-    AdminComponent
+    AdminComponent,
+    CommaSepratedObjectPropertyValuesPipe
   ],
   imports: [
     BrowserModule,

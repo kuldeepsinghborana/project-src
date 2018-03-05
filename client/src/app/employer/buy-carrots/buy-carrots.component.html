@@ -1,7 +1,7 @@
 <div class="content">
   <div class="clearfix"></div>
   <div class="container-fluid">
-    <div class="content-wrap">
+    <div class="content-wrap" [hidden]="showCard">
       <div class="align-center">
         <img class="left20" height="60" length="60" src="assets/img/carrot.png">
         <h3 class="strong">Purchase Carrots</h3>
@@ -10,7 +10,7 @@
       <br>
       <br>
       <br>
-      <div class="row">
+      <div class="row" [hidden]="showCard">
         <div class="col-md-4">
           <div class="panel align-center pad20">
             <strong>PROFESSIONAL</strong>
@@ -21,7 +21,7 @@
             <p class="strong">1000 carrots</p>
             <p>0.35¢ per carrot</p>
             <br>
-            <button class="btn btn-green">Buy now</button>
+            <button (click)="buyNow('PROFESSIONAL')" class="btn btn-green">Buy now</button>
           </div>
         </div>
         <div class="col-md-4" style="margin-top: -30px;">
@@ -34,7 +34,7 @@
             <p class="strong">200 carrots</p>
             <p>0.45¢ per carrot</p>
             <br>
-            <button class="btn btn-green">Buy now</button>
+            <button (click)="buyNow('VALUE')" class="btn btn-green">Buy now</button>
           </div>
         </div>
         <div class="col-md-4">
@@ -47,15 +47,23 @@
             <p class="strong">50 carrots</p>
             <p>0.50¢ per carrot</p>
             <br>
-            <button class="btn btn-green">Buy now</button>
+            <button (click)="buyNow('CASUAL')" class="btn btn-green">Buy now</button>
           </div>
         </div>
       </div>
       <div class="align-center">
         <p class="medium">For custom pricing for bulk orders, please tell us your quantity through our contact form</p>
-        <a class="btn btn-orange"
-          href="/contact">Contact us</a>
+        <a class="btn btn-orange" href="/contact">Contact us</a>
       </div>
     </div>
   </div>
 </div>
+
+
+<div class="div">
+  <div id="dropin-container"></div>
+  <button id="submit-button" type="button">SUBMIT</button>
+</div>
+<!-- <form>
+  <div id="dropin-container"></div>
+</form> -->

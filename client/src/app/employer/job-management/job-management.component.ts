@@ -48,7 +48,7 @@ export class JobManagementComponent implements OnInit {
   constructor(public userService: UserService, private route: ActivatedRoute, public atp: AmazingTimePickerService,public toasterService: ToasterService) { }
 
   ngOnInit() {
-    this.userService.getUserJobDetails().subscribe(res => {
+    this.userService.getJobDetails('employer').subscribe(res => {
       this.jobsList = res.jobs;
       console.log("res", this.jobsList)
       this.route.queryParams.subscribe(queryParams => {

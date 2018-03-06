@@ -12,6 +12,8 @@ import { FarmCarrotsComponent } from './farm-carrots/farm-carrots.component';
 import { BuyCarrotsService } from './buy-carrots/buy-carrots.service';
 import { JobComponent } from './job/job.component';
 import { FormsModule } from '@angular/forms';
+import { AccountSettingsComponent } from './account-settings/account-settings.component';
+
 
 @NgModule({
   imports: [
@@ -23,11 +25,13 @@ import { FormsModule } from '@angular/forms';
       { path:'job-management', component: JobManagementComponent, pathMatch: 'full' },
       { path:'buy-carrots', component: BuyCarrotsComponent, pathMatch: 'full' },
       { path:'farm-carrots', component: FarmCarrotsComponent, pathMatch: 'full' },
-      { path:'employee-management', component: EmployeeManagementComponent, pathMatch: 'full' }
-    ])
+      { path:'employee-management', component: EmployeeManagementComponent, pathMatch: 'full' },
+      { path:'account-settings', component: AccountSettingsComponent, pathMatch: 'full' }
+    ]),
+    FormsModule
   ],
   exports:[RouterModule],
-  declarations: [JobOverviewComponent, JobManagementComponent, EmployeeManagementComponent, BuyCarrotsComponent, FarmCarrotsComponent, JobComponent],
+  declarations: [JobOverviewComponent, JobManagementComponent, EmployeeManagementComponent, BuyCarrotsComponent, FarmCarrotsComponent, JobComponent, AccountSettingsComponent],
   providers:[BuyCarrotsService]
 })
 export class EmployerModule { }

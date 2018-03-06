@@ -79,7 +79,9 @@ module.exports.settings = function (req, res, next) {
       })
     }
     // console.log('User found: ', user);
-    res.locals.user = user;
+    if(user){
+      user.password = '';
+    }
     res.json({
       user: user
     });

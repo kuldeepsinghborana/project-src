@@ -14,8 +14,8 @@ export class UserService {
       .map(res => res.json())
       .catch(this.handleError);
   }
-  public getUserJobDetails() {
-    return this.commonServiceService.get('/employer/jobs' )
+  public getJobDetails(userType : string) {
+    return this.commonServiceService.get('/'+userType+'/jobs' )
       .map(res => res.json())
       .catch(this.handleError);
   }
@@ -24,6 +24,12 @@ export class UserService {
       .map(res => res.json())
       .catch(this.handleError);
   }
+  public getUserSettings(userType : string){
+    return this.commonServiceService.get('/'+userType+'/settings')
+    .map(res => res.json())
+    .catch(this.handleError);
+  }
+
   handleError(error: Response | any) {
     const body = JSON.parse(JSON.stringify(error)) || '';
     return Observable.throw(body);

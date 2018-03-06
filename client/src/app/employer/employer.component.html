@@ -1,12 +1,12 @@
 <div class="wrapper">
     <div class="sidebar" data-color="#303135">
-        <div class="sidebar-wrapper">
-            <div class="logo align-center">
-                <img class="img-circle" height="75" length="75" src="https://i.imgur.com/0ifoulJ.jpg">
-                <div class="strong medium">Gary Lim</div>
-                <div class="medium">Jobbunny</div>
-                <a >
-                    <i class="small">Edit Account Settings</i>
+        <div class="sidebar-wrapper" >
+            <div class="logo align-center" *ngIf="curruntUserDetails['firstName']">
+                <img class="img-circle" height="75" length="75" [src]="curruntUserDetails['profilePic']">
+                <div class="strong medium">{{curruntUserDetails['firstName'] + ' ' + curruntUserDetails['lastName']}}</div>
+                <div class="medium">{{curruntUserDetails['companyName']}}</div>
+                <a [routerLink]="['./account-settings']">
+                    <i class="small" >Edit Account Settings</i>
                 </a>
             </div>
             <ul class="nav list-group">
@@ -108,16 +108,16 @@
                 <div class="pull-right hidden-xs top20">
                     <a class="hover" >
                         <div class="tooltip pad10">
-                            <div class="strong">Available Carrots: 98</div>
-                            <div class="strong">Pending Carrots: 2</div>
-                            <div class="strong">Total Carrots: 100</div>
+                            <div class="strong">Available Carrots: {{(curruntUserDetails['carrots'] && curruntUserDetails['carrots']['available'])||0}}</div>
+                            <div class="strong">Pending Carrots: {{(curruntUserDetails['carrots'] && curruntUserDetails['carrots']['pending'])||0}}</div>
+                            <div class="strong">Total Carrots: {{(curruntUserDetails['carrots'] && curruntUserDetails['carrots']['total'])||0}}</div>
                             <form action="/employer/buy-carrots" method="get">
                                 <button class="btn btn-orange" >Purchase carrots</button>
                             </form>
                         </div>
                         <img class="pull-left" height="50" length="50" src="assets/img/carrot.png">
                         <div class="pull-left right10 black">
-                            <span class="strong">98</span>
+                            <span class="strong">{{(curruntUserDetails['carrots'] && curruntUserDetails['carrots']['available'])||0}}</span>
                             <p>Available</p>
                         </div>
                     </a>

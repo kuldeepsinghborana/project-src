@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from '../user-service.service';
+import { UserService } from '../../user-service.service';
 
 @Component({
-  selector: 'app-employer',
-  templateUrl: './employer.component.html',
-  styleUrls: ['./employer.component.scss']
+  selector: 'app-account-settings',
+  templateUrl: './account-settings.component.html',
+  styleUrls: ['./account-settings.component.css']
 })
-export class EmployerComponent implements OnInit {
+export class AccountSettingsComponent implements OnInit {
   public curruntUserDetails : object = {};
   constructor(public userService:UserService) { 
     userService.getUserSettings('employer').subscribe(res=>{
@@ -15,7 +15,6 @@ export class EmployerComponent implements OnInit {
   }
 
   ngOnInit() {
-    
   }
 
 }

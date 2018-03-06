@@ -200,10 +200,10 @@ module.exports.newJob = function (req, res, next) {
   res.status(200).render('employer/newjob', { title: 'Jobbunny | Employer > Jobs' });
 }
 
-// GET /employer/jobs/:jobId
-module.exports.showJob = function (req, res, next) {
+module.exports.showJobWithId = function(req,res){
+  console.log("i am in show job")
   var job_id = req.params.jobId;
-  var current_user = req.session.user;
+  // var current_user = req.session.user;
   let user_id = jwt.getCurrentUserId(req);
 
   console.log('GET job with _id: ' + job_id);
@@ -213,8 +213,8 @@ module.exports.showJob = function (req, res, next) {
     .exec(function (err, job) {
       if (err) {
         console.log("Job not found: ", err)
-        res.locals.error = 'Page not found';
-        res.status(400).render('error');
+        // res.locals.error = 'Page not found';
+        // res.status(400).render('error');
       }
       console.log('Found job: ', job._id);
       Match.find({ employerId: user_id, jobId: job._id }, function (err, matches) {
@@ -229,14 +229,68 @@ module.exports.showJob = function (req, res, next) {
           if (err) {
             console.log(err);
           }
+          res.send({
+            status:1,
+              job: job_with_stats,
+              message:"successfully retrieved"  
+          })
+          return false;
           // console.log(job_with_stats);
-          res.status(200).render('employer/showJob', {
-            job: job_with_stats,
-            moment: moment,
-            title: 'Jobbunny | Employer > Job',
-            message: req.flash('message'),
-            error: req.flash('error')
-          });
+          // res.status(200).render('employer/showJob', {
+          //   job: job_with_stats,
+          //   moment: moment,
+          //   title: 'Jobbunny | Employer > Job',
+          //   message: req.flash('message'),
+          //   error: req.flash('error')
+          // });
+        });
+      });
+    });
+}
+// GET /employer/jobs/:jobId
+module.exports.showJob = function (req, res, next) {
+  console.log("i am in show job")
+  var job_id = req.params.jobId;
+  var current_user = req.session.user;
+  let user_id = jwt.getCurrentUserId(req);
+
+  console.log('GET job with _id: ' + job_id);
+
+  Job
+    .findById(job_id)
+    .exec(function (err, job) {
+      if (err) {
+        console.log("Job not found: ", err)
+        // res.locals.error = 'Page not found';
+        // res.status(400).render('error');
+      }
+      console.log('Found job: ', job._id);
+      Match.find({ employerId: user_id, jobId: job._id }, function (err, matches) {
+        if (err) {
+          console.log(err);
+        }
+        res.locals.pendingInvitationWorkersCount = 0;
+        res.locals.pendingAcceptanceWorkersCount = countMatches(matches, 'matched');
+        res.locals.shortListedWorkersCount = countMatches(matches, 'shortlisted');
+        res.locals.declinedWorkersCount = countMatches(matches, 'declined');
+        _appendMatchesMetricsToJob(job, current_user, function (err, job_with_stats) {
+          if (err) {
+            console.log(err);
+          }
+          res.send({
+            status:1,
+              job: job_with_stats,
+              message:"successfully retrieved"  
+          })
+          return false;
+          // console.log(job_with_stats);
+          // res.status(200).render('employer/showJob', {
+          //   job: job_with_stats,
+          //   moment: moment,
+          //   title: 'Jobbunny | Employer > Job',
+          //   message: req.flash('message'),
+          //   error: req.flash('error')
+          // });
         });
       });
     });

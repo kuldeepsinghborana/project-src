@@ -14,7 +14,7 @@ var options = {
     replset: { socketOptions: { keepAlive: 300000, connectTimeoutMS: 30000 } }
 };
 var mongodbUri = 'mongodb://jobbunnyadmin:jobbunnyadminasdlkjasdlkj123@ds111103.mlab.com:11103/jobbunnyworkers';
-// let mongodbUri = 'mongodb://localhost:27017/jobbunnyDev';
+//  let mongodbUri = 'mongodb://localhost:27017/jobbunnyDev';
 
 mongoose.connect(mongodbUri, options);
 mongoose.Promise = global.Promise;

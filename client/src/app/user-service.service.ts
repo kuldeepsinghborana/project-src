@@ -19,7 +19,11 @@ export class UserService {
       .map(res => res.json())
       .catch(this.handleError);
   }
-
+  public updateJobPost(jobId,data) {
+    return this.commonServiceService.post('/jobs/update/' + jobId,data)
+      .map(res => res.json())
+      .catch(this.handleError);
+  }
   handleError(error: Response | any) {
     const body = JSON.parse(JSON.stringify(error)) || '';
     return Observable.throw(body);

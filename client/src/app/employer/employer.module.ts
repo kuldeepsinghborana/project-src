@@ -11,10 +11,12 @@ import { BuyCarrotsComponent } from './buy-carrots/buy-carrots.component';
 import { FarmCarrotsComponent } from './farm-carrots/farm-carrots.component';
 import { BuyCarrotsService } from './buy-carrots/buy-carrots.service';
 import { JobComponent } from './job/job.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
     CommonModule,
+    FormsModule,
     RouterModule.forChild([
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
       { path: 'overview', component: JobOverviewComponent, pathMatch: 'full' },

@@ -1,10 +1,12 @@
-<div class="content">
+<div class="content" [hidden]="!jobListing">
   <div class="clearfix"></div>
   <div class="container-fluid">
     <div class="content-wrap">
       <div class="panel pad10">
-        <p class="large strong">Job Management</p>                                                                                                                    
-       <div class="filter"><span></span></div>
+        <p class="large strong">Job Management</p>
+        <div class="filter">
+          <span></span>
+        </div>
         <div class="row">
           <div class="col-md-3">
             <p class="strong">{{jobs ? jobs.length : 0}} matches </p>
@@ -24,13 +26,13 @@
               <strong>STATUS</strong>
               <ul class="list-unstyled">
                 <li class="top10" [ngClass]="{'active': filter['jobStatus'] && filter['jobStatus'] === 'open'}" (click)="toggleFilter('jobStatus','open')">
-                  <a class="gray" >open</a>
+                  <a class="gray">open</a>
                 </li>
                 <li class="top10" [ngClass]="{'active': filter['jobStatus'] && filter['jobStatus'] === 'urgent'}" (click)="toggleFilter('jobStatus','urgent')">
-                  <a class="gray" >urgent</a>
+                  <a class="gray">urgent</a>
                 </li>
                 <li class="top10" [ngClass]="{'active': filter['jobStatus'] && filter['jobStatus'] === 'completed'}" (click)="toggleFilter('jobStatus','completed')">
-                  <a class="gray" >completed</a>
+                  <a class="gray">completed</a>
                 </li>
               </ul>
             </div>
@@ -102,7 +104,7 @@
           <div *ngFor="let job of jobs;">
             <hr>
             <div class="row">
-              <a>
+              <a (click)="rowSelect(job)">
                 <div class="col-md-2">
                   <div class="strong black capitalize">{{job['companyName']}}</div>
                 </div>
@@ -155,5 +157,291 @@
         </div>
       </div>
     </div>
+  </div>
+</div>
+<div class="content" [hidden]="!viewJob">
+  <div class="clearfix"></div>
+  <div class="content-wrap">
+    <div class="panel">
+      <div class="pad20">
+        <p class="large strong capitalize">Sales Executive
+          <span class="left20">
+            <a (click)="showEdit()">
+              <i class="fa fa-edit small gray"></i>
+            </a>
+            <a class="left20" href="/api/jobs/delete/5a685478d60e310014dab89b" onclick="return confirm('delete now?');">
+              <i class="fa fa-trash small gray"></i>
+            </a>
+          </span>
+          <span class="left20">
+            <a class="small gray" href="/api/jobs/mark/5a685478d60e310014dab89b?status=completed">Mark as completed</a>
+          </span>
+        </p>
+        <div class="row">
+          <div class="col-md-9">
+            <div class="row">
+              <div class="col-md-9">
+                <i class="fa fa-map-marker"></i>
+                <span>{{jobData['workRegion']}},{{jobData['location']}}</span>
+                <br>
+                <i class="fa fa-clock-o"></i>
+                <span>{{jobData['jobType']}},{{jobData['startTime']}} - {{jobData['endTime']}},{{jobData["workPeriod"]}}</span>
+                <br>
+                <i class="fa fa-calendar"></i>
+               <span>Starts on {{jobData['startDate'] | date}}, Ends onInvalid date</span>
+                <br>
+                <img class="img-fit" src="/img/carrot.png" height="30" widht="30">
+                <span>10 carrots spent successfully</span>
+              </div>
+              <div class="col-md-3">
+                <div class="pull-right medium green"> ${{jobData["salary"]}}/{{jobData["salaryType"]}}</div>
+              </div>
+            </div>
+            <h4>Job Description</h4>
+            <p>{{ jobData["description"] }}</p>
+            <h4>Duties and Responsibilities</h4>
+            <p>N/A</p>
+            <h4>Requirements</h4>
+            <p>Requirements</p>
+            <div class="row">
+              <div class="col-md-1">
+                <h5>
+                  <i class="fa fa-3x fa-lightbulb-o"></i>
+                </h5>
+              </div>
+              <div class="col-md-8">
+                <h5 class="strong gray">PRO-TIP</h5>
+                <div>Not getting applications? you may not be highlighting the best points about working with your company. Be
+                  more descriptive about pros of working in your company :)</div>
+              </div>
+              <div class="col-md-3">
+                <h1></h1>
+                <a class="btn btn-orange btn-block" href="/employer/workers/invite/5a685478d60e310014dab89b">Invite Employees</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 border-left">
+            <div class="align-center bottom10">
+              <div class="medium strong">JOBBUNNY</div>
+              <br>
+              <div class="pad20">
+                <img class="img-circle pull-left" src="/img/logo.png" height="40" width="40">
+                <small class="strong top10 left10 pull-left">Posted by Gary</small>
+              </div>
+            </div>
+            <br>
+            <div class="top20">
+              <div class="medium strong">Job Post activity</div>
+              <h6 class="gray">Invited ( 0 )</h6>
+              <h6 class="gray">Applied ( 0 )</h6>
+              <h6 class="gray">Shortlisted ( 0 )</h6>
+            </div>
+            <br>
+            <div class="align-center">
+              <a class="btn btn-blue btn-block" href="">Share to Group</a>
+              <small class="strong">Share to groups for more results</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="content" [hidden]="!editJobPost">
+  <div class="clearfix"></div>
+  <p>Last updated: {{jobData["updatedAt"] | date}}</p>
+  <div class="card pad20">
+      <form class="form-horizontal" method="post" enctype="multipart/form-data">
+          <div class="form-group">
+              <label class="control-label col-sm-2 small">COVER IMAGE</label>
+              <div class="col-sm-10">
+                  <input class="form-control" (change)="readFile($event)" type="file" name="coverImage">
+              </div>
+              <br>
+          </div>
+          <div class="form-group">
+              <label class="control-label col-sm-2 small">JOB TITLE</label>
+              <div class="col-sm-10">
+                  <input class="form-control" type="text" [(ngModel)]="jobTitle" name="jobTitle" placeholder="Enter job title"  value="Sales Executive" required>
+              </div>
+          </div>
+          <div class="form-group">
+              <label class="control-label col-sm-2 small">NUMBER OF HIRES</label>
+              <div class="col-sm-10">
+                  <input class="form-control" type="number" [(ngModel)]="requiredNumber" placeholder="How many people do you need to hire ?" name="requiredNumber" value="1" required="">
+              </div>
+          </div>
+          <div class="form-group">
+              <label class="control-label col-sm-2 small">JOB TYPE</label>
+              <div class="col-sm-10">
+                  <select class="form-control" name="jobType" [(ngModel)]='jobType' id="job-type" required="">
+                      <option value="Full-time" selected="">Full-time</option>
+                      <option value="Part-time">Part-time</option>
+                  </select>
+              </div>
+          </div>
+          <div class="form-group">
+              <label class="control-label col-sm-2 small">INDUSTRY</label><span></span>
+              <div class="col-sm-10">
+                  <select class="form-control" name="jobIndustry" [(ngModel)]='jobIndustry' id="job-industry" required="">
+                      <option value="Accounting / Finance">Accounting / Finance</option>
+                      <option value="Admin / HR">Admin / HR</option>
+                      <option value="Sales / Marketing" selected="">Sales / Marketing</option>
+                      <option value="Arts Design Media">Arts Design Media</option>
+                      <option value="Computer / Technology">Computer / Technology</option>
+                      <option value="Training and education">Training and education</option>
+                      <option value="Engineering">Engineering</option>
+                      <option value="Service / Logistics">Service / Logistics</option>
+                  </select>
+              </div>
+          </div>
+          <div class="form-group">
+              <label class="control-label col-sm-2 small">SALARY TYPE</label>
+              <div class="col-sm-10">
+                  <select class="form-control" name="salaryType" [(ngModel)]='salaryType' required="">
+                      <option value="Per Hour">Per Hour</option>
+                      <option value="Per Month" selected="">Per Month</option>
+                      <option value="Per Project">Per Project</option>
+                  </select>
+              </div>
+          </div>
+          <div class="form-group">
+              <label class="control-label col-sm-2 small">SALARY</label>
+              <div class="col-sm-10">
+                  <input class="form-control" type="number" placeholder="How much are you willing to pay?" name="salary" [(ngModel)]='salary' value="2000" required="">
+              </div>
+          </div>
+          <div class="form-group">
+              <label class="control-label col-sm-2 small">WORKING PERIOD</label>
+              <div class="col-sm-5"><small class="strong">START DATE</small>
+                  <div class="input-group datepicker">
+                      <input type="date" name="startDate" id="start-date" [(ngModel)]='startDate' value="2018-01-24" required="">
+                  </div>
+              </div>
+              <div class="col-sm-5" id="end-date-wrapper" style="display: none;"><small class="strong">END DATE</small>
+                  <div class="input-group datepicker">
+                      <input type="date" name="endDate" id="end-date" [(ngModel)]='endDate'>
+                  </div>
+              </div>
+          </div>
+          <div class="form-group">
+              <label class="control-label col-sm-2 small">WORKING DAYS</label>
+              <div class="col-sm-10">
+                  <select class="form-control" name="workPeriod" [(ngModel)]='workPeriod' required="">
+                      <option value="Weekdays">Weekdays</option>
+                      <option value="Weekends">Weekends</option>
+                      <option value="Both weekdays and weekends" selected="">Both weekdays and weekends</option>
+                  </select>
+              </div>
+          </div>
+          <div class="form-group" id="total-hours-wrap" style="display: none;">
+              <label class="control-label col-sm-2 small">TOTAL HOURS</label>
+              <div class="col-sm-10">
+                  <input class="form-control" type="number" placeholder="How many manhours total?" id="total-hours" [(ngModel)]='totalHours' name="totalHours">
+              </div>
+          </div>
+          <div class="form-group" id="working-hours-wrap">
+              <label class="control-label col-sm-2 small strong">START TIMING</label>
+              <div class="col-sm-4">
+                <div class="input-group clockpicker" (click)="openstartTime()">
+                  <input type="text" value="{{startTime}}">
+                  <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-time"></span>
+                  </span>
+                </div>
+              </div>
+              <label class="control-label col-sm-2 small strong">END TIMING</label>
+              <div class="col-sm-4">
+                <div class="input-group clockpicker" (click)="openendTime()">
+                  <input type="text" value="{{endTime}}">
+                  <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-time"></span>
+                  </span>
+                </div>
+              </div>
+          </div>
+          <div class="form-group">
+              <label class="control-label col-sm-2 small">EXPIRATION DATE OF JOB</label>
+              <div class="col-sm-10">
+                  <select class="form-control" name="jobExpiration" id="job-expiration" [(ngModel)]='jobExpiration' required="">
+                      <option value="At the start of working period" selected="">At the start of working period</option>
+                      <option value="At the end of working period">At the end of working period</option>
+                      <option value="After 2 months">After 2 months</option>
+                  </select>
+              </div>
+          </div>
+          <div class="form-group">
+              <label class="control-label col-sm-2 small">LOCATION OF WORK</label> 
+              <div class="col-sm-10">
+                  <input class="form-control" type="text" placeholder="Work location" name="location" [(ngModel)]='location' value="JCUBE Mall" required="">
+              </div>
+          </div>
+          <div class="form-group">
+              <label class="control-label col-sm-2 small">LOCATION REGION</label>
+              <div class="col-sm-10">
+                  <select class="form-control" name="workRegion" [(ngModel)]='workRegion' required="">
+                      <option value="North">North</option>
+                      <option value="West" selected="">West</option>
+                      <option value="East">East</option>
+                      <option value="Central">Central</option>
+                      <option value="Central Business District">Central Business District</option>
+                  </select>
+              </div>
+          </div>
+          <div class="form-group">
+              <label class="control-label col-sm-2 small strong">BACKGROUND OF JOB</label>
+              <div class="col-sm-10">
+                  <textarea class="form-control" rows="5" placeholder="Give a description of what your company does or a message to attract employees" name="description" [(ngModel)]='description' required="">Help company to bring in achieve sales targets month on month</textarea>
+              </div>
+          </div>
+          <div class="form-group">
+              <label class="control-label col-sm-2 small strong">RESPONSIBILITIES</label>
+              <div class="col-sm-10">
+                  <textarea class="form-control" rows="5" placeholder="What are your employees expected to do ?" [(ngModel)]='jobRole' name="jobRole"></textarea>
+              </div>
+          </div>
+          <div class="form-group">
+              <label class="control-label col-sm-2 small strong">REQUIREMENTS</label>
+              <div class="col-sm-10">
+                  <textarea class="form-control" rows="5" placeholder="What basic requirements should your employee have ?" [(ngModel)]='requirement' name="requirement">Requirements</textarea>
+              </div>
+          </div>
+          <div class="form-group">
+              <label class="control-label col-sm-2 small">ARE YOU EMPLOYING FOR YOURSELF?</label>
+              <div class="col-sm-10">
+                  <select class="form-control" name="selfEmployer" [(ngModel)]='selfEmployer' required="">
+                      <option value="true">Yes</option>
+                      <option value="false" selected="">No</option>
+                  </select>
+              </div>
+          </div>
+          <div class="form-group">
+              <label class="control-label col-sm-2 small strong">COMPANY NAME</label>
+              <div class="col-sm-10">
+                  <input class="form-control" type="text" name="companyName" [(ngModel)]='companyName' value="Jobbunny" required="">
+              </div>
+          </div>
+          <div class="form-group">
+              <label class="control-label col-sm-2 small strong">COMPANY WEBSITE</label>
+              <div class="col-sm-10">
+                  <input class="form-control" type="url" name="companyWebsite" [(ngModel)]='companyWebsite' value="Https://www.jobbunny.com">
+              </div>
+          </div>
+          <div class="form-group">
+              <label class="control-label col-sm-2 small strong">RECRUITER NAME</label>
+              <div class="col-sm-10">
+                  <input class="form-control" type="text" name="employerName" [(ngModel)]='employerName' value="Gary">
+              </div>
+          </div>
+          <div class="form-group">
+              <label class="control-label col-sm-2 small strong">RECRUITER HANDPHONE</label>
+              <div class="col-sm-10">
+                  <input class="form-control" type="text"  name="employerPhone" [(ngModel)]='employerPhone' value="82330317">
+              </div>
+          </div>
+          <button class="btn-lg btn-warning pull-right" (click)="updateJobPost()">Save updates</button>
+      </form>
+      <br>
+      <br>
   </div>
 </div>

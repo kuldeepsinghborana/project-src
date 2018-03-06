@@ -352,7 +352,7 @@
     position: relative;
   }
   
-  a {
+  :host ::ng-deep a {
     color: #1DC7EA;
   }
   a:hover, a:focus {

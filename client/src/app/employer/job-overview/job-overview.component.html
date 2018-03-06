@@ -5,7 +5,7 @@
       <div class="large strong">Job Overview</div>
       <p>The status of your job posts</p>
       <div class="row tile_count">
-        <div class="col-md-3 col-xs-6">
+        <div class="col-md-3 col-xs-6" [routerLink]="['../job-management']" [queryParams]="{jobStatus :'open'}">
           <a >
             <div class="panel dash-card-light-green">
               <h3 class="strong">{{jobCount["openJobsCount"]}}</h3>
@@ -13,7 +13,7 @@
             </div>
           </a>
         </div>
-        <div class="col-md-3 col-xs-6">
+        <div class="col-md-3 col-xs-6" [routerLink]="['../job-management']" [queryParams]="{jobStatus :'urgent'}">
           <a >
             <div class="panel dash-card-red">
               <h3 class="strong">{{jobCount["urgentJobsCount"]}}</h3>
@@ -21,7 +21,7 @@
             </div>
           </a>
         </div>
-        <div class="col-md-3 col-xs-6">
+        <div class="col-md-3 col-xs-6" [routerLink]="['../job-management']" [queryParams]="{jobStatus :'completed'}">
           <a >
             <div class="panel dash-card-gray">
               <h3 class="strong">{{jobCount["completedJobsCount"]}}</h3>
@@ -44,7 +44,7 @@
       <div class="large strong">Employee Overview</div>
       <p>The status of your employee activities</p>
       <div class="row">
-        <div class="col-md-3 col-xs-6">
+        <div class="col-md-3 col-xs-6" [routerLink]="['../employee-management']" [queryParams]="{matchStatus : 'invited'}">
           <a >
             <div class="dash-card-white">
               <h3 class="strong">{{jobCount["invitedWorkersCount"]}}</h3>
@@ -53,7 +53,7 @@
             </div>
           </a>
         </div>
-        <div class="col-md-3 col-xs-6">
+        <div class="col-md-3 col-xs-6" [routerLink]="['../employee-management']" [queryParams]="{matchStatus : 'applied'}">
           <a >
             <div class="dash-card-white">
               <h3 class="strong">{{jobCount["acceptedWorkersCount"]}}</h3>
@@ -62,7 +62,7 @@
             </div>
           </a>
         </div>
-        <div class="col-md-3 col-xs-6">
+        <div class="col-md-3 col-xs-6" [routerLink]="['../employee-management']" [queryParams]="{matchStatus : 'shortlisted'}">
           <a >
             <div class="dash-card-white">
               <h3 class="strong">{{jobCount["shortlistedWorkersCount"]}}</h3>

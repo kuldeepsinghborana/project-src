@@ -7,6 +7,7 @@ import { EmployeeManagementComponent } from './employee-management/employee-mana
 import { JobManagementComponent } from './job-management/job-management.component';
 import { CarrotAnalyticsComponent } from './carrot-analytics/carrot-analytics.component';
 import { ChatbotAnalyticsComponent } from './chatbot-analytics/chatbot-analytics.component';
+import { JobDetailComponent } from './job-detail/job-detail.component';
 
 @NgModule({
   imports: [
@@ -19,9 +20,10 @@ import { ChatbotAnalyticsComponent } from './chatbot-analytics/chatbot-analytics
       { path: 'job-management', component: JobManagementComponent, pathMatch: 'full' },
       { path: 'carrot-analytics', component: CarrotAnalyticsComponent, pathMatch: 'full' },
       { path: 'chatbot-analytics', component: ChatbotAnalyticsComponent, pathMatch: 'full' },
+      { path: 'job-detail/:id', component: JobDetailComponent, pathMatch: 'full' },
     ])
   ],
   exports:[RouterModule],
-  declarations: [OverviewComponent, EmployerManagementComponent, EmployeeManagementComponent, JobManagementComponent, CarrotAnalyticsComponent, ChatbotAnalyticsComponent]
+  declarations: [OverviewComponent, EmployerManagementComponent, EmployeeManagementComponent, JobManagementComponent, CarrotAnalyticsComponent, ChatbotAnalyticsComponent, JobDetailComponent]
 })
 export class AdminModule { }

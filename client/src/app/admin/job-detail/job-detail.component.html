@@ -1,0 +1,62 @@
+<div class="content">
+  <div class="clearfix"></div>
+  <div class="content-wrap">
+    <div class="panel" [hidden]="!job || !job['coverImage']">
+      <img class="img-fit" [src]="job['coverImage']" style="height:300px;width:100%;">
+      <br>
+      <div class="pad20">
+        <p class="large strong capitalize">{{job['jobTitle']}}
+          <span class="left20">
+            <a href="/admin/jobs/5a4f2c71a1550f001455ac48/edit">
+              <i class="fa fa-edit small gray"></i>
+            </a>
+            <a class="left20" href="/api/jobs/delete/5a4f2c71a1550f001455ac48" onclick="return confirm('delete now?');">
+              <i class="fa fa-trash small gray"></i>
+            </a>
+          </span>
+        </p>
+        <div class="row">
+          <div class="col-md-9">
+            <div class="row">
+              <div class="col-md-9">
+                <i class="fa fa-map-marker"></i>
+                <span>{{job['workRegion']+ ', ' + job['location']}}</span>
+                <br>
+                <i class="fa fa-clock-o"></i>
+                <span>{{job['jobType'] + ', ' + job['startTime'] + '-' + job['endTime'] + ', '+job['workPeriod']}}</span>
+                <br>
+                <i class="fa fa-calendar"></i>
+                <span>Starts on {{ job['startDate'] | date}}, Ends on {{job['endDate'] | date}}</span>
+                <br>
+                <img class="img-fit" src="assets/img/carrot.png" height="30" widht="30">
+                <span>10 carrots spent successfully</span>
+              </div>
+              <div class="col-md-3">
+                <div class="pull-right medium green"> {{job['salary'] ? '$'+job['salary'] + ' '+ job['salaryType'] : 'salary is not specified'}}</div>
+              </div>
+            </div>
+            <h4>Job Description</h4>
+            <p>{{job['description']}}
+            </p>
+            <h4>Duties and Responsibilities</h4>
+            <p>{{job['jobRole']}}
+            </p>
+            <h4>Requirements</h4>
+            <p>{{job['requirement']}}</p>
+          </div>
+          <div class="col-md-3 border-left">
+            <div class="align-center bottom10">
+              <p class="gray">EMPLOYER</p>
+              <a href="/admin/employers/5a3dc87e56494f0bbb6c175f">
+                <div class="medium strong">{{job['companyName']}}</div>
+                <br>
+                <small class="strong top10 left10 pull-left"></small>
+              </a>
+            </div>
+            <br>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -265,13 +265,13 @@ router
   .route('/admin/employers/:employerId')
   .get(auth.requiresAdminLogin, ctrlAdmin.showEmployer);
 router
-  .route('/admin/jobs')
+  .route('/api/admin/jobs')
   .get(auth.requiresAdminLogin, ctrlAdmin.jobsList);
 router
-  .route('/admin/jobs/:jobId')
+  .route('/api/admin/jobs/:jobId')
   .get(auth.requiresAdminLogin, ctrlAdmin.showJob);
 router
-  .route('/admin/workers')
+  .route('/api/admin/employee')
   .get(auth.requiresAdminLogin, ctrlAdmin.workersList);
 router
   .route('/admin/workers/:workerId')

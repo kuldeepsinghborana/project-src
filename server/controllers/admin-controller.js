@@ -5,6 +5,7 @@ var Worker = require('../models/worker');
 var Match = mongoose.model('Match');
 
 var moment = require('moment');
+let jwt = require('../helper/jwt');
 
 // GET /admin
 module.exports.dashboard = function (req, res, next) {
@@ -103,15 +104,9 @@ module.exports.jobsList = function (req, res, next) {
   // var job_type = req.query.jobType;
   // var job_status = req.query.jobStatus;
   Job.find({}, function (err, jobs) {
-    var tmpJobsList = jobs;
-    res.locals.jobsCount = tmpJobsList.length;
-    res.status(200).render('admin/jobsList', {
-      title: 'Jobbunny | Admin > Jobs',
-      jobs: tmpJobsList,
-      moment: moment,
-      message: req.flash('message'),
-      error: req.flash('error')
-    })
+    res.status(200).json({
+      jobs: jobs
+    });
   });
 };
 
@@ -126,11 +121,12 @@ module.exports.showJob = function (req, res, next) {
     .exec(function (err, job) {
       if (err) {
         console.log("Job not found: ", err)
-        res.locals.error = 'Page not found';
-        res.status(400).render('error');
+        res.status(400).json({
+          message : 'Page not found'
+        });
       }
       // console.log('Found job: ', job._id);
-      res.status(200).render('admin/showJob', {
+      res.status(200).json({
         job: job,
         moment: moment,
         title: 'Jobbunny | Admin > Job',
@@ -159,17 +155,14 @@ module.exports.workersList = function (req, res, next) {
   gender && filters.push({ gender: gender });
 
   res.locals.searchQuery = search_query;
-  _searchAndSortWrokers(search_query, filters, function (err, workers) {
+  _searchAndSortWrokers(search_query, filters, function (err, employees) {
     if (err) {
       console.log(err);
       res.redirect('/admin')
     }
-    res.locals.workersCount = workers.length;
-    res.locals.workerFilters = filters;
-    res.status(200).render('admin/workersList', {
-      title: 'Jobbunny | Admin > Workers',
-      workers: workers,
-      moment: moment
+    res.status(200).json({
+      title: 'Jobbunny | Admin > Employee Management',
+      employees: employees,
     });
   });
 };

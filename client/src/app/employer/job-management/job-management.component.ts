@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../user-service.service';
+import { ActivatedRoute } from '@angular/router';
+
 @Component({
   selector: 'app-job-management',
   templateUrl: './job-management.component.html',
@@ -8,21 +10,24 @@ import { UserService } from '../../user-service.service';
 export class JobManagementComponent implements OnInit {
   public jobsList = [];
   public jobs = [];
-  public filter : object = {};
-  public filterCount : number = 0;
-  constructor(public userService:UserService) { }
+  public filter: object = {};
+  public filterCount: number = 0;
+  constructor(public userService: UserService, private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.userService.getUserJobDetails().subscribe(res => {
       this.jobsList = res.jobs;
-      console.log("res",this.jobsList)
-      this.applyFilter();
-     }, err => {
-       console.log("err",err)
-     });
+      console.log("res", this.jobsList)
+      this.route.queryParams.subscribe(queryParams => {
+        this.filter = JSON.parse(JSON.stringify(queryParams));
+        this.applyFilter();
+      });
+    }, err => {
+      console.log("err", err)
+    });
   }
   toggleFilter(key, value) {
-    if(key === 'jobType' && this.filter['jobIndustry']){
+    if (key === 'jobType' && this.filter['jobIndustry']) {
       delete this.filter['jobIndustry'];
       this.filterCount--;
     }
@@ -30,11 +35,11 @@ export class JobManagementComponent implements OnInit {
       delete this.filter[key];
       this.filterCount--;
     } else {
-      if(!this.filter[key]){
-        this.filterCount++;        
+      if (!this.filter[key]) {
+        this.filterCount++;
       }
       this.filter[key] = value;
-    }    
+    }
     this.applyFilter();
   }
   private applyFilter() {
@@ -57,18 +62,18 @@ export class JobManagementComponent implements OnInit {
     this.filterCount = 0;
     this.jobs = Object.assign([], this.jobsList);
   }
-  sort(option){
+  sort(option) {
     let order = 0;
-    if(option === 'Salary: Low to High'){
+    if (option === 'Salary: Low to High') {
       order = 1;
-    } else if(option === 'Salary: High to Low'){
+    } else if (option === 'Salary: High to Low') {
       order = -1;
     }
-    if(order === 0){
+    if (order === 0) {
       return this.applyFilter();
     }
-    this.jobs.sort((a,b)=>{
-      return order*(a['salary'] - b['salary']);
+    this.jobs.sort((a, b) => {
+      return order * (a['salary'] - b['salary']);
     })
   }
 

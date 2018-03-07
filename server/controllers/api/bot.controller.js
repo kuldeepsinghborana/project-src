@@ -251,8 +251,14 @@ BotControl.processTask= async function(req, res, task){
 
 	  	  case 'manualApplication' : 
 	  	  		var job_id = req.body['jobId']
-	  	  		var messenger_user_id = req.body['messenger user id']
-
+						var messenger_user_id = req.body['messenger user id']
+						var ref = req.body['ref']
+						if(!job_id && ref && ref.indexOf('applyToJob,') === 0 && ref.length === 35){
+							var id = req.body['ref'].substring(11);
+							if(id.match(/^[a-z0-9]{24}$/) !== null){
+								job_id = id;
+							}
+						}
 	  	  		var response = {}
 	  	  		console.log(messenger_user_id);
 

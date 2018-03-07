@@ -110,7 +110,7 @@ paymentCtr.paymentMethod = (req, res) => {
                 if (err) {
                     callback(err);
                 } else {
-                    console.log('userData', userData);
+                    // console.log('userData', userData);
                     let purchasedCarrot = selectedPlan.carrots;
                     let oldTotalCarrots = userData.carrots.total;
                     let oldAvailableCarrots = userData.carrots.available;
@@ -123,7 +123,7 @@ paymentCtr.paymentMethod = (req, res) => {
                             pending: userData.carrots.pending
                         }
                     }
-                    console.log('userNewData', userNewData);
+                    // console.log('userNewData', userNewData);
                     User.findByIdAndUpdate(user_id, userNewData, { new: true }, function (err, updatedUserData) {
                         if (err) {
                             console.log('err', err);
@@ -146,12 +146,6 @@ paymentCtr.paymentMethod = (req, res) => {
                     console.log('err', err);
                     callback(err);
                 } else {
-                    // let response = {
-                    //     status: 200,
-                    //     message: 'SUCCESS',
-                    //     carrots: updatedUserData.carrots
-                    // }
-                    // return res.status(200).json(response);
                     callback(null, updatedUserData)
                 }
             });
@@ -184,7 +178,8 @@ paymentCtr.paymentMethod = (req, res) => {
                             // callback(null, result);
                             let response = {
                                 status: 200,
-                                message: "SUCCESS"
+                                message: "SUCCESS",
+                                data:updatedUserData
                             }
                             return res.status(200).json(response);
                         }

@@ -19,6 +19,11 @@ export class UserService {
       .map(res => res.json())
       .catch(this.handleError);
   }
+  public updateJobPost(jobId,data) {
+    return this.commonServiceService.post('/jobs/update/' + jobId,data)
+      .map(res => res.json())
+      .catch(this.handleError);
+  }
   public getUserSettings(userType : string){
     return this.commonServiceService.get('/'+userType+'/settings')
     .map(res => res.json())

@@ -165,10 +165,18 @@ module.exports.updateJob = function (req, res) {
               Job.findByIdAndUpdate(job._id, { $set: { coverImage: remote_url } }, { new: true }, function (err, job) {
                 if (err) {
                   console.log("Something wrong when updating data!");
-                  res.redirect(400, req.header('Referer'));
+                  res.send({
+                    status:400,
+                    message:"Something wrong when updating data!"
+                  })
+                  return false;
                 }
                 console.log('Updated job', job);
-                res.redirect(getRedirectionPath(req, job._id));
+                res.send({
+                  status:1,
+                  message:"Updated job"
+                })
+                return false;
               });
             })
               .catch(function (err) {
@@ -176,8 +184,12 @@ module.exports.updateJob = function (req, res) {
                 res.redirect(400, req.header('Referer'));
               });
           } else {
-            req.flash('info', 'Job updated successfully');
-            res.redirect(getRedirectionPath(req, job._id));
+            res.send({
+              status:1,
+              message:"job Job updated successfully"
+            })
+            // req.flash('info', 'Job updated successfully');
+            // res.redirect(getRedirectionPath(req, job._id));
           }
         }
       });

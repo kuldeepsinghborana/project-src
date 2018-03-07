@@ -223,7 +223,10 @@ router
   .get(auth.requiresEmployerLogin, ctrlEmployer.newJob);
 router
   .route('/employer/jobs/:jobId')
-  .get(auth.requiresEmployerLogin, ctrlEmployer.showJob);
+  .get(ctrlEmployer.showJob);
+  router
+  .route('/employer/jobsWithId/:jobId')
+  .get(ctrlEmployer.showJobWithId);
 router
   .route('/employer/jobs/:jobId/edit')
   .get(auth.requiresEmployerLogin, ctrlEmployer.editJob);

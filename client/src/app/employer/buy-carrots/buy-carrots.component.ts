@@ -90,7 +90,7 @@ export class BuyCarrotsComponent implements OnInit {
       paypalCredit: {
         flow: 'checkout',
         amount: newSelectedPlan,
-        currency: 'USD'
+        currency: 'SGD'
       }
     }, function (createErr, instance) {
       button.addEventListener('click', function () {
@@ -111,6 +111,8 @@ export class BuyCarrotsComponent implements OnInit {
             }, err => {
               console.log('err', err);
             });
+          } else {
+            console.log('requestPaymentMethodErr', requestPaymentMethodErr);
           }
         });
       });

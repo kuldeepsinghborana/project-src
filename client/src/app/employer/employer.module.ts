@@ -13,6 +13,10 @@ import { BuyCarrotsService } from './buy-carrots/buy-carrots.service';
 import { JobComponent } from './job/job.component';
 import { FormsModule } from '@angular/forms';
 import { AccountSettingsComponent } from './account-settings/account-settings.component';
+import { InviteEmployeesComponent } from './invite-employees/invite-employees.component';
+import { EmployeeProfileComponent } from './employee-profile/employee-profile.component';
+import { ReviewEmployeesComponent } from './review-employees/review-employees.component';
+import { NotificationsComponent } from './notifications/notifications.component'
 
 
 @NgModule({
@@ -26,12 +30,15 @@ import { AccountSettingsComponent } from './account-settings/account-settings.co
       { path:'buy-carrots', component: BuyCarrotsComponent, pathMatch: 'full' },
       { path:'farm-carrots', component: FarmCarrotsComponent, pathMatch: 'full' },
       { path:'employee-management', component: EmployeeManagementComponent, pathMatch: 'full' },
-      { path:'account-settings', component: AccountSettingsComponent, pathMatch: 'full' }
-    ]),
-    FormsModule
+      { path:'account-settings', component: AccountSettingsComponent, pathMatch: 'full' },
+      { path:'invite-employees', component: InviteEmployeesComponent, pathMatch: 'full' },
+      { path:'employee-profile/:id', component: EmployeeProfileComponent, pathMatch: 'full' },
+      { path:'review-employees', component: ReviewEmployeesComponent, pathMatch: 'full' },
+      { path:'notifications', component: NotificationsComponent, pathMatch: 'full' }
+    ])
   ],
   exports:[RouterModule],
-  declarations: [JobOverviewComponent, JobManagementComponent, EmployeeManagementComponent, BuyCarrotsComponent, FarmCarrotsComponent, JobComponent, AccountSettingsComponent],
+  declarations: [JobOverviewComponent, JobManagementComponent, EmployeeManagementComponent, BuyCarrotsComponent, FarmCarrotsComponent, JobComponent, AccountSettingsComponent, InviteEmployeesComponent, EmployeeProfileComponent, ReviewEmployeesComponent, NotificationsComponent],
   providers:[BuyCarrotsService]
 })
 export class EmployerModule { }

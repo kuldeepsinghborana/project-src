@@ -1,8 +1,8 @@
 <div class="wrapper">
     <div class="sidebar" data-color="#303135">
         <div class="sidebar-wrapper" >
-            <div class="logo align-center" *ngIf="curruntUserDetails['firstName']">
-                <img class="img-circle" height="75" length="75" [src]="curruntUserDetails['profilePic']">
+            <div class="logo align-center">
+                <img class="img-circle" height="75" length="75" [src]="curruntUserDetails['profilePic']|| 'assets/img/logo.png'">
                 <div class="strong medium">{{curruntUserDetails['firstName'] + ' ' + curruntUserDetails['lastName']}}</div>
                 <div class="medium">{{curruntUserDetails['companyName']}}</div>
                 <a [routerLink]="['./account-settings']">

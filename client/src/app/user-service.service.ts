@@ -29,6 +29,11 @@ export class UserService {
     .map(res => res.json())
     .catch(this.handleError);
   }
+  public saveProfile(payload){
+    return this.commonServiceService.post('/users/update', payload)
+    .map(res => res.json())
+    .catch(this.handleError);
+  }
 
   handleError(error: Response | any) {
     const body = JSON.parse(JSON.stringify(error)) || '';

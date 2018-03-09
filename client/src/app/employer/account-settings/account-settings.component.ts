@@ -14,6 +14,16 @@ export class AccountSettingsComponent implements OnInit {
     })
   }
 
+  public saveAccountSettings(curruntUserDetails){
+    let payload = new FormData();
+    for(let property in curruntUserDetails){
+      payload.append(property, curruntUserDetails[property]);
+    }
+    this.userService.saveProfile(payload).subscribe(res =>{
+      console.log('robot ',res);
+    });
+  }
+
   ngOnInit() {
   }
 

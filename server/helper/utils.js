@@ -1,9 +1,10 @@
-let fs = require('fs');
+const fs = require('fs');
 const nodemailer = require("nodemailer");
-let bcrypt = require('bcrypt');
-let mongoose = require('mongoose');
-let User = mongoose.model('User');
-let jwt = require('./jwt');
+const bcrypt = require('bcrypt');
+const mongoose = require('mongoose');
+const User = mongoose.model('User');
+const jwt = require('./jwt');
+const promise = require('bluebird');
 let utilsfunction = {};
 utilsfunction.isDefined = (variable) => {
     if (typeof variable == 'boolean') return true;
@@ -129,32 +130,18 @@ utilsfunction.sendEmail = (toEmail, subject, body, callback) => {
 }
 
 utilsfunction.getCurrentUser = (req) => {
-    let token = (req.headers && req.headers['x-auth-token']);
-    let userId = jwt.getCurrentUserId(req);
+    const token = (req.headers && req.headers['x-auth-token']);
+    const userId = jwt.getCurrentUserId(req);
     if (utilsfunction.empty(token) || utilsfunction.empty(userId)) {
-        let response = {
-            status: 401,
-            message: "NOT_AUTHORIZED"
-        }
-        return res.status(401).json(response);
+        return new promise.reject();
     }
     else {
-        let filter = {
+        const filter = {
             _id: userId,
             userType: 'employer'
         }
-        let data = {};
-        User.findOne(filter, (err, result) => {
-            if (!result) {
-                let response = {
-                    status: 401,
-                    message: "NOT_AUTHORIZED"
-                }
-                return res.status(401).json(response);
-            } else {
-                data = result;
-                return data;
-            }
+        return User.findOne(filter).then((data)=>{
+            return data;
         });
     }
 }

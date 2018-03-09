@@ -65,8 +65,6 @@ module.exports.dashboard = function (req, res, next) {
 module.exports.settings = function (req, res, next) {
   // var user_id = req.session.userId;
   let user_id = jwt.getCurrentUserId(req);
-  let currentUser = utils.getCurrentUser(req);
-  console.log('currentUser', currentUser);
   console.log('GET Employer settings', user_id);
   // let user_id1 = '5a94785630c7bf43f8b359ab';
   // console.log('user_id', user_id1);

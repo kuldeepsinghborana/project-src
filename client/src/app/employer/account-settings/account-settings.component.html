@@ -5,7 +5,7 @@
       <span class="medium strong">Account Settings</span>
     </p>
     <div class="card pad20">
-      <form class="form-horizontal" action="/api/users/update" method="post" enctype="multipart/form-data">
+      <form class="form-horizontal" (ngSubmit)="saveAccountSettings(curruntUserDetails)" #verify="ngForm">
         <div class="form-group">
           <label class="control-label col-sm-2 small">FIRST NAME</label>
           <div class="col-sm-10">

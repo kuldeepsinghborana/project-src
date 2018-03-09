@@ -10,6 +10,7 @@ let utils = require('../../helper/utils');
 
 
 
+
 //verification
 module.exports.isEmailExist = function (req, res) {
   console.log(req.body, "sda")
@@ -102,7 +103,7 @@ module.exports.register = (req, res) => {
           token: token,
           carrots: {
             available: 100,
-            pending:0
+            pending: 0
           }
         }
         User.create(userData, function (err, user) {
@@ -265,73 +266,76 @@ module.exports.logout = function (req, res, next) {
 
 // POST /api/users/update
 module.exports.updateUser = function (req, res) {
-  var userId = req.session.user._id;
-  var current_user = req.session.user;
-  console.log('UPDATE user with _id: ' + userId);
-  var formData = req.body;
-  var updateParams = {
-    firstName: formData.firstName,
-    lastName: formData.lastName,
-    email: formData.email,
-    companyName: formData.companyName,
-    profilePic: req.file ? req.file.filename : current_user.profilePic || null
-  };
+  let userId = jwt.getCurrentUserId(req);
+  utils.getCurrentUser(req).then((current_user) => {
+    console.log('UPDATE user with _id: ' + userId);
+    var formData = req.body;
+    var updateParams = {
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      email: formData.email,
+      companyName: formData.companyName,
+      profilePic: req.file ? req.file.filename : current_user.profilePic || null
+    };
 
-  if (formData.password.length > 0 && formData.passwordConf.length > 0) {
-    if (formData.password !== formData.passwordConf) {
-      err = "Password does not match with Password confirmation";
-      req.flash('error', err);
+    if (formData.password.length > 0 && formData.passwordConf.length > 0) {
+      if (formData.password !== formData.passwordConf) {
+        err = "Password does not match with Password confirmation";
+        req.flash('error', err);
+        return res.redirect(_getRedirectionPath(current_user.userType));
+      }
+      updateParams.password = formData.password;
+    } else {
+      req.flash('error', 'Please enter password and password confirmation to update your settings');
       return res.redirect(_getRedirectionPath(current_user.userType));
     }
-    updateParams.password = formData.password;
-  } else {
-    req.flash('error', 'Please enter password and password confirmation to update your settings');
-    return res.redirect(_getRedirectionPath(current_user.userType));
-  }
 
-  User
-    .findById(userId)
-    .exec(function (err, user) {
-      if (err) {
-        console.log("User not found: ", err)
-        res.locals.error = 'User not found ' + err;
-        res.redirect(_getRedirectionPath(current_user.userType));
-      }
-      console.log('Found user: ', user._id);
-      user.set(updateParams);
-      user.save(function (err, user) {
+    User
+      .findById(userId)
+      .exec(function (err, user) {
         if (err) {
-          console.log("Error updating user")
-          req.flash('error', 'Error updating user');
-          res.redirect(req.header('Referer'));
-        }
-        req.flash('info', 'Account updated sucessfully');
-        if (user.profilePic) {
-          // upload profile pic
-          imgur.uploadFile('public/uploads/' + user.profilePic).then(function (json) {
-            remote_url = json.data.link;
-            User.findByIdAndUpdate(user._id, { $set: { profilePic: remote_url } }, { new: true }, function (err, user) {
-              if (err) {
-                console.log("Something wrong when updating data!");
-                res.redirect(_getRedirectionPath(current_user.userType));
-              }
-              console.log('Updated user', user);
-              // reset session user to reflect changes in UI
-              req.session.user = user;
-              res.redirect(_getRedirectionPath(current_user.userType));
-            });
-          })
-            .catch(function (err) {
-              console.error(err.message);
-              res.redirect(_getRedirectionPath(current_user.userType));
-            });
-        } else {
-          // reset session user to reflect changes in UI
-          req.session.user = user;
+          console.log("User not found: ", err)
+          res.locals.error = 'User not found ' + err;
           res.redirect(_getRedirectionPath(current_user.userType));
         }
+        console.log('Found user: ', user._id);
+        user.set(updateParams);
+        user.save(function (err, user) {
+          if (err) {
+            console.log("Error updating user")
+            req.flash('error', 'Error updating user');
+            res.redirect(req.header('Referer'));
+          }
+          req.flash('info', 'Account updated sucessfully');
+          if (user.profilePic) {
+            // upload profile pic
+            imgur.uploadFile('public/uploads/' + user.profilePic).then(function (json) {
+              remote_url = json.data.link;
+              User.findByIdAndUpdate(user._id, { $set: { profilePic: remote_url } }, { new: true }, function (err, user) {
+                if (err) {
+                  console.log("Something wrong when updating data!");
+                  res.redirect(_getRedirectionPath(current_user.userType));
+                }
+                console.log('Updated user', user);
+                // reset session user to reflect changes in UI
+                req.session.user = user;
+                res.redirect(_getRedirectionPath(current_user.userType));
+              });
+            })
+              .catch(function (err) {
+                console.error(err.message);
+                res.redirect(_getRedirectionPath(current_user.userType));
+              });
+          } else {
+            // reset session user to reflect changes in UI
+            req.session.user = user;
+            res.redirect(_getRedirectionPath(current_user.userType));
+          }
+        });
       });
-    });
+  }).catch((err) => {
+    res.status(401).send('Not Authorized')
+  });
 }
 
 //Get /api/users/activateaccount/:token

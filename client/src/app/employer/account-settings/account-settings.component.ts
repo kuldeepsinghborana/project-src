@@ -8,10 +8,16 @@ import { UserService } from '../../user-service.service';
 })
 export class AccountSettingsComponent implements OnInit {
   public curruntUserDetails : object = {};
+  public file : File;
   constructor(public userService:UserService) { 
     userService.getUserSettings('employer').subscribe(res=>{
       this.curruntUserDetails = res.user;
+      delete this.curruntUserDetails['profilePic']
     })
+  }
+
+  public fileSelected($event){
+    this.file = $event.target.files[0];
   }
 
   public saveAccountSettings(curruntUserDetails){
@@ -19,6 +25,7 @@ export class AccountSettingsComponent implements OnInit {
     for(let property in curruntUserDetails){
       payload.append(property, curruntUserDetails[property]);
     }
+    payload.append('profilePic', this.file, this.file['name'])
     this.userService.saveProfile(payload).subscribe(res =>{
       console.log('robot ',res);
     });

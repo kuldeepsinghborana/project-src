@@ -8,6 +8,7 @@ import { UserService } from '../../user-service.service';
 })
 export class JobOverviewComponent implements OnInit {
   public jobCount :object = {};
+  public carrots : object = {};
   constructor(public userService:UserService) { }
 
   ngOnInit() {
@@ -17,6 +18,9 @@ export class JobOverviewComponent implements OnInit {
     }, err => {
       console.log("err",err)
     });
+    this.userService.userDetail.subscribe(user =>{
+      this.carrots = user['carrots'];
+    })
   }
 
 }

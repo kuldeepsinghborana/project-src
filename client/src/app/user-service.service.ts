@@ -1,18 +1,16 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { Http, Response } from '@angular/http';
 import { CommonServiceService } from './common/common-service.service';
 @Injectable()
 export class UserService {
-
+  public userDetail = new BehaviorSubject({});
   constructor(private http: Http, private commonServiceService: CommonServiceService) {
-
   }
-
   public getDashboardDetail(userType : string) {
     return this.commonServiceService.get('/'+userType )
       .map(res => res.json())
-      .catch(this.handleError);
+      .catch(this.handleError)
   }
   public getJobDetails(userType : string) {
     return this.commonServiceService.get('/'+userType+'/jobs' )
@@ -27,11 +25,17 @@ export class UserService {
   public getUserSettings(userType : string){
     return this.commonServiceService.get('/'+userType+'/settings')
     .map(res => res.json())
-    .catch(this.handleError);
+    .catch(this.handleError)
+    .subscribe(res => {
+      this.userDetail.next(res['user']);
+    });
   }
-  public saveProfile(payload){
+  public saveProfile(payload, userType:string){
     return this.commonServiceService.post('/users/update', payload)
-    .map(res => res.json())
+    .map(res => {
+      this.getDashboardDetail(userType);
+      return res.json()
+    })
     .catch(this.handleError);
   }
 

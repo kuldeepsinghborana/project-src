@@ -9,8 +9,9 @@ import { UserService } from '../user-service.service';
 export class EmployerComponent implements OnInit {
   public curruntUserDetails : object = {};
   constructor(public userService:UserService) { 
-    userService.getUserSettings('employer').subscribe(res=>{
-      this.curruntUserDetails = res.user;
+    userService.getUserSettings('employer');
+    userService.userDetail.subscribe(user=>{
+      this.curruntUserDetails = user;
     })
   }
 

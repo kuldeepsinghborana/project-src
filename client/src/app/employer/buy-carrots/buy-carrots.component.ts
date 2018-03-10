@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ToasterModule, ToasterContainerComponent, ToasterService } from './../../../../node_modules/angular5-toaster/angular5-toaster';
 import { Router } from '@angular/router';
 import { BuyCarrotsService } from './buy-carrots.service';
+import { UserService } from '../../user-service.service'
 declare var braintree: any;
 declare var paypal: any;
 // var dropin = require('braintree-web-drop-in');
@@ -15,8 +16,8 @@ declare var paypal: any;
 export class BuyCarrotsComponent implements OnInit {
   public clientToken = '';
   public showCard: boolean = false;
-
-  constructor(public toasterService: ToasterService, private router: Router, private buyCarrotsService: BuyCarrotsService) { }
+  private self = this;
+  constructor(public toasterService: ToasterService, private router: Router, private buyCarrotsService: BuyCarrotsService, private UserService : UserService) { }
 
   ngOnInit() {
     this.buyCarrotsService.clientToken().subscribe(res => {
@@ -107,6 +108,7 @@ export class BuyCarrotsComponent implements OnInit {
             self.buyCarrotsService.checkout(data).subscribe(res => {
               if (res) {
                 console.log('res', res);
+                self.UserService.getUserSettings('employer');
               }
             }, err => {
               console.log('err', err);

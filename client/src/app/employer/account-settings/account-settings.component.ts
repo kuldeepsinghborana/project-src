@@ -10,9 +10,8 @@ export class AccountSettingsComponent implements OnInit {
   public curruntUserDetails : object = {};
   public file : File;
   constructor(public userService:UserService) { 
-    userService.getUserSettings('employer').subscribe(res=>{
-      this.curruntUserDetails = res.user;
-      delete this.curruntUserDetails['profilePic']
+    userService.userDetail.subscribe(user=>{
+      this.curruntUserDetails = Object.assign({},user);
     })
   }
 
@@ -26,7 +25,7 @@ export class AccountSettingsComponent implements OnInit {
       payload.append(property, curruntUserDetails[property]);
     }
     payload.append('profilePic', this.file, this.file['name'])
-    this.userService.saveProfile(payload).subscribe(res =>{
+    this.userService.saveProfile(payload, 'employer').subscribe(res =>{
       console.log('robot ',res);
     });
   }

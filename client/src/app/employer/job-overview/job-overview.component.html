@@ -32,10 +32,10 @@
         <div class="col-md-3 col-xs-6">
           <a >
             <div class="panel dash-card-orange">
-              <h3 class="strong">100</h3>
+              <h3 class="strong">{{carrots['available']}}</h3>
               <span>Carrots Available</span>
               <br>
-              <small class="strong">73 carrots in transit</small>
+              <small class="strong">{{carrots['pending']}} carrots in transit</small>
             </div>
           </a>
         </div>
@@ -46,7 +46,7 @@
       <div class="row">
         <div class="col-md-3 col-xs-6" [routerLink]="['../employee-management']" [queryParams]="{matchStatus : 'invited'}">
           <a >
-            <div class="dash-card-white">
+            <div class="dash-card-white panel">
               <h3 class="strong">{{jobCount["invitedWorkersCount"]}}</h3>
               <div class="medium">Invitations</div>
               <small class="strong">sent</small>
@@ -55,7 +55,7 @@
         </div>
         <div class="col-md-3 col-xs-6" [routerLink]="['../employee-management']" [queryParams]="{matchStatus : 'applied'}">
           <a >
-            <div class="dash-card-white">
+            <div class="dash-card-white panel">
               <h3 class="strong">{{jobCount["acceptedWorkersCount"]}}</h3>
               <div class="medium">Applications</div>
               <small class="strong">to be accepted</small>
@@ -64,7 +64,7 @@
         </div>
         <div class="col-md-3 col-xs-6" [routerLink]="['../employee-management']" [queryParams]="{matchStatus : 'shortlisted'}">
           <a >
-            <div class="dash-card-white">
+            <div class="dash-card-white panel">
               <h3 class="strong">{{jobCount["shortlistedWorkersCount"]}}</h3>
               <div class="medium">Shortlisted</div>
               <small class="strong">claim 5 carrots back when you update your actions</small>
@@ -73,7 +73,7 @@
         </div>
         <div class="col-md-3 col-xs-6">
           <a >
-            <div class="dash-card-white">
+            <div class="dash-card-white panel">
               <h3 class="strong">{{jobCount["acceptedWorkersCount"]}}</h3>
               <div class="medium">Employed</div>
               <small class="strong">successfully</small>

@@ -11,7 +11,7 @@ export class EmployerManagementComponent implements OnInit {
   public employerList : Array<object> = [];
   constructor(private commonServiceService : CommonServiceService) { 
     let self = this;
-    this.commonServiceService.get('/admin/employer/')
+    this.commonServiceService.get('/admin/employers')
       .map(res => res.json())
       .catch(this.handleError)
       .subscribe(function (result) {

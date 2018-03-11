@@ -207,19 +207,18 @@ module.exports.employersList = function (req, res, next) {
   last_activity && filters.push({ updatedAt: last_activity });
 
   res.locals.searchQuery = search_query;
-  _searchAndSortEmployers(search_query, filters, function (err, employers) {
-    if (err) {
-      console.log(err);
-      res.redirect('/admin')
-    }
-    var tmpEmployersList = employers;
-    res.locals.employersCount = employers.length;
-    res.locals.employerFilters = filters;
-    res.status(200).render('admin/employersList', {
-      title: 'Jobbunny | Admin > Employers',
-      employers: employers,
-      moment: moment
+  return _searchAndSortEmployers(search_query, filters).then(employers => {
+    employers.forEach((employer)=>{
+      employer['password'] = null;
+    })
+    return res.json({
+      employers : employers
     });
+  })
+  .catch(err =>{
+    return res.status(500).json({
+      message : 'Something went wrong'
+    })
   });
 };
 
@@ -324,24 +323,10 @@ var _searchAndSortEmployers = function (search_query, filters, callback) {
 
   console.log(sort_by);
   if (search_query) {
-    User
-      .find({ userType: 'employer', $text: { $search: search_query } }, { score: { $meta: "textScore" } }, function (err, employers) {
-        if (err) {
-          console.log(err);
-          error = err;
-        }
-        employersList = employers;
-        callback(error, employersList);
-      }).sort(sort_by);
+    return User
+      .find({ userType: 'employer', $text: { $search: search_query } }, { score: { $meta: "textScore" } }).sort(sort_by);
   } else {
-    User.find({ userType: 'employer' }, function (err, employers) {
-      if (err) {
-        console.log(err);
-        error = err;
-      }
-      employersList = employers;
-      callback(error, employersList);
-    }).sort(sort_by);
+    return User.find({ userType: 'employer' }).sort(sort_by);
   }
 }
 

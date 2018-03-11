@@ -15,6 +15,7 @@ import { EmployeeProfileComponent } from './employee-profile/employee-profile.co
 import { ReviewEmployeesComponent } from './review-employees/review-employees.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { JobAddEditComponent } from './job-add-edit/job-add-edit.component';
+import { EmployerDetailsComponent } from './employer-details/employer-details.component'
 
 
 @NgModule({
@@ -33,11 +34,12 @@ import { JobAddEditComponent } from './job-add-edit/job-add-edit.component';
       { path:'invite-employees', component: InviteEmployeesComponent, pathMatch: 'full' },
       { path:'employee-profile/:id', component: EmployeeProfileComponent, pathMatch: 'full' },
       { path:'review-employees', component: ReviewEmployeesComponent, pathMatch: 'full' },
-      { path:'notifications', component: NotificationsComponent, pathMatch: 'full' }
+      { path:'notifications', component: NotificationsComponent, pathMatch: 'full' },
+      { path:'employer-details/:id', component: EmployerDetailsComponent, pathMatch: 'full' }
     ])
   ],
   exports:[RouterModule],
-  declarations: [JobOverviewComponent, JobManagementComponent, EmployeeManagementComponent, BuyCarrotsComponent, FarmCarrotsComponent, JobComponent, AccountSettingsComponent, InviteEmployeesComponent, EmployeeProfileComponent, ReviewEmployeesComponent, NotificationsComponent, JobAddEditComponent],
+  declarations: [JobOverviewComponent, JobManagementComponent, EmployeeManagementComponent, BuyCarrotsComponent, FarmCarrotsComponent, JobComponent, AccountSettingsComponent, InviteEmployeesComponent, EmployeeProfileComponent, ReviewEmployeesComponent, NotificationsComponent, JobAddEditComponent, EmployerDetailsComponent],
   providers:[BuyCarrotsService]
 })
 export class EmployerModule { }

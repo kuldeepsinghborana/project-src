@@ -259,7 +259,7 @@ router
   .route('/admin/settings')
   .get(auth.requiresAdminLogin, ctrlAdmin.settings);
 router
-  .route('/admin/employers')
+  .route('/api/admin/employers')
   .get(auth.requiresAdminLogin, ctrlAdmin.employersList);
 router
   .route('/admin/employers/search')

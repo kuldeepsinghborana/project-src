@@ -12,7 +12,7 @@ export class EmployeeManagementComponent implements OnInit {
   public employeeList : Array<object> =[];
   constructor(private commonServiceService: CommonServiceService) { 
     let self = this;
-    this.commonServiceService.get('/admin/employee/')
+    this.commonServiceService.get('/admin/employee')
       .map(res => res.json())
       .catch(this.handleError)
       .subscribe(function (result) {

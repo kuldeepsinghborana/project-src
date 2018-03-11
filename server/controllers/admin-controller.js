@@ -167,27 +167,23 @@ module.exports.workersList = function (req, res, next) {
   });
 };
 
-// GET /admin/workers/:workerId
+// GET /admin/workers/:employeeId
 module.exports.showWorker = function (req, res, next) {
-  var workerId = req.params.workerId;
-  console.log('GET worker with _id: ' + workerId);
+  var employeeId = req.params.employeeId;
+  console.log('GET worker with _id: ' + employeeId);
 
   Worker
-    .findById(workerId)
-    .exec(function (err, worker) {
-      if (err) {
-        console.log("worker not found: ", err)
-        res.locals.error = 'Page not found';
-        res.status(400).render('error');
-      } else {
-        console.log('Found worker: ', worker._id);
-        res.status(200).render('admin/showWorker', {
-          title: 'Jobbunny | Admin > Worker',
-          worker: worker,
-          message: req.flash('message'),
-          error: req.flash('error')
-        });
-      }
+    .findById(employeeId)
+    .exec()
+    .then((employee) => {
+      return res.json({
+        employee : employee
+      })
+    })
+    .catch((err)=>{
+      return res.status(400).json({
+        message : 'worker not found'
+      })
     });
 }
 

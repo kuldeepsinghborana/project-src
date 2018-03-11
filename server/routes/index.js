@@ -277,7 +277,7 @@ router
   .route('/api/admin/employee')
   .get(auth.requiresAdminLogin, ctrlAdmin.workersList);
 router
-  .route('/admin/workers/:workerId')
+  .route('/api/admin/employees/:employeeId')
   .get(auth.requiresAdminLogin, ctrlAdmin.showWorker);
 router
   .route('/admin/carrots')

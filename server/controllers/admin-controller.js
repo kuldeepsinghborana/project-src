@@ -261,18 +261,26 @@ module.exports.showEmployer = function (req, res, next) {
       console.log('Found employer: ', employer._id);
       Job.find({ employerId: employer_id }, function (err, jobs) {
         if (err) { console.log(err) }
-        res.locals.jobsCount = jobs.length
+        let jobsCount = jobs.length
         Match.find({ employerId: employer_id, initiatorId: employer_id }, function (err, matches) {
           if (err) { console.log(err) }
-          res.locals.invitationsCount = matches.length;
-          res.locals.shortlistedCount = _filterMatches(matches, 'shortlisted').length;
-          res.status(200).render('admin/showEmployer', {
-            title: 'Jobbunny | Admin > Employer',
+          let invitationsCount = matches.length;
+          let shortlistedCount = _filterMatches(matches, 'shortlisted').length;
+          return res.json({
             employer: employer,
-            message: req.flash('message'),
-            error: req.flash('error'),
-            moment: moment
-          });
+            counts: {
+              invitationsCount: invitationsCount,
+              shortlistedCount: shortlistedCount,
+              jobsCount: jobsCount
+            }
+          })
+          // res.status(200).render('admin/showEmployer', {
+          //   title: 'Jobbunny | Admin > Employer',
+          //   employer: employer,
+          //   message: req.flash('message'),
+          //   error: req.flash('error'),
+          //   moment: moment
+          // });
         });
       });
     });

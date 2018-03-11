@@ -265,7 +265,7 @@ router
   .route('/admin/employers/search')
   .get(auth.requiresAdminLogin, ctrlAdmin.searchEmployers);
 router
-  .route('/admin/employers/:employerId')
+  .route('/api/admin/employers/:employerId')
   .get(auth.requiresAdminLogin, ctrlAdmin.showEmployer);
 router
   .route('/api/admin/jobs')

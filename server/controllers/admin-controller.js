@@ -167,27 +167,23 @@ module.exports.workersList = function (req, res, next) {
   });
 };
 
-// GET /admin/workers/:workerId
+// GET /admin/workers/:employeeId
 module.exports.showWorker = function (req, res, next) {
-  var workerId = req.params.workerId;
-  console.log('GET worker with _id: ' + workerId);
+  var employeeId = req.params.employeeId;
+  console.log('GET worker with _id: ' + employeeId);
 
   Worker
-    .findById(workerId)
-    .exec(function (err, worker) {
-      if (err) {
-        console.log("worker not found: ", err)
-        res.locals.error = 'Page not found';
-        res.status(400).render('error');
-      } else {
-        console.log('Found worker: ', worker._id);
-        res.status(200).render('admin/showWorker', {
-          title: 'Jobbunny | Admin > Worker',
-          worker: worker,
-          message: req.flash('message'),
-          error: req.flash('error')
-        });
-      }
+    .findById(employeeId)
+    .exec()
+    .then((employee) => {
+      return res.json({
+        employee : employee
+      })
+    })
+    .catch((err)=>{
+      return res.status(400).json({
+        message : 'worker not found'
+      })
     });
 }
 
@@ -207,19 +203,18 @@ module.exports.employersList = function (req, res, next) {
   last_activity && filters.push({ updatedAt: last_activity });
 
   res.locals.searchQuery = search_query;
-  _searchAndSortEmployers(search_query, filters, function (err, employers) {
-    if (err) {
-      console.log(err);
-      res.redirect('/admin')
-    }
-    var tmpEmployersList = employers;
-    res.locals.employersCount = employers.length;
-    res.locals.employerFilters = filters;
-    res.status(200).render('admin/employersList', {
-      title: 'Jobbunny | Admin > Employers',
-      employers: employers,
-      moment: moment
+  return _searchAndSortEmployers(search_query, filters).then(employers => {
+    employers.forEach((employer)=>{
+      employer['password'] = null;
+    })
+    return res.json({
+      employers : employers
     });
+  })
+  .catch(err =>{
+    return res.status(500).json({
+      message : 'Something went wrong'
+    })
   });
 };
 
@@ -262,18 +257,26 @@ module.exports.showEmployer = function (req, res, next) {
       console.log('Found employer: ', employer._id);
       Job.find({ employerId: employer_id }, function (err, jobs) {
         if (err) { console.log(err) }
-        res.locals.jobsCount = jobs.length
+        let jobsCount = jobs.length
         Match.find({ employerId: employer_id, initiatorId: employer_id }, function (err, matches) {
           if (err) { console.log(err) }
-          res.locals.invitationsCount = matches.length;
-          res.locals.shortlistedCount = _filterMatches(matches, 'shortlisted').length;
-          res.status(200).render('admin/showEmployer', {
-            title: 'Jobbunny | Admin > Employer',
+          let invitationsCount = matches.length;
+          let shortlistedCount = _filterMatches(matches, 'shortlisted').length;
+          return res.json({
             employer: employer,
-            message: req.flash('message'),
-            error: req.flash('error'),
-            moment: moment
-          });
+            counts: {
+              invitationsCount: invitationsCount,
+              shortlistedCount: shortlistedCount,
+              jobsCount: jobsCount
+            }
+          })
+          // res.status(200).render('admin/showEmployer', {
+          //   title: 'Jobbunny | Admin > Employer',
+          //   employer: employer,
+          //   message: req.flash('message'),
+          //   error: req.flash('error'),
+          //   moment: moment
+          // });
         });
       });
     });
@@ -324,24 +327,10 @@ var _searchAndSortEmployers = function (search_query, filters, callback) {
 
   console.log(sort_by);
   if (search_query) {
-    User
-      .find({ userType: 'employer', $text: { $search: search_query } }, { score: { $meta: "textScore" } }, function (err, employers) {
-        if (err) {
-          console.log(err);
-          error = err;
-        }
-        employersList = employers;
-        callback(error, employersList);
-      }).sort(sort_by);
+    return User
+      .find({ userType: 'employer', $text: { $search: search_query } }, { score: { $meta: "textScore" } }).sort(sort_by);
   } else {
-    User.find({ userType: 'employer' }, function (err, employers) {
-      if (err) {
-        console.log(err);
-        error = err;
-      }
-      employersList = employers;
-      callback(error, employersList);
-    }).sort(sort_by);
+    return User.find({ userType: 'employer' }).sort(sort_by);
   }
 }
 

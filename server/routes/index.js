@@ -257,13 +257,13 @@ router
   .route('/admin/settings')
   .get(auth.requiresAdminLogin, ctrlAdmin.settings);
 router
-  .route('/admin/employers')
+  .route('/api/admin/employers')
   .get(auth.requiresAdminLogin, ctrlAdmin.employersList);
 router
   .route('/admin/employers/search')
   .get(auth.requiresAdminLogin, ctrlAdmin.searchEmployers);
 router
-  .route('/admin/employers/:employerId')
+  .route('/api/admin/employers/:employerId')
   .get(auth.requiresAdminLogin, ctrlAdmin.showEmployer);
 router
   .route('/api/admin/jobs')
@@ -275,7 +275,7 @@ router
   .route('/api/admin/employee')
   .get(auth.requiresAdminLogin, ctrlAdmin.workersList);
 router
-  .route('/admin/workers/:workerId')
+  .route('/api/admin/employees/:employeeId')
   .get(auth.requiresAdminLogin, ctrlAdmin.showWorker);
 router
   .route('/admin/carrots')

@@ -71,11 +71,11 @@
           </div>
           <div class="row" *ngFor="let employee of employeeList">
             <hr>
-            <a href="/admin/workers/5a4f67c3a17df86089df9303">
+            <a [routerLink]="['../employee-details', employee['_id']]">
               <div class="row pad20">
                 <div class="col-md-2">
                   <div class="align-center">
-                    <img class="img-fit img-circle" [src]="employee['profilePic']"
+                    <img class="img-fit img-circle" [src]="employee['profilePic'] || '/assets/img/logo.png'"
                       height="100" width="100">
                   </div>
                 </div>
@@ -83,7 +83,7 @@
                   <div class="row">
                     <div class="col-md-3">
                       <div class="strong capitalize black">{{employee['first name'] +' '+ employee['last name']}}</div>
-                      <p class="green strong"> {{' $'+employee['salaryHour']}}</p>
+                      <p class="green strong"> {{employee['salaryHour'] ? '$'+employee['salaryHour'] : 'Salary not specified'}}</p>
                       <p class="strong black">{{employee['gender']}}</p>
                     </div>
                     <div class="col-md-2">

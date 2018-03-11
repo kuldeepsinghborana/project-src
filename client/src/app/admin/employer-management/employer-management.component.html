@@ -20,7 +20,7 @@
         <div class="row">
           <div class="col-md-3">
             <p class="strong">
-              <span>19 employers</span>
+              <span>{{employerList ? employerList.length : 0}} employers</span>
             </p>
           </div>
           <div class="col-md-9">
@@ -58,31 +58,33 @@
             </div>
           </div>
         </div>
-        <a href="/admin/employers/5a9afbc3a50ea82c7f85f77b">
+        <div *ngFor="let employer of employerList">
+        <a [routerLink]="['../employer-details', employer['_id'] ]" >
           <div class="pad10">
             <div class="row">
               <div class="col-md-2">
-                <img class="img-circle" height="75" length="75" src="/img/logo.png">
+                <img class="img-circle" height="75" width="75" [src]="employer['profilePic'] || '/assets/img/logo.png'">
               </div>
               <div class="col-md-2">
-                <div class="strong black">test11239@gmail.com</div>
-                <p class="black">Date created: 03/03/2018</p>
+                <div class="strong black">{{employer['email']}}</div>
+                <p class="black">Date created:<br/> {{employer['createdAt'] | date}}</p>
               </div>
               <div class="col-md-2">
                 <h6 class="gray">COMPANY NAME</h6>
-                <span class="black">N/A</span>
+                <span class="black">{{employer['companyName'] ? employer['companyName'] : 'N/A'}}</span>
               </div>
               <div class="col-md-3">
                 <h6 class="gray">FULL NAME</h6>
-                <div class="strong medium black">N/A</div>
+                <div class="strong medium black">{{(employer['firstName'] || employer['lastName']) ? ((employer['firstName'] ? employer['firstName'] : '') + (employer['lastName'] ? ' ' + employer['lastName'] : '')) : 'N/A'}}</div>
               </div>
               <div class="col-md-3">
                 <h6 class="gray">CARROTS</h6>
-                <span class="black">Total : 100</span>
+                <span class="black">Total : {{ employer['carrots']['total']}}</span>
               </div>
             </div>
           </div>
         </a>
+      </div>
       </div>
     </div>
   </div>

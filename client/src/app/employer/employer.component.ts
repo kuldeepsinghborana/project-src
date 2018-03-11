@@ -7,7 +7,7 @@ import { UserService } from '../user-service.service';
   styleUrls: ['./employer.component.scss']
 })
 export class EmployerComponent implements OnInit {
-  public curruntUserDetails : object = {};
+  public curruntUserDetails : object = { carrots : {}};
   constructor(public userService:UserService) { 
     userService.getUserSettings('employer');
     userService.userDetail.subscribe(user=>{

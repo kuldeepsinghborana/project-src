@@ -33,7 +33,7 @@ export class UserService {
   public saveProfile(payload, userType:string){
     return this.commonServiceService.post('/users/update', payload)
     .map(res => {
-      this.getDashboardDetail(userType);
+      this.getUserSettings(userType);
       return res.json()
     })
     .catch(this.handleError);

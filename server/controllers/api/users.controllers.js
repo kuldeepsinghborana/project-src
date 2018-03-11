@@ -1,12 +1,13 @@
-var mongoose = require('mongoose');
-let waterfall = require('async-waterfall');
-let jwt = require('../../helper/jwt');
+const mongoose = require('mongoose');
+const waterfall = require('async-waterfall');
+const jwt = require('../../helper/jwt');
 const crypto = require('crypto');
-var User = mongoose.model('User');
-var Notification = mongoose.model('Notification');
-var bcrypt = require('bcrypt');
-var imgur = require('imgur');
-let utils = require('../../helper/utils');
+const User = mongoose.model('User');
+const Notification = mongoose.model('Notification');
+const bcrypt = require('bcrypt');
+const imgur = require('imgur');
+const promise = require('bluebird');
+const utils = require('../../helper/utils');
 
 
 
@@ -267,75 +268,62 @@ module.exports.logout = function (req, res, next) {
 // POST /api/users/update
 module.exports.updateUser = function (req, res) {
   let userId = jwt.getCurrentUserId(req);
-  utils.getCurrentUser(req).then((current_user) => {
-    console.log('UPDATE user with _id: ' + userId);
-    var formData = req.body;
-    var updateParams = {
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      email: formData.email,
-      companyName: formData.companyName,
-      profilePic: req.file ? req.file.filename : current_user.profilePic || null
-    };
-
-    if (formData.password.length > 0 && formData.passwordConf.length > 0) {
-      if (formData.password !== formData.passwordConf) {
-        err = "Password does not match with Password confirmation";
-        req.flash('error', err);
-        return res.redirect(_getRedirectionPath(current_user.userType));
-      }
-      updateParams.password = formData.password;
-    } else {
-      req.flash('error', 'Please enter password and password confirmation to update your settings');
-      return res.redirect(_getRedirectionPath(current_user.userType));
-    }
-
-    User
-      .findById(userId)
-      .exec(function (err, user) {
-        if (err) {
-          console.log("User not found: ", err)
-          res.locals.error = 'User not found ' + err;
-          res.redirect(_getRedirectionPath(current_user.userType));
+  return new Promise((resolve, reject) => {
+    utils.getCurrentUser(req).then((current_user) => {
+      console.log('UPDATE user with _id: ' + userId);
+      var formData = req.body;
+      var updateParams = {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        companyName: formData.companyName,
+        profilePic: req.file ? req.file.filename : current_user.profilePic || null
+      };
+      if (formData.password.length > 0 && formData.passwordConf.length > 0) {
+        if (formData.password !== formData.passwordConf) {
+          err = "Password does not match with Password confirmation";
+          reject(400, err);
         }
-        console.log('Found user: ', user._id);
-        user.set(updateParams);
-        user.save(function (err, user) {
-          if (err) {
-            console.log("Error updating user")
-            req.flash('error', 'Error updating user');
-            res.redirect(req.header('Referer'));
-          }
-          req.flash('info', 'Account updated sucessfully');
-          if (user.profilePic) {
-            // upload profile pic
-            imgur.uploadFile('public/uploads/' + user.profilePic).then(function (json) {
-              remote_url = json.data.link;
-              User.findByIdAndUpdate(user._id, { $set: { profilePic: remote_url } }, { new: true }, function (err, user) {
-                if (err) {
-                  console.log("Something wrong when updating data!");
-                  res.redirect(_getRedirectionPath(current_user.userType));
-                }
-                console.log('Updated user', user);
-                // reset session user to reflect changes in UI
-                req.session.user = user;
-                res.redirect(_getRedirectionPath(current_user.userType));
+        updateParams.password = formData.password;
+      } else {
+        reject(400, 'Please enter password and password confirmation to update your settings');
+      }
+      return User
+        .findById(userId)
+        .exec().then((user) => {
+          console.log('Found user: ', user._id);
+          user.set(updateParams);
+          return user.save().then(user => {
+            if (user.profilePic) {
+              // upload profile pic
+              return imgur.uploadFile('public/uploads/' + user.profilePic).then(json => {
+                remote_url = json.data.link;
+                return User.findByIdAndUpdate(user._id, { $set: { profilePic: remote_url } }, { new: true }).then(user => {
+                  resolve();
+                  // reset session user to reflect changes in UI
+                  // req.session.user = user;
+                });
               });
-            })
-              .catch(function (err) {
-                console.error(err.message);
-                res.redirect(_getRedirectionPath(current_user.userType));
-              });
-          } else {
-            // reset session user to reflect changes in UI
-            req.session.user = user;
-            res.redirect(_getRedirectionPath(current_user.userType));
-          }
+            }
+          });
         });
+    });
+  })
+    .then(() => {
+      return res.json({
+        message: 'Account updated successfully'
+      })
+    })
+    .catch((status, err) => {
+      if (status && err) {
+        return res.status(status).json({
+          message: err
+        });
+      }
+      return res.status(500).json({
+        message: 'Something went wrong'
       });
-  }).catch((err) => {
-    res.status(401).send('Not Authorized')
-  });
+    });
 }
 
 //Get /api/users/activateaccount/:token

@@ -166,15 +166,15 @@ module.exports.updateJob = function (req, res) {
                 if (err) {
                   console.log("Something wrong when updating data!");
                   res.send({
-                    status:400,
-                    message:"Something wrong when updating data!"
+                    status: 400,
+                    message: "Something wrong when updating data!"
                   })
                   return false;
                 }
                 console.log('Updated job', job);
                 res.send({
-                  status:1,
-                  message:"Updated job"
+                  status: 1,
+                  message: "Updated job"
                 })
                 return false;
               });
@@ -185,8 +185,8 @@ module.exports.updateJob = function (req, res) {
               });
           } else {
             res.send({
-              status:1,
-              message:"job Job updated successfully"
+              status: 1,
+              message: "job Job updated successfully"
             })
             // req.flash('info', 'Job updated successfully');
             // res.redirect(getRedirectionPath(req, job._id));
@@ -224,32 +224,20 @@ module.exports.getJob = function (jobId) {
 module.exports.deleteJob = function (req, res, next) {
   var jobId = req.params.jobId;
   console.log('GET job with _id: ' + jobId);
-
-  Job
+  return Job
     .findById(jobId)
-    .exec(function (err, job) {
-      if (err) {
-        console.log("Job not found: ", err)
-        res.status(400).render('error');
-      }
-      console.log('Found job: ', job._id);
-      //remove it from db
-      job.remove(function (err, job) {
-        if (err) {
-          console.log(err);
-        } else {
+    .exec()
+    .then(job => {
+      return job.remove()
+        .then(() => {
           console.log('DELETE removing ID: ' + job._id);
-          res.format({
-            html: function () {
-              req.flash('message', 'Job deleted successfully!')
-              res.redirect(getRedirectionPath(req));
-            },
-            json: function () {
-              res.json({ message: 'deleted' });
-            }
-          });
-        }
-      });
+          res.json({ message: 'deleted' });
+        })
+    })
+    .catch(err => {
+      res.status(500).json({
+        message: 'Something went wrong'
+      })
     });
 }
 

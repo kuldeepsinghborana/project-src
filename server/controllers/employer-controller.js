@@ -301,19 +301,19 @@ module.exports.editJob = function (req, res, next) {
   var jobId = req.params.jobId;
   console.log('GET job with _id: ' + jobId);
   res.locals.jobProfile = 'advanced';
-
   Job
     .findById(jobId)
-    .exec(function (err, job) {
-      if (err) {
-        console.log("Job not found: ", err)
-        res.locals.error = 'Page not found';
-        res.status(400).render('error');
-      } else {
-        console.log('Found job: ', job._id);
-        // res.status(200).render('employer/newJob', { title: 'Jobbunny | Employer > Jobs' });
-        res.status(200).render('employer/editJob', { job: job, moment: moment, title: 'Jobbunny | Employer > Job' });
-      }
+    .exec()
+    .then((job)=>{
+      console.log('Found job: ', job._id);
+      res.json({
+        message : 'Job updated successful'
+      })
+    })
+    .catch(err => {
+      res.status(400).json({
+        message : 'Job not found'
+      })
     });
 }
 

@@ -1,12 +1,13 @@
-var mongoose = require('mongoose');
-var Job = mongoose.model('Job');
-var User = mongoose.model('User');
-var Worker = require('../models/worker');
-var Match = mongoose.model('Match');
-var Notification = mongoose.model('Notification');
-let jwt = require('../helper/jwt');
-let utils = require('../helper/utils');
-var moment = require('moment');
+const mongoose = require('mongoose');
+const Job = mongoose.model('Job');
+const User = mongoose.model('User');
+const Worker = require('../models/worker');
+const Match = mongoose.model('Match');
+const Notification = mongoose.model('Notification');
+const jwt = require('../helper/jwt');
+const utils = require('../helper/utils');
+const moment = require('moment');
+const waterfall = require('async-waterfall');
 
 // GET /employer
 module.exports.dashboard = function (req, res, next) {
@@ -427,6 +428,86 @@ module.exports.inviteWorkers = function (req, res, next) {
       });
     })
 };
+
+module.exports.sendinvite = (req, res) => {
+  let user_id = jwt.getCurrentUserId(req);
+  let email = req.body.email;
+  waterfall([
+    function (callback) {
+      let filter = {
+        email: req.body.email
+      }
+      User.find(filter, function (err, result) {
+        if (result && result.length > 0) {
+          callback('Already Registered with Us');
+        } else {
+          callback(null);
+        }
+      });
+    },
+    function (callback) {
+      utils.getCurrentUser(req).then(user => {
+        callback(null, user);
+      }).catch(err => {
+        callback(err);
+      });
+    },
+    function (user, callback) {
+      // console.log('second function user', user);
+      let email = req.body.email;
+      let referenceNumber = user.referenceNumber;
+      // let username = data.name ? data.name : '';
+      let subject = 'Invitation For Create Account';
+      let pageName = 'homepage/register/' + referenceNumber;
+      let fileName = 'invitation';
+      let date = new Date();
+      let year = date.getFullYear();
+      let mailTemplatePath = "./mail_content/" + fileName + ".html";
+      utils.getHtmlContent(mailTemplatePath, function (err, content) {
+        if (err) {
+          callback('PLEASE_TRY_AGAIN');
+        }
+        if (content) {
+          let link = config.SITE_URL + pageName;
+          content = content.replace("{LINK}", link);
+          content = content.replace("{USERNAME}", " ");
+          content = content.replace("{YEAR}", year);
+          content = content.replace("{referralCode}", user.referenceNumber);
+
+          utils.sendEmail(email, subject, content, function (err, result) {
+            if (err) {
+              callback('PLEASE_TRY_AGAIN');
+            }
+            if (result) {
+              // callback(null, result);
+              let response = {
+                status: 200,
+                message: "SUCCESS",
+                // userId: user._id
+              }
+              return res.status(200).json(response);
+            }
+            else {
+              callback('PLEASE_TRY_AGAIN');
+            }
+          });
+        }
+        else {
+          callback('PLEASE_TRY_AGAIN');
+        }
+      });
+    }
+  ], (err) => {
+    if (err) {
+      let response = {
+        message: err,
+        status:400
+      }
+      return res.status(400).json(response);
+    }
+  });
+}
+
 
 Object.getPrototypeOf(moment()).toBSON = function () {
   return this.toDate();

@@ -11,5 +11,7 @@ export class FarmCarrotsComponent implements OnInit {
 
   ngOnInit() {
   }
+  sendGift() {
 
+  }
 }

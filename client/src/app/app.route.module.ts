@@ -24,6 +24,7 @@ export const routes: Routes = [
       { path: 'login', component: LoginComponent, pathMatch: 'full' },
       { path: 'contact', component: ContactComponent, pathMatch: 'full' },
       { path: 'register', component: RegisterComponent, pathMatch: 'full' },
+      { path: 'register/:referenceNumber', component: RegisterComponent, pathMatch: 'full' },      
       { path: 'about', component: AboutComponent, pathMatch: 'full' },
       { path: 'postjob', component: CreatejobComponent, pathMatch: 'full' },
       { path: 'job/:id', component: JobComponent, pathMatch: 'full' }

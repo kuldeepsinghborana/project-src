@@ -39,7 +39,8 @@ var userSchema = new mongoose.Schema({
     type:Boolean,
     default:false
   },
-  token:String
+  token:String,
+  referenceNumber:String
 },
 { timestamps: true });
 

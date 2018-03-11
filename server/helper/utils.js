@@ -50,6 +50,15 @@ utilsfunction.makeRandom = (req) => {
     return text;
 }
 
+utilsfunction.makeRandomWithCharacter = (req) => {
+    let text = "";
+    let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    for (let i = 0; i < 6; i++) {
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    return text;
+}
+
 utilsfunction.isPasswordMatch = (password, hash) => {
     //compare db password hash with new request password
     return new Promise((resolve, reject) => {

@@ -248,6 +248,10 @@ router.get('/employer/buy-carrots', function (req, res, next) {
   res.render('employer/buyCarrots', { title: 'Jobbunny | Employer > Carrots' });
 });
 
+router
+  .route('/api/employer/sendinvite')
+  .post(auth.requiresEmployerLogin, ctrlEmployer.sendinvite);
+
 
 // admin routes
 router

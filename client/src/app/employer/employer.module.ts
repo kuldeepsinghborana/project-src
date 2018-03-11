@@ -13,7 +13,8 @@ import { AccountSettingsComponent } from './account-settings/account-settings.co
 import { InviteEmployeesComponent } from './invite-employees/invite-employees.component';
 import { EmployeeProfileComponent } from './employee-profile/employee-profile.component';
 import { ReviewEmployeesComponent } from './review-employees/review-employees.component';
-import { NotificationsComponent } from './notifications/notifications.component'
+import { NotificationsComponent } from './notifications/notifications.component';
+import { JobAddEditComponent } from './job-add-edit/job-add-edit.component';
 
 
 @NgModule({
@@ -24,6 +25,7 @@ import { NotificationsComponent } from './notifications/notifications.component'
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
       { path: 'overview', component: JobOverviewComponent, pathMatch: 'full' },
       { path:'job-management', component: JobManagementComponent, pathMatch: 'full' },
+      { path:'job-details/:id', component: JobAddEditComponent, pathMatch: 'full' },
       { path:'buy-carrots', component: BuyCarrotsComponent, pathMatch: 'full' },
       { path:'farm-carrots', component: FarmCarrotsComponent, pathMatch: 'full' },
       { path:'employee-management', component: EmployeeManagementComponent, pathMatch: 'full' },
@@ -35,7 +37,7 @@ import { NotificationsComponent } from './notifications/notifications.component'
     ])
   ],
   exports:[RouterModule],
-  declarations: [JobOverviewComponent, JobManagementComponent, EmployeeManagementComponent, BuyCarrotsComponent, FarmCarrotsComponent, JobComponent, AccountSettingsComponent, InviteEmployeesComponent, EmployeeProfileComponent, ReviewEmployeesComponent, NotificationsComponent],
+  declarations: [JobOverviewComponent, JobManagementComponent, EmployeeManagementComponent, BuyCarrotsComponent, FarmCarrotsComponent, JobComponent, AccountSettingsComponent, InviteEmployeesComponent, EmployeeProfileComponent, ReviewEmployeesComponent, NotificationsComponent, JobAddEditComponent],
   providers:[BuyCarrotsService]
 })
 export class EmployerModule { }

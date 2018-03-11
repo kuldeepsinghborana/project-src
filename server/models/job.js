@@ -26,6 +26,7 @@ var jobSchema = new mongoose.Schema({
   employerEmail: String,
   employerPhone: String,
   coverImage: String,
+  companyPhoto: String,
   featuredImages: [String],
   employerId: String,
   jobStatus: { type: String, default: 'open' },

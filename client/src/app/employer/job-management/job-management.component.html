@@ -104,7 +104,9 @@
           <div *ngFor="let job of jobs;">
             <hr>
             <div class="row">
-              <a (click)="rowSelect(job)">
+                 <!-- (click)="rowSelect(job)" -->
+                 
+              <a [routerLink]="['./']" [queryParams]="{ id:job._id }">
                 <div class="col-md-2">
                   <div class="strong black capitalize">{{job['companyName']}}</div>
                 </div>
@@ -166,15 +168,15 @@
       <div class="pad20">
         <p class="large strong capitalize">Sales Executive
           <span class="left20">
-            <a (click)="showEdit()">
+            <a [routerLink]="['../job-details',jobData._id]">
               <i class="fa fa-edit small gray"></i>
             </a>
-            <a class="left20" href="/api/jobs/delete/5a685478d60e310014dab89b" onclick="return confirm('delete now?');">
+            <a class="left20" (click)="deleteJobPost(jobData._id)" onclick="return confirm('delete now?');">
               <i class="fa fa-trash small gray"></i>
             </a>
           </span>
           <span class="left20">
-            <a class="small gray" href="/api/jobs/mark/5a685478d60e310014dab89b?status=completed">Mark as completed</a>
+           <a class="small gray" (click)="changeJobStatus(jobData._id,jobData.jobStatus)">Mark as {{jobData['jobStatus'] === 'completed' ? 'open':'completed' }}</a>
           </span>
         </p>
         <div class="row">
@@ -190,7 +192,7 @@
                 <i class="fa fa-calendar"></i>
                <span>Starts on {{jobData['startDate'] | date}}, Ends onInvalid date</span>
                 <br>
-                <img class="img-fit" src="/img/carrot.png" height="30" widht="30">
+                <img class="img-fit" src="assets/img/carrot.png" height="30" widht="30">
                 <span>10 carrots spent successfully</span>
               </div>
               <div class="col-md-3">
@@ -225,7 +227,7 @@
               <div class="medium strong">JOBBUNNY</div>
               <br>
               <div class="pad20">
-                <img class="img-circle pull-left" src="/img/logo.png" height="40" width="40">
+                <img class="img-circle pull-left" src="assets/img/logo.png" height="40" width="40">
                 <small class="strong top10 left10 pull-left">Posted by Gary</small>
               </div>
             </div>
@@ -245,203 +247,5 @@
         </div>
       </div>
     </div>
-  </div>
-</div>
-<div class="content" [hidden]="!editJobPost">
-  <div class="clearfix"></div>
-  <p>Last updated: {{jobData["updatedAt"] | date}}</p>
-  <div class="card pad20">
-      <form class="form-horizontal" method="post" enctype="multipart/form-data">
-          <div class="form-group">
-              <label class="control-label col-sm-2 small">COVER IMAGE</label>
-              <div class="col-sm-10">
-                  <input class="form-control" (change)="readFile($event)" type="file" name="coverImage">
-              </div>
-              <br>
-          </div>
-          <div class="form-group">
-              <label class="control-label col-sm-2 small">JOB TITLE</label>
-              <div class="col-sm-10">
-                  <input class="form-control" type="text" [(ngModel)]="jobTitle" name="jobTitle" placeholder="Enter job title"  value="Sales Executive" required>
-              </div>
-          </div>
-          <div class="form-group">
-              <label class="control-label col-sm-2 small">NUMBER OF HIRES</label>
-              <div class="col-sm-10">
-                  <input class="form-control" type="number" [(ngModel)]="requiredNumber" placeholder="How many people do you need to hire ?" name="requiredNumber" value="1" required="">
-              </div>
-          </div>
-          <div class="form-group">
-              <label class="control-label col-sm-2 small">JOB TYPE</label>
-              <div class="col-sm-10">
-                  <select class="form-control" name="jobType" [(ngModel)]='jobType' id="job-type" required="">
-                      <option value="Full-time" selected="">Full-time</option>
-                      <option value="Part-time">Part-time</option>
-                  </select>
-              </div>
-          </div>
-          <div class="form-group">
-              <label class="control-label col-sm-2 small">INDUSTRY</label><span></span>
-              <div class="col-sm-10">
-                  <select class="form-control" name="jobIndustry" [(ngModel)]='jobIndustry' id="job-industry" required="">
-                      <option value="Accounting / Finance">Accounting / Finance</option>
-                      <option value="Admin / HR">Admin / HR</option>
-                      <option value="Sales / Marketing" selected="">Sales / Marketing</option>
-                      <option value="Arts Design Media">Arts Design Media</option>
-                      <option value="Computer / Technology">Computer / Technology</option>
-                      <option value="Training and education">Training and education</option>
-                      <option value="Engineering">Engineering</option>
-                      <option value="Service / Logistics">Service / Logistics</option>
-                  </select>
-              </div>
-          </div>
-          <div class="form-group">
-              <label class="control-label col-sm-2 small">SALARY TYPE</label>
-              <div class="col-sm-10">
-                  <select class="form-control" name="salaryType" [(ngModel)]='salaryType' required="">
-                      <option value="Per Hour">Per Hour</option>
-                      <option value="Per Month" selected="">Per Month</option>
-                      <option value="Per Project">Per Project</option>
-                  </select>
-              </div>
-          </div>
-          <div class="form-group">
-              <label class="control-label col-sm-2 small">SALARY</label>
-              <div class="col-sm-10">
-                  <input class="form-control" type="number" placeholder="How much are you willing to pay?" name="salary" [(ngModel)]='salary' value="2000" required="">
-              </div>
-          </div>
-          <div class="form-group">
-              <label class="control-label col-sm-2 small">WORKING PERIOD</label>
-              <div class="col-sm-5"><small class="strong">START DATE</small>
-                  <div class="input-group datepicker">
-                      <input type="date" name="startDate" id="start-date" [(ngModel)]='startDate' value="2018-01-24" required="">
-                  </div>
-              </div>
-              <div class="col-sm-5" id="end-date-wrapper" style="display: none;"><small class="strong">END DATE</small>
-                  <div class="input-group datepicker">
-                      <input type="date" name="endDate" id="end-date" [(ngModel)]='endDate'>
-                  </div>
-              </div>
-          </div>
-          <div class="form-group">
-              <label class="control-label col-sm-2 small">WORKING DAYS</label>
-              <div class="col-sm-10">
-                  <select class="form-control" name="workPeriod" [(ngModel)]='workPeriod' required="">
-                      <option value="Weekdays">Weekdays</option>
-                      <option value="Weekends">Weekends</option>
-                      <option value="Both weekdays and weekends" selected="">Both weekdays and weekends</option>
-                  </select>
-              </div>
-          </div>
-          <div class="form-group" id="total-hours-wrap" style="display: none;">
-              <label class="control-label col-sm-2 small">TOTAL HOURS</label>
-              <div class="col-sm-10">
-                  <input class="form-control" type="number" placeholder="How many manhours total?" id="total-hours" [(ngModel)]='totalHours' name="totalHours">
-              </div>
-          </div>
-          <div class="form-group" id="working-hours-wrap">
-              <label class="control-label col-sm-2 small strong">START TIMING</label>
-              <div class="col-sm-4">
-                <div class="input-group clockpicker" (click)="openstartTime()">
-                  <input type="text" value="{{startTime}}">
-                  <span class="input-group-addon">
-                    <span class="glyphicon glyphicon-time"></span>
-                  </span>
-                </div>
-              </div>
-              <label class="control-label col-sm-2 small strong">END TIMING</label>
-              <div class="col-sm-4">
-                <div class="input-group clockpicker" (click)="openendTime()">
-                  <input type="text" value="{{endTime}}">
-                  <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-time"></span>
-                  </span>
-                </div>
-              </div>
-          </div>
-          <div class="form-group">
-              <label class="control-label col-sm-2 small">EXPIRATION DATE OF JOB</label>
-              <div class="col-sm-10">
-                  <select class="form-control" name="jobExpiration" id="job-expiration" [(ngModel)]='jobExpiration' required="">
-                      <option value="At the start of working period" selected="">At the start of working period</option>
-                      <option value="At the end of working period">At the end of working period</option>
-                      <option value="After 2 months">After 2 months</option>
-                  </select>
-              </div>
-          </div>
-          <div class="form-group">
-              <label class="control-label col-sm-2 small">LOCATION OF WORK</label> 
-              <div class="col-sm-10">
-                  <input class="form-control" type="text" placeholder="Work location" name="location" [(ngModel)]='location' value="JCUBE Mall" required="">
-              </div>
-          </div>
-          <div class="form-group">
-              <label class="control-label col-sm-2 small">LOCATION REGION</label>
-              <div class="col-sm-10">
-                  <select class="form-control" name="workRegion" [(ngModel)]='workRegion' required="">
-                      <option value="North">North</option>
-                      <option value="West" selected="">West</option>
-                      <option value="East">East</option>
-                      <option value="Central">Central</option>
-                      <option value="Central Business District">Central Business District</option>
-                  </select>
-              </div>
-          </div>
-          <div class="form-group">
-              <label class="control-label col-sm-2 small strong">BACKGROUND OF JOB</label>
-              <div class="col-sm-10">
-                  <textarea class="form-control" rows="5" placeholder="Give a description of what your company does or a message to attract employees" name="description" [(ngModel)]='description' required="">Help company to bring in achieve sales targets month on month</textarea>
-              </div>
-          </div>
-          <div class="form-group">
-              <label class="control-label col-sm-2 small strong">RESPONSIBILITIES</label>
-              <div class="col-sm-10">
-                  <textarea class="form-control" rows="5" placeholder="What are your employees expected to do ?" [(ngModel)]='jobRole' name="jobRole"></textarea>
-              </div>
-          </div>
-          <div class="form-group">
-              <label class="control-label col-sm-2 small strong">REQUIREMENTS</label>
-              <div class="col-sm-10">
-                  <textarea class="form-control" rows="5" placeholder="What basic requirements should your employee have ?" [(ngModel)]='requirement' name="requirement">Requirements</textarea>
-              </div>
-          </div>
-          <div class="form-group">
-              <label class="control-label col-sm-2 small">ARE YOU EMPLOYING FOR YOURSELF?</label>
-              <div class="col-sm-10">
-                  <select class="form-control" name="selfEmployer" [(ngModel)]='selfEmployer' required="">
-                      <option value="true">Yes</option>
-                      <option value="false" selected="">No</option>
-                  </select>
-              </div>
-          </div>
-          <div class="form-group">
-              <label class="control-label col-sm-2 small strong">COMPANY NAME</label>
-              <div class="col-sm-10">
-                  <input class="form-control" type="text" name="companyName" [(ngModel)]='companyName' value="Jobbunny" required="">
-              </div>
-          </div>
-          <div class="form-group">
-              <label class="control-label col-sm-2 small strong">COMPANY WEBSITE</label>
-              <div class="col-sm-10">
-                  <input class="form-control" type="url" name="companyWebsite" [(ngModel)]='companyWebsite' value="Https://www.jobbunny.com">
-              </div>
-          </div>
-          <div class="form-group">
-              <label class="control-label col-sm-2 small strong">RECRUITER NAME</label>
-              <div class="col-sm-10">
-                  <input class="form-control" type="text" name="employerName" [(ngModel)]='employerName' value="Gary">
-              </div>
-          </div>
-          <div class="form-group">
-              <label class="control-label col-sm-2 small strong">RECRUITER HANDPHONE</label>
-              <div class="col-sm-10">
-                  <input class="form-control" type="text"  name="employerPhone" [(ngModel)]='employerPhone' value="82330317">
-              </div>
-          </div>
-          <button class="btn-lg btn-warning pull-right" (click)="updateJobPost()">Save updates</button>
-      </form>
-      <br>
-      <br>
   </div>
 </div>

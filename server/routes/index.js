@@ -222,7 +222,7 @@ router
   .route('/employer/jobs/new')
   .get(auth.requiresEmployerLogin, ctrlEmployer.newJob);
 router
-  .route('/employer/jobs/:jobId')
+  .route('/api/employer/jobs/:jobId')
   .get(ctrlEmployer.showJob);
   router
   .route('/employer/jobsWithId/:jobId')

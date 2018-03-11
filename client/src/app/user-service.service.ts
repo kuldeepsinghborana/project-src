@@ -12,8 +12,25 @@ export class UserService {
       .map(res => res.json())
       .catch(this.handleError)
   }
+  
+  public getEmployerDetails(jobid) {
+    return this.commonServiceService.get('/employer/jobs/' + jobid)
+      .map(res => res.json())
+      .catch(this.handleError);
+  } 
   public getJobDetails(userType : string) {
     return this.commonServiceService.get('/'+userType+'/jobs' )
+      .map(res => res.json())
+      .catch(this.handleError);
+  }
+ public updateJobStatus(jobId,status) {
+    return this.commonServiceService.get('/jobs/mark/' + jobId+'?status='+status)
+      .map(res => res.json())
+      .catch(this.handleError);
+  }
+  
+  public deleteJobPost(jobId) {
+    return this.commonServiceService.get('/jobs/delete/' + jobId)
       .map(res => res.json())
       .catch(this.handleError);
   }

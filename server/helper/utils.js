@@ -133,7 +133,7 @@ utilsfunction.getCurrentUser = (req) => {
     const token = (req.headers && req.headers['x-auth-token']);
     const userId = jwt.getCurrentUserId(req);
     if (utilsfunction.empty(token) || utilsfunction.empty(userId)) {
-        return new promise.reject();
+        return new promise.reject(401, 'Not Authorized');
     }
     else {
         const filter = {

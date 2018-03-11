@@ -4,6 +4,7 @@ var Job = mongoose.model('Job');
 var moment = require('moment');
 var imgur = require('imgur');
 let waterfall = require('async-waterfall');
+const jwt = require('../../helper/jwt');
 
 // Setting
 imgur.setClientId('e019b1bcff86b7f');
@@ -21,8 +22,17 @@ module.exports.newJob = function (req, res) {
 
 // POST /api/jobs
 module.exports.createJob = function (req, res) {
+  let user_id = jwt.getCurrentUserId(req);
+
   console.log('Creating new job');
   var formData = req.body;
+  let employerId;
+  if(formData.employerId != "" && formData.employerId != undefined){
+    employerId = formData.employerId
+  }
+  else{
+    employerId = user_id
+  }
   var newJob = Job({
     jobTitle: formData.jobTitle,
     jobType: formData.jobType,
@@ -48,18 +58,19 @@ module.exports.createJob = function (req, res) {
     employerName: formData.employerName,
     employerEmail: formData.employerEmail,
     employerPhone: formData.employerPhone,
-    employerId: formData.employerId,
+    employerId: employerId,
     coverImage: req.file ? req.file.filename : null
+    
   });
-
+ 
   newJob.save(function (err, job) {
     if (err) {
       console.log("Error creating job", err)
-      res.send({
+      return res.stattus(400).send({
         status: 400,
         message: "Error creating job",
         error: err
-      })
+      });
       // req.session.error = 'Error creating job';
       // res.redirect(400, '/newjob');
     } else {
@@ -258,8 +269,8 @@ module.exports.markJob = function (req, res, next) {
       } else {
         console.log('Updated successfully: ' + job._id);
         res.send({
-          status:1,
-          message:"Status changed successfully"
+          status: 1,
+          message: "Status changed successfully"
         })
         return false;
       }

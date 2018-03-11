@@ -1,10 +1,8 @@
 var express = require('express');
 var cookieParser = require('cookie-parser');
-var cors = require('cors');
 let auth = require('../helper/auth');
 var router = express.Router();
 
-router.use(cors());
 // image upload
 var multer = require('multer')
 var storage = multer.diskStorage({

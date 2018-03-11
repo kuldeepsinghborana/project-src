@@ -24,7 +24,7 @@ export class CreatejobComponent implements OnInit {
   hidePassword: boolean = true;
   showSubmit: boolean = false;
   next: boolean = true;
- email: any;
+  email: any;
   user = {};
   post = {
     jobTitle: "",
@@ -59,7 +59,7 @@ export class CreatejobComponent implements OnInit {
 
 
   };
-  constructor(public createJobService: CreatejobService, public toasterService: ToasterService, public atp: AmazingTimePickerService, private loginService: LoginService, public registerServiceService: RegisterServiceService,public router:Router) {
+  constructor(public createJobService: CreatejobService, public toasterService: ToasterService, public atp: AmazingTimePickerService, private loginService: LoginService, public registerServiceService: RegisterServiceService, public router: Router) {
     this.toasterService = toasterService;
   }
 
@@ -171,8 +171,14 @@ export class CreatejobComponent implements OnInit {
     if (this.user['password'] != this.user['Confirmpassword']) {
       return this.toasterService.pop('error', 'Error', "Password and confirm password must be same");
     }
+    console.log('test');
     this.registerServiceService.register(this.user).subscribe(res => {
+      console.log('res------------------------', res);
       this.user = {};
+      if (res.status == 200) {
+        this.post["employerId"] = res.userId;
+        this.postJob(this.post);
+      }
       this.toasterService.pop('success', 'Success', 'Registration Successfully done');
       this.router.navigate(["/employer/overview"]);
     }, err => {

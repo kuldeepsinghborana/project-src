@@ -219,13 +219,14 @@ module.exports.showJobWithId = function(req,res){
       console.log('Found job: ', job._id);
       Match.find({ employerId: user_id, jobId: job._id }, function (err, matches) {
         if (err) {
-          console.log(err);
+          console.log("error",err);
         }
         res.locals.pendingInvitationWorkersCount = 0;
         res.locals.pendingAcceptanceWorkersCount = countMatches(matches, 'matched');
         res.locals.shortListedWorkersCount = countMatches(matches, 'shortlisted');
         res.locals.declinedWorkersCount = countMatches(matches, 'declined');
-        _appendMatchesMetricsToJob(job, current_user, function (err, job_with_stats) {
+        console.log("current_user",current_user,job)
+        _appendMatchesMetricsToJob(job, current_user,req, function (err, job_with_stats) {
           if (err) {
             console.log(err);
           }
@@ -261,10 +262,19 @@ module.exports.showJob = function (req, res, next) {
     .exec(function (err, job) {
       if (err) {
         console.log("Job not found: ", err)
+        return res.status(500).send({
+          message:"Something went wrong!"
+         })
         // res.locals.error = 'Page not found';
         // res.status(400).render('error');
       }
-      console.log('Found job: ', job._id);
+      if(!job){
+        return res.status(404).send({
+         message:"Job not found"
+        })
+        
+      }
+      console.log('Found job: ', job);
       Match.find({ employerId: user_id, jobId: job._id }, function (err, matches) {
         if (err) {
           console.log(err);
@@ -273,7 +283,7 @@ module.exports.showJob = function (req, res, next) {
         res.locals.pendingAcceptanceWorkersCount = countMatches(matches, 'matched');
         res.locals.shortListedWorkersCount = countMatches(matches, 'shortlisted');
         res.locals.declinedWorkersCount = countMatches(matches, 'declined');
-        _appendMatchesMetricsToJob(job, current_user, function (err, job_with_stats) {
+        _appendMatchesMetricsToJob(job, current_user,req, function (err, job_with_stats) {
           if (err) {
             console.log(err);
           }
@@ -622,7 +632,7 @@ var countEmployedMatches = function (matches_list) {
 
 // returns job object with these metrics added to the object:
 // { invited: [invited workers], applied: [applied workers], shortlisted: [shortlisted workers] }
-var _appendMatchesMetricsToJob = function (job, current_user, callback) {
+var _appendMatchesMetricsToJob = function (job, current_user,req, callback) {
   // add each job's invited, shortlisted matches
   let user_id = jwt.getCurrentUserId(req);
 

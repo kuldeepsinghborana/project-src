@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../user-service.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AmazingTimePickerService } from 'amazing-time-picker'; // this line you need
 import { ToasterModule, ToasterContainerComponent, ToasterService } from '../../../../node_modules/angular5-toaster/angular5-toaster';
 
@@ -45,7 +45,26 @@ export class JobManagementComponent implements OnInit {
   
   
 
-  constructor(public userService: UserService, private route: ActivatedRoute, public atp: AmazingTimePickerService,public toasterService: ToasterService) { }
+  constructor(public userService: UserService, private route: ActivatedRoute, public atp: AmazingTimePickerService,public toasterService: ToasterService,private router: Router) {
+    this.route.queryParams.subscribe(queryParams => {
+     console.log("queryParams",queryParams)
+     if(queryParams['id']){
+      this.userService.getEmployerDetails(queryParams['id']).subscribe(res => {
+        console.log("response",res)
+        this.jobData = res.job;
+        
+      }, err => {
+        console.log("err", err)
+      });
+      this.jobListing = false;
+    this.viewJob = true;
+    } else {
+      this.jobListing = true;
+      this.viewJob = false;
+    } 
+      
+    });
+   }
 
   ngOnInit() {
     this.userService.getJobDetails('employer').subscribe(res => {
@@ -95,41 +114,41 @@ export class JobManagementComponent implements OnInit {
     this.filterCount = 0;
     this.jobs = Object.assign([], this.jobsList);
   }
-  rowSelect(rowData) {
-    console.log("rowData", rowData)
-    this.jobListing = false;
-    this.viewJob = true;
-    this.jobData = rowData;
-  }
-  showEdit() {
-    console.log("hello", this.jobData)
-    this.jobListing = false;
-    this.viewJob = false;
-    this.editJobPost = true;
-    this.jobTitle = this.jobData["jobTitle"];
-    this.requiredNumber = this.jobData["requiredNumber"];
-    this.jobType = this.jobData["jobType"];
-    this.jobIndustry = this.jobData["jobIndustry"];
-    this.salaryType = this.jobData["salaryType"];
-    this.salary = this.jobData["salary"];
-    this.startDate = this.jobData["startDate"];
-    this.endDate = this.jobData["endDate"];
-    this.workPeriod = this.jobData["workPeriod"];
-    this.totalHours = this.jobData["totalHours"];
-    this.jobExpiration = this.jobData["jobExpiration"];
-    this.location = this.jobData["location"];
-    this.workRegion = this.jobData["workRegion"];
-    this.description = this.jobData["description"];
-    this.jobRole = this.jobData["jobRole"];
-    this.requirement = this.jobData["requirement"];
-    this.selfEmployer = this.jobData["selfEmployer"];
-    this.companyName = this.jobData["companyName"];
-    this.companyWebsite = this.jobData["companyWebsite"];
-    this.employerName = this.jobData["employerName"];
-    this.employerPhone = this.jobData["employerPhone"];
-    this.startTime = this.jobData["startTime"];
-    this.endTime = this.jobData["endTime"];
-  }
+  // rowSelect(rowData) {
+  //   console.log("rowData", rowData)
+  //   this.jobListing = false;
+  //   this.viewJob = true;
+  //   this.jobData = rowData;
+  // }
+  // showEdit() {
+  //   console.log("hello", this.jobData)
+  //   this.jobListing = false;
+  //   this.viewJob = false;
+  //   this.editJobPost = true;
+  //   this.jobTitle = this.jobData["jobTitle"];
+  //   this.requiredNumber = this.jobData["requiredNumber"];
+  //   this.jobType = this.jobData["jobType"];
+  //   this.jobIndustry = this.jobData["jobIndustry"];
+  //   this.salaryType = this.jobData["salaryType"];
+  //   this.salary = this.jobData["salary"];
+  //   this.startDate = this.jobData["startDate"];
+  //   this.endDate = this.jobData["endDate"];
+  //   this.workPeriod = this.jobData["workPeriod"];
+  //   this.totalHours = this.jobData["totalHours"];
+  //   this.jobExpiration = this.jobData["jobExpiration"];
+  //   this.location = this.jobData["location"];
+  //   this.workRegion = this.jobData["workRegion"];
+  //   this.description = this.jobData["description"];
+  //   this.jobRole = this.jobData["jobRole"];
+  //   this.requirement = this.jobData["requirement"];
+  //   this.selfEmployer = this.jobData["selfEmployer"];
+  //   this.companyName = this.jobData["companyName"];
+  //   this.companyWebsite = this.jobData["companyWebsite"];
+  //   this.employerName = this.jobData["employerName"];
+  //   this.employerPhone = this.jobData["employerPhone"];
+  //   this.startTime = this.jobData["startTime"];
+  //   this.endTime = this.jobData["endTime"];
+  // }
   sort(option) {
     let order = 0;
     if (option === 'Salary: Low to High') {
@@ -162,37 +181,34 @@ export class JobManagementComponent implements OnInit {
   readFile(event) {
     this.coverImage = event.target.value;
   }
-  updateJobPost(){
-    console.log("cover image",this.coverImage)
-    let form = new FormData();
-    form.append("jobTitle", this.jobTitle)
-    form.append("jobType", this.jobType)
-    form.append("jobIndustry", this.jobIndustry)
-    form.append("salaryType", this.salaryType)
-    form.append("salary", this.salary)
-    form.append("startDate", this.startDate)
-    form.append("startTime", this.startTime)
-    form.append("endTime", this.endTime)
-    form.append("endDate", this.endDate)
-    form.append("totalHours", this.totalHours)
-    form.append("jobExpiration", this.jobExpiration)
-    form.append("requiredNumber", this.requiredNumber)
-    form.append("workPeriod", this.workPeriod)
-    form.append("workRegion", this.workRegion)
-    form.append("location", this.location)
-    form.append("description", this.description)
-    form.append("jobRole", this.jobRole)
-    form.append("requirement", this.requirement)
-    form.append("selfEmployer", this.selfEmployer)
-    form.append("companyName", this.companyName)
-    form.append("companyWebsite", this.companyWebsite)
-    form.append("employerName", this.employerName)
-    form.append("employerPhone", this.employerPhone)
-   form.append("coverImage", this.coverImage)
-    this.userService.updateJobPost(this.jobData["_id"],form).subscribe(res => {
-      return this.toasterService.pop('success', 'Success', 'Updated Successfully done');
-    }, err => {
-      return this.toasterService.pop('error', 'Error', err.message);
-    }); 
+  deleteJobPost(id){
+    this.userService.deleteJobPost(id).subscribe(res => {
+      this.router.navigate(["employer/job-management"])
+    return this.toasterService.pop('success', 'Success', res.message);
+
+   }, err => {
+      console.log("err", err)
+      return this.toasterService.pop('success', 'Success', err);
+
+    });
+  }
+  changeJobStatus(id,status){
+    let statusChanged;
+    if(status == "open"){
+      statusChanged = "completed";
+    }
+    else{
+      statusChanged = "open";
+    }
+  this.userService.updateJobStatus(id,statusChanged).subscribe(res => {
+      this.router.navigate(["employer/job-management"])
+    return this.toasterService.pop('success', 'Success', res.message);
+
+   }, err => {
+      console.log("err", err)
+      return this.toasterService.pop('success', 'Success', err);
+
+    });
+
   }
 }

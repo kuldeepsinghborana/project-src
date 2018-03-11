@@ -132,6 +132,7 @@ export class CreatejobComponent implements OnInit {
         this.next = false;
         this.hidePassword = false;
         this.showSubmit = true;
+        console.log("1")
       }
       else if (res.status == 201) {
         this.showPassword = true;
@@ -139,10 +140,12 @@ export class CreatejobComponent implements OnInit {
         this.hideConfirmPassword = false;
         this.hidePassword = true;
         this.next = false;
+        console.log("2")
         return this.toasterService.pop('error', 'Error', res.message);
       }
     }, err => {
       console.log("err", err)
+      console.log("3")
       return this.toasterService.pop('error', 'Error', err.message);
     });
   }
@@ -153,7 +156,7 @@ export class CreatejobComponent implements OnInit {
       this.loginService.login(this.user).subscribe(res => {
         myModal.close();
         this.user = {};
-        this.toasterService.pop('success', 'Success', 'You post is successfuly registered');
+        this.postJob(this.post)
         this.router.navigate(["/employer/overview"]);
       }, (err) => {
         console.log('err', err);

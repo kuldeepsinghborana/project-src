@@ -269,12 +269,11 @@ module.exports.markJob = function (req, res, next) {
         console.log(err);
       } else {
         console.log('Updated successfully: ' + job._id);
-        res.format({
-          html: function () {
-            req.flash('message', 'Job marked [' + status + '] successfully!')
-            res.redirect(getRedirectionPath(req));
-          }
-        });
+        res.send({
+          status:1,
+          message:"Status changed successfully"
+        })
+        return false;
       }
     });
 }

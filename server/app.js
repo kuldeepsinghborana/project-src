@@ -33,20 +33,20 @@ app.use(cors());
 app.use(flash());
 
 //use sessions for tracking logins, valid for 1 day
-app.use(session({
-  key: 'userId',
-  secret: sessionSecret,
-  resave: false,
-  saveUninitialized: true,
-  cookie: {
-    path: '/',
-    httpOnly: false,
-    maxAge: 24 * 60 * 60 * 1000
-  },
-  store: new mongoStore({
-    url: mongoose.dbUrl
-  })
-}));
+// app.use(session({
+//   key: 'userId',
+//   secret: sessionSecret,
+//   resave: false,
+//   saveUninitialized: true,
+//   cookie: {
+//     path: '/',
+//     httpOnly: false,
+//     maxAge: 24 * 60 * 60 * 1000
+//   },
+//   store: new mongoStore({
+//     url: mongoose.dbUrl
+//   })
+// }));
 
 app.use(function (req, res, next) {
   res.locals.session = req.session;

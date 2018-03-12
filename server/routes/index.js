@@ -1,10 +1,8 @@
 var express = require('express');
 var cookieParser = require('cookie-parser');
-var cors = require('cors');
 let auth = require('../helper/auth');
 var router = express.Router();
 
-router.use(cors());
 // image upload
 var multer = require('multer')
 var storage = multer.diskStorage({
@@ -249,6 +247,10 @@ router.get('/employer/farm-carrots', function (req, res, next) {
 router.get('/employer/buy-carrots', function (req, res, next) {
   res.render('employer/buyCarrots', { title: 'Jobbunny | Employer > Carrots' });
 });
+
+router
+  .route('/api/employer/sendinvite')
+  .post(auth.requiresEmployerLogin, ctrlEmployer.sendinvite);
 
 
 // admin routes

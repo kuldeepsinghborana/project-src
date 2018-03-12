@@ -24,20 +24,21 @@ export const routes: Routes = [
       { path: 'login', component: LoginComponent, pathMatch: 'full' },
       { path: 'contact', component: ContactComponent, pathMatch: 'full' },
       { path: 'register', component: RegisterComponent, pathMatch: 'full' },
+      { path: 'register/:referenceNumber', component: RegisterComponent, pathMatch: 'full' },      
       { path: 'about', component: AboutComponent, pathMatch: 'full' },
       { path: 'postjob', component: CreatejobComponent, pathMatch: 'full' },
       { path: 'job/:id', component: JobComponent, pathMatch: 'full' }
     ]
   },
- {
-    path: 'employer', component : EmployerComponent,
+  {
+    path: 'employer',canActivate: [AuthGuard], component: EmployerComponent,
     loadChildren: './employer/employer.module#EmployerModule',
- },{
-  path: 'admin', component : AdminComponent,
-  loadChildren: './admin/admin.module#AdminModule',
-}, {
-  path: 'activateaccount/:token', component: ActivateAccountComponent
-}
+  }, {
+    path: 'admin', component: AdminComponent,
+    loadChildren: './admin/admin.module#AdminModule',
+  }, {
+    path: 'activateaccount/:token', component: ActivateAccountComponent
+  }
 ];
 
 @NgModule({

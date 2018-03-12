@@ -1,12 +1,13 @@
-var mongoose = require('mongoose');
-var Job = mongoose.model('Job');
-var User = mongoose.model('User');
-var Worker = require('../models/worker');
-var Match = mongoose.model('Match');
-var Notification = mongoose.model('Notification');
-let jwt = require('../helper/jwt');
-let utils = require('../helper/utils');
-var moment = require('moment');
+const mongoose = require('mongoose');
+const Job = mongoose.model('Job');
+const User = mongoose.model('User');
+const Worker = require('../models/worker');
+const Match = mongoose.model('Match');
+const Notification = mongoose.model('Notification');
+const jwt = require('../helper/jwt');
+const utils = require('../helper/utils');
+const moment = require('moment');
+const waterfall = require('async-waterfall');
 
 // GET /employer
 module.exports.dashboard = function (req, res, next) {
@@ -44,17 +45,17 @@ module.exports.dashboard = function (req, res, next) {
         // set stats as session variable
         req.session.stats = stats;
         res.json({
-           notification: notifications,
-          notificationCount : notificationCount,
+          notification: notifications,
+          notificationCount: notificationCount,
           jobCount: {
-          invitedWorkersCount : invitedWorkersCount,
-          hiredWorkersCount : hiredWorkersCount,
-          acceptedWorkersCount : acceptedWorkersCount,
-          shortlistedWorkersCount : shortlistedWorkersCount,
-          openJobsCount : openJobsCount,
-          urgentJobsCount : urgentJobsCount,
-          completedJobsCount : completedJobsCount
-        },
+            invitedWorkersCount: invitedWorkersCount,
+            hiredWorkersCount: hiredWorkersCount,
+            acceptedWorkersCount: acceptedWorkersCount,
+            shortlistedWorkersCount: shortlistedWorkersCount,
+            openJobsCount: openJobsCount,
+            urgentJobsCount: urgentJobsCount,
+            completedJobsCount: completedJobsCount
+          },
         });
       }).sort({ 'createdAt': -1 });
     });
@@ -77,7 +78,7 @@ module.exports.settings = function (req, res, next) {
       })
     }
     // console.log('User found: ', user);
-    if(user){
+    if (user) {
       user.password = '';
     }
     res.json({
@@ -125,6 +126,7 @@ module.exports.jobsList = function (req, res, next) {
   // get employer's joblist
   Job.find({ employerId: user_id }, function (err, jobs) {
     var tmpJobsList = jobs;
+    // console.log('tmpJobsList', tmpJobsList);
     var filters = [];
     if (err) {
       console.log(err);
@@ -182,13 +184,15 @@ module.exports.jobsList = function (req, res, next) {
         // console.log(job_clone);
         jobsList.push(job_clone);
       }
+      console.log('jobsList', jobsList);
+
       res.send({
         title: 'Jobbunny | Employer > Jobs',
         jobs: jobsList,
-        moment: moment, 
+        moment: moment,
       })
       return false;
-     });
+    });
   });
 };
 
@@ -200,7 +204,7 @@ module.exports.newJob = function (req, res, next) {
   res.status(200).render('employer/newjob', { title: 'Jobbunny | Employer > Jobs' });
 }
 
-module.exports.showJobWithId = function(req,res){
+module.exports.showJobWithId = function (req, res) {
   console.log("i am in show job")
   var job_id = req.params.jobId;
   // var current_user = req.session.user;
@@ -219,21 +223,21 @@ module.exports.showJobWithId = function(req,res){
       console.log('Found job: ', job._id);
       Match.find({ employerId: user_id, jobId: job._id }, function (err, matches) {
         if (err) {
-          console.log("error",err);
+          console.log("error", err);
         }
         res.locals.pendingInvitationWorkersCount = 0;
         res.locals.pendingAcceptanceWorkersCount = countMatches(matches, 'matched');
         res.locals.shortListedWorkersCount = countMatches(matches, 'shortlisted');
         res.locals.declinedWorkersCount = countMatches(matches, 'declined');
-        console.log("current_user",current_user,job)
-        _appendMatchesMetricsToJob(job, current_user,req, function (err, job_with_stats) {
+        console.log("current_user", current_user, job)
+        _appendMatchesMetricsToJob(job, current_user, req, function (err, job_with_stats) {
           if (err) {
             console.log(err);
           }
           res.send({
-            status:1,
-              job: job_with_stats,
-              message:"successfully retrieved"  
+            status: 1,
+            job: job_with_stats,
+            message: "successfully retrieved"
           })
           return false;
           // console.log(job_with_stats);
@@ -263,16 +267,16 @@ module.exports.showJob = function (req, res, next) {
       if (err) {
         console.log("Job not found: ", err)
         return res.status(500).send({
-          message:"Something went wrong!"
-         })
+          message: "Something went wrong!"
+        })
         // res.locals.error = 'Page not found';
         // res.status(400).render('error');
       }
-      if(!job){
+      if (!job) {
         return res.status(404).send({
-         message:"Job not found"
+          message: "Job not found"
         })
-        
+
       }
       console.log('Found job: ', job);
       Match.find({ employerId: user_id, jobId: job._id }, function (err, matches) {
@@ -283,14 +287,14 @@ module.exports.showJob = function (req, res, next) {
         res.locals.pendingAcceptanceWorkersCount = countMatches(matches, 'matched');
         res.locals.shortListedWorkersCount = countMatches(matches, 'shortlisted');
         res.locals.declinedWorkersCount = countMatches(matches, 'declined');
-        _appendMatchesMetricsToJob(job, current_user,req, function (err, job_with_stats) {
+        _appendMatchesMetricsToJob(job, current_user, req, function (err, job_with_stats) {
           if (err) {
             console.log(err);
           }
           res.send({
-            status:1,
-              job: job_with_stats,
-              message:"successfully retrieved"  
+            status: 1,
+            job: job_with_stats,
+            message: "successfully retrieved"
           })
           return false;
           // console.log(job_with_stats);
@@ -314,15 +318,15 @@ module.exports.editJob = function (req, res, next) {
   Job
     .findById(jobId)
     .exec()
-    .then((job)=>{
+    .then((job) => {
       console.log('Found job: ', job._id);
       res.json({
-        message : 'Job updated successful'
+        message: 'Job updated successful'
       })
     })
     .catch(err => {
       res.status(400).json({
-        message : 'Job not found'
+        message: 'Job not found'
       })
     });
 }
@@ -424,6 +428,86 @@ module.exports.inviteWorkers = function (req, res, next) {
       });
     })
 };
+
+module.exports.sendinvite = (req, res) => {
+  let user_id = jwt.getCurrentUserId(req);
+  let email = req.body.email;
+  waterfall([
+    function (callback) {
+      let filter = {
+        email: req.body.email
+      }
+      User.find(filter, function (err, result) {
+        if (result && result.length > 0) {
+          callback('Already Registered with Us');
+        } else {
+          callback(null);
+        }
+      });
+    },
+    function (callback) {
+      utils.getCurrentUser(req).then(user => {
+        callback(null, user);
+      }).catch(err => {
+        callback(err);
+      });
+    },
+    function (user, callback) {
+      // console.log('second function user', user);
+      let email = req.body.email;
+      let referenceNumber = user.referenceNumber;
+      // let username = data.name ? data.name : '';
+      let subject = 'Invitation For Create Account';
+      let pageName = 'homepage/register/' + referenceNumber;
+      let fileName = 'invitation';
+      let date = new Date();
+      let year = date.getFullYear();
+      let mailTemplatePath = "./mail_content/" + fileName + ".html";
+      utils.getHtmlContent(mailTemplatePath, function (err, content) {
+        if (err) {
+          callback('PLEASE_TRY_AGAIN');
+        }
+        if (content) {
+          let link = config.SITE_URL + pageName;
+          content = content.replace("{LINK}", link);
+          content = content.replace("{USERNAME}", " ");
+          content = content.replace("{YEAR}", year);
+          content = content.replace("{referralCode}", user.referenceNumber);
+
+          utils.sendEmail(email, subject, content, function (err, result) {
+            if (err) {
+              callback('PLEASE_TRY_AGAIN');
+            }
+            if (result) {
+              // callback(null, result);
+              let response = {
+                status: 200,
+                message: "SUCCESS",
+                // userId: user._id
+              }
+              return res.status(200).json(response);
+            }
+            else {
+              callback('PLEASE_TRY_AGAIN');
+            }
+          });
+        }
+        else {
+          callback('PLEASE_TRY_AGAIN');
+        }
+      });
+    }
+  ], (err) => {
+    if (err) {
+      let response = {
+        message: err,
+        status:400
+      }
+      return res.status(400).json(response);
+    }
+  });
+}
+
 
 Object.getPrototypeOf(moment()).toBSON = function () {
   return this.toDate();
@@ -632,7 +716,7 @@ var countEmployedMatches = function (matches_list) {
 
 // returns job object with these metrics added to the object:
 // { invited: [invited workers], applied: [applied workers], shortlisted: [shortlisted workers] }
-var _appendMatchesMetricsToJob = function (job, current_user,req, callback) {
+var _appendMatchesMetricsToJob = function (job, current_user, req, callback) {
   // add each job's invited, shortlisted matches
   let user_id = jwt.getCurrentUserId(req);
 

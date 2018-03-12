@@ -1,6 +1,7 @@
 import { Component, NgModule, OnInit } from '@angular/core';
 import { ToasterModule, ToasterContainerComponent, ToasterService } from './../../../node_modules/angular5-toaster/angular5-toaster';
 import { RegisterServiceService } from './register-service.service';
+import { Params, ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -16,22 +17,22 @@ export class RegisterComponent implements OnInit {
   public name = '';
   public companyname = '';
   public handphoneNumber = '';
-
-  constructor(toasterService: ToasterService, private registerServiceService: RegisterServiceService) {
+  public referenceNumber = '';
+  constructor(toasterService: ToasterService, private registerServiceService: RegisterServiceService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router) {
     this.toasterService = toasterService;
-
-
   }
 
   ngOnInit() {
-    // let current = this;
-    // setTimeout(function () {
-    //   current.popToast();
 
-    // }, 3000)
-    // this.registerServiceService.getData().subscribe(res => {
-    //   console.log(res, 'check')
-    // })
+
+
+    this.activatedRoute.params.subscribe((params: Params) => {
+      this.referenceNumber = params['referenceNumber'];
+      console.log('this.referenceNumber', this.referenceNumber);
+    });
+
   }
 
   public popToast() {
@@ -65,6 +66,11 @@ export class RegisterComponent implements OnInit {
     if (this.name == '') {
       return this.toasterService.pop('error', 'Error', "Name Can't be blank");
     }
+
+    if (this.referenceNumber.length != 6 && this.referenceNumber.length != 0) {
+      return this.toasterService.pop('error', 'Error', "Invalid Reference Number");
+    }
+
     let data = {
       email: this.email,
       password: this.password,
@@ -72,7 +78,9 @@ export class RegisterComponent implements OnInit {
       companyname: this.companyname,
       name: this.name
     }
-
+    if (this.referenceNumber != '' && this.referenceNumber != undefined) {
+      data['referenceNumber'] = this.referenceNumber;
+    }
     this.registerServiceService.register(data).subscribe(res => {
       this.email = '';
       this.name = '';

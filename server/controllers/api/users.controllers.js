@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const waterfall = require('async-waterfall');
 const jwt = require('../../helper/jwt');
 const crypto = require('crypto');
 const User = mongoose.model('User');
@@ -8,6 +7,7 @@ const bcrypt = require('bcrypt');
 const imgur = require('imgur');
 const promise = require('bluebird');
 const utils = require('../../helper/utils');
+const waterfall = require('async-waterfall');
 
 
 
@@ -89,35 +89,122 @@ module.exports.isEmailExist = function (req, res) {
 //   }
 // };
 
+
+function generateReferenceNumber(cb) {
+  let referenceNumber = utils.makeRandomWithCharacter();
+  let filter = {
+    referenceNumber: referenceNumber
+  }
+
+  User.find(filter, function (err, result) {
+    (err) => {
+      let response = {
+        status: 400,
+        message: 'Please Try Again'
+      }
+      return res.status(400).json(response);
+    }
+    if (result && result.length > 0) {
+      generateReferenceNumber(cb);
+    } else {
+      cb(referenceNumber);
+    }
+  });
+  // User.find(filter).exec(result => {
+  //   if (result && result.length > 0) {
+  //     generateReferenceNumber(cb);
+  //   } else {
+  //     cb(referenceNumber);
+  //   }
+  // }, (err) => {
+  //   let response = {
+  //     status: 400,
+  //     message: 'Please Try Again'
+  //   }
+  //   return res.status(400).json(response);
+  // });
+}
+
 module.exports.register = (req, res) => {
   let token = crypto.randomBytes(20).toString('hex');
+  let newReferenceNumber;
+  let referralSender;
   waterfall([
     function (callback) {
+      generateReferenceNumber((data) => {
+        newReferenceNumber = data;
+        callback(null);
+      });
+    },
+    function (callback) {
+      if (req.body.referenceNumber) {
+        let filter = {
+          referenceNumber: req.body.referenceNumber
+        }
+        User.find(filter, function (err, result) {
+          console.log('result', result);
+          if (result && result.length > 0) {
+            referralSender = result[0];
+            let carrot = {
+              available: 110,
+              pending: 0,
+              total: 110
+            }
+            callback(null, carrot);
+          } else {
+            let carrot = {
+              available: 100,
+              pending: 0,
+              total: 100
+            }
+            callback(null, carrot);
+          }
+        });
+      } else {
+        let carrot = {
+          available: 100,
+          pending: 0,
+          total: 100
+        }
+        callback(null, carrot);
+      }
+    },
+    function (carrot, callback) {
       if (req.body.email && req.body.password) {
         var userData = {
           email: req.body.email,
           name: req.body.name,
           password: req.body.password,
           // passwordConf: req.body.passwordConf,
-          phoneNumber: req.body.handphoneNumber,
+          phoneNumber: parseInt(req.body.handphoneNumber),
           companyname: req.body.companyname,
           token: token,
-          carrots: {
-            available: 100,
-            pending: 0
-          }
+          // carrots: {
+          //   available: 100,
+          //   pending: 0,
+          //   total: 100
+          // },
+          carrots: carrot,
+          referenceNumber: newReferenceNumber
         }
         User.create(userData, function (err, user) {
           if (err) {
-            console.log("Error creating user", err)
+            console.log("Error creating user", err);
+            if (err.code === 11000) {
+              let response = {
+                status: 400,
+                message: "Already Registered"
+              }
+              return res.status(400).json(response);
+            }
             // res.status(400).render('sessions/register', { error: err });
             let response = {
               status: 400,
               message: "FAILED"
             }
-            return res.status(200).json(response);
+            return res.status(400).json(response);
           } else {
-            callback(null, userData);
+            callback(null, userData, user);
           }
         });
       } else {
@@ -129,7 +216,37 @@ module.exports.register = (req, res) => {
         }
         return res.status(400).json(response);
       }
-    }, function (data, callback) {
+    }, function (data, user, callback) {
+      if (referralSender && referralSender != null && referralSender != undefined) {
+        // console.log('referralSender', referralSender);
+        let user_id = referralSender._id;
+        let purchasedCarrot = 10;
+        let oldTotalCarrots = referralSender.carrots.total;
+        let oldAvailableCarrots = referralSender.carrots.available;
+        let updatedTotalCarrot = Number(oldTotalCarrots) + Number(purchasedCarrot);
+        let updatedAvailableCarrot = Number(oldAvailableCarrots) + Number(purchasedCarrot);
+        let userNewData = {
+          carrots: {
+            total: Number(updatedTotalCarrot),
+            available: Number(updatedAvailableCarrot),
+            pending: referralSender.carrots.pending
+          }
+        }
+        // console.log('userNewData', userNewData);
+        User.findByIdAndUpdate(user_id, userNewData, { new: true }, function (err, updatedUserData) {
+          if (err) {
+            console.log('err', err);
+            // callback(err);
+            callback(null, data, user);
+          } else {
+            // console.log('updatedUserData', updatedUserData);
+            callback(null, data, user);
+          }
+        });
+      } else {
+        callback(null, data, user);
+      }
+    }, function (data, user, callback) {
       let email = data.email;
       let token = data.token;
       let username = data.name ? data.name : '';
@@ -157,7 +274,8 @@ module.exports.register = (req, res) => {
               // callback(null, result);
               let response = {
                 status: 200,
-                message: "SUCCESS"
+                message: "SUCCESS",
+                userId: user._id
               }
               return res.status(200).json(response);
             }
@@ -174,7 +292,7 @@ module.exports.register = (req, res) => {
   ], function (err) {
     response = {
       status: 400,
-      'error': err
+      error: err
     }
     return res.status(400).json(response);
   });

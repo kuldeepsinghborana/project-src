@@ -120,6 +120,7 @@ module.exports.createJob = function (req, res) {
 // POST /api/jobs/update/:jobId
 module.exports.updateJob = function (req, res) {
   var jobId = req.params.jobId;
+  let user_id = jwt.getCurrentUserId(req);
   console.log('UPDATE job with _id: ' + jobId);
   var formData = req.body;
   var updateJobParams = {
@@ -147,7 +148,7 @@ module.exports.updateJob = function (req, res) {
     employerName: formData.employerName,
     employerEmail: formData.employerEmail,
     employerPhone: formData.employerPhone,
-    employerId: req.session.user ? req.session.user._id : null,
+    employerId: user_id ? user_id : null,
     coverImage: req.file ? req.file.filename : null
   };
 
@@ -164,11 +165,14 @@ module.exports.updateJob = function (req, res) {
       job.save(function (err, job) {
         if (err) {
           console.log("Error updating job", err)
-          req.session.error = 'Error updating job';
-          res.redirect(400, req.header('Referer'));
+        return res.status(400).send({
+            message:err
+          })
+          // req.session.error = 'Error updating job';
+          // res.redirect(400, req.header('Referer'));
         } else {
           console.log("Job updated >>>>>", job);
-          req.session.message = 'Job updated sucessfully';
+          // req.session.message = 'Job updated sucessfully';
           if (job.coverImage) {
             imgur.uploadFile('public/uploads/' + job.coverImage).then(function (json) {
               remote_url = json.data.link;

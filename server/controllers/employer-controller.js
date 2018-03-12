@@ -256,7 +256,7 @@ module.exports.showJobWithId = function (req, res) {
 module.exports.showJob = function (req, res, next) {
   console.log("i am in show job")
   var job_id = req.params.jobId;
-  var current_user = req.session.user;
+  // var current_user = req.session.user;
   let user_id = jwt.getCurrentUserId(req);
 
   console.log('GET job with _id: ' + job_id);
@@ -287,7 +287,7 @@ module.exports.showJob = function (req, res, next) {
         res.locals.pendingAcceptanceWorkersCount = countMatches(matches, 'matched');
         res.locals.shortListedWorkersCount = countMatches(matches, 'shortlisted');
         res.locals.declinedWorkersCount = countMatches(matches, 'declined');
-        _appendMatchesMetricsToJob(job, current_user, req, function (err, job_with_stats) {
+        _appendMatchesMetricsToJob(job, user_id, req, function (err, job_with_stats) {
           if (err) {
             console.log(err);
           }

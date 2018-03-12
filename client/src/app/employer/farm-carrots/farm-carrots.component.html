@@ -9,6 +9,7 @@
         <p>hiring great again</p>
       </div>
       <br>
+
       <div class="row">
         <div class="col-md-6">
           <div class="panel pad20 align-center">
@@ -22,7 +23,7 @@
             <br>
             <p>Everybody wins</p>
             <br>
-            <button class="btn btn-orange" (click)="sendGift()" >Send Gift</button>
+            <button class="btn btn-orange" (click)="sendGift();myModal.open();">Send Gift</button>
           </div>
         </div>
         <div class="col-md-6">
@@ -43,4 +44,33 @@
       </div>
     </div>
   </div>
+
 </div>
+<!-- <div class="container">
+    <modal #myModal>
+        <modal-content>
+          <label>Please Enter Email:</label>
+          <input type="email" id="email" name="email" required>
+          <button class="btn btn-primary">Send Invitation</button>
+        </modal-content>
+      </modal>
+</div> -->
+<!-- <button (click)="myModal.open()">open my modal</button> -->
+
+<!-- <ng-template #template1>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Update Category</h4>
+     <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <form>
+    <div class="modal-body addnew-body">
+      <label class="col-4" for="canton">Category name :-</label>
+      <input class="col-7" type="text" [(ngModel)]="categoryTitle" [ngModelOptions]="{standalone: true}">
+    </div>
+  </form>
+  <div class="text-center" style="padding:20px;">
+    <button type="button" class="btn btn-primary" (click)="updateCategory(editCategoryId)">Update</button>
+  </div>
+</ng-template> -->

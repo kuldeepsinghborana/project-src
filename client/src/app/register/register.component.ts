@@ -88,7 +88,10 @@ export class RegisterComponent implements OnInit {
       this.companyname = '';
       this.confirmPassword = '';
       this.password = '';
-      return this.toasterService.pop('success', 'Success', 'Registration Successfully done');
+      this.toasterService.pop('success', 'Success', 'Registration Successfully done');
+
+      return this.router.navigate(["/employer/overview"]);
+
     }, err => {
       return this.toasterService.pop('error', 'Error', err.message);
     });

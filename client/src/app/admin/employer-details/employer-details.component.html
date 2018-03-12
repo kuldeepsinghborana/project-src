@@ -16,7 +16,7 @@
             </div>
           </div>
           <div class="col-md-9">
-            <h3 class="strong capitalize">N/A</h3>
+            <h3 class="strong capitalize">{{ (employerDetail['firstName'] || employerDetail['lastName']) ? employerDetail['firstName'] + ' ' + employerDetail['lastName'] : 'N/A' }}</h3>
             <p class="medium strong">Email</p>
             <p>{{employerDetail['email']}}</p>
             <p class="medium strong">Company Name</p>

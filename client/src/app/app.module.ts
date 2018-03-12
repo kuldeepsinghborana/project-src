@@ -45,7 +45,8 @@ const appRoutes: Routes = [];
     ActivateAccountComponent,
     EmployerComponent,
     AdminComponent,
-    CommaSepratedObjectPropertyValuesPipe
+    CommaSepratedObjectPropertyValuesPipe,
+    
   ],
   imports: [
     BrowserModule,

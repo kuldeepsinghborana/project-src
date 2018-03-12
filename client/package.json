@@ -27,6 +27,7 @@
     "braintree-web-drop-in": "^1.9.4",
     "core-js": "^2.4.1",
     "moment": "^2.21.0",
+    "ng2-img-cropper": "^0.9.0",
     "ngx-modal": "0.0.29",
     "ngx-progressbar": "^2.1.1",
     "rxjs": "^5.5.6",

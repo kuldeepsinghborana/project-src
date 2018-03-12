@@ -253,17 +253,17 @@ router.get('/employer/buy-carrots', function (req, res, next) {
 
 // admin routes
 router
-  .route('/admin')
+  .route('/api/admin')
   .get(auth.requiresAdminLogin, ctrlAdmin.dashboard)
-router
-  .route('/admin/settings')
-  .get(auth.requiresAdminLogin, ctrlAdmin.settings);
 router
   .route('/api/admin/employers')
   .get(auth.requiresAdminLogin, ctrlAdmin.employersList);
 router
   .route('/admin/employers/search')
   .get(auth.requiresAdminLogin, ctrlAdmin.searchEmployers);
+router
+  .route('/api/admin/settings')
+  .get(auth.requiresAdminLogin, ctrlAdmin.settings);
 router
   .route('/api/admin/employers/:employerId')
   .get(auth.requiresAdminLogin, ctrlAdmin.showEmployer);

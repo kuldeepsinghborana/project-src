@@ -1,13 +1,13 @@
 <div class="content">
   <div class="clearfix"></div>
   <div class="content-wrap">
-    <div class="panel" [hidden]="!job || !job['coverImage']">
-      <img class="img-fit" [src]="job['coverImage']" style="height:300px;width:100%;">
+    <div class="panel" >
+      <img *ngIf="job && job['coverImage']" class="img-fit" [src]="job['coverImage']" style="height:300px;width:100%;">
       <br>
       <div class="pad20">
         <p class="large strong capitalize">{{job['jobTitle']}}
           <span class="left20">
-            <a href="/admin/jobs/5a4f2c71a1550f001455ac48/edit">
+            <a [routerLink]="['../../job-edit',job._id]">
               <i class="fa fa-edit small gray"></i>
             </a>
             <a class="left20" href="/api/jobs/delete/5a4f2c71a1550f001455ac48" onclick="return confirm('delete now?');">
@@ -47,7 +47,7 @@
           <div class="col-md-3 border-left">
             <div class="align-center bottom10">
               <p class="gray">EMPLOYER</p>
-              <a href="/admin/employers/5a3dc87e56494f0bbb6c175f">
+              <a [routerLink]="['../../employer-details', job['employerId']]">
                 <div class="medium strong">{{job['companyName']}}</div>
                 <br>
                 <small class="strong top10 left10 pull-left"></small>

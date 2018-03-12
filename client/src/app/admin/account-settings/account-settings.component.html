@@ -1,0 +1,57 @@
+<div class="content">
+    <div class="clearfix"></div>
+    <div class="container-fluid">
+      <p>
+        <span class="medium strong">Account Settings</span>
+      </p>
+      <div class="card pad20">
+        <form class="form-horizontal" (ngSubmit)="saveAccountSettings(curruntUserDetails)" #verify="ngForm">
+          <div class="form-group">
+            <label class="control-label col-sm-2 small">FIRST NAME</label>
+            <div class="col-sm-10">
+              <input class="form-control" type="text" placeholder="Enter first name" name="firstName" [(ngModel)]="curruntUserDetails['firstName']">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-2 small">LAST NAME</label>
+            <div class="col-sm-10">
+              <input class="form-control" type="text" placeholder="Enter last name" name="lastName" [(ngModel)]="curruntUserDetails['lastName']">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-2 small">EMAIL</label>
+            <div class="col-sm-10">
+              <input class="form-control" type="text" placeholder="Enter email" name="email" [(ngModel)]="curruntUserDetails['email']" required="">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-2 small">COMPANY NAME</label>
+            <div class="col-sm-10">
+              <input class="form-control" type="text" placeholder="Enter your company name" name="companyName" [(ngModel)]="curruntUserDetails['companyName']">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-2 small">PROFILE PIC</label>
+            <div class="col-sm-10">
+              <input class="form-control" type="file" name="profilePic" (change)="fileSelected($event)">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2" for="password">Password</label>
+            <div class="col-sm-10">
+              <input class="form-control" id="password" type="password" placeholder="Password" name="password" [(ngModel)]="curruntUserDetails['password']">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2" for="password-repeat">Password Confirmation</label>
+            <div class="col-sm-10">
+              <input class="form-control" id="password-repeat" type="password" placeholder="Re-enter Password" name="passwordConf" [(ngModel)]="curruntUserDetails['passwordConf']">
+            </div>
+          </div>
+          <button class="btn-lg btn-warning pull-right" type="submit">Save</button>
+        </form>
+        <br>
+        <br>
+      </div>
+    </div>
+  </div>

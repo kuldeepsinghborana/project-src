@@ -28,21 +28,22 @@ module.exports.dashboard = function (req, res, next) {
           if (err) {
             console.log(err);
           }
-          res.locals.totalEmployersCount = _filterUsers(users, 'employer').length;
-          res.locals.totalJobsCount = jobs.length;
-          res.locals.totalWorkersCount = workers.length;
-          res.locals.totalInvitationsCount = matches.length;
-          res.locals.totalMatchesCount = matches.length;
-          res.locals.matchesStats = {
+          let totalCounts = {
+            totalEmployersCount: _filterUsers(users, 'employer').length,
+            totalJobsCount: jobs.length,
+            totalWorkersCount: workers.length,
+            totalInvitationsCount: matches.length,
+            totalMatchesCount: matches.length
+          }
+          let matchesStats = {
             invited: _filterMatches(matches, 'invited').length,
             applied: _filterMatches(matches, 'applied').length,
             accepted: _filterMatches(matches, 'accepted').length,
             shortlisted: _filterMatches(matches, 'shortlisted').length
           }
-          res.render('admin/dashboard', {
-            title: 'Jobbunny | Admin',
-            error: req.flash('error'),
-            message: req.flash('message')
+          return res.json({
+            totalCounts : totalCounts,
+            matchesStats : matchesStats
           });
         });
       });
@@ -84,16 +85,10 @@ module.exports.settings = function (req, res, next) {
       if (err) {
         console.log(err);
       }
+      user.password = null;
       console.log('User found: ', user._id)
-      res.locals.user = user;
-      res.format({
-        html: function () {
-          res.render('admin/settings', {
-            title: 'Jobbunny | Admin > Settings',
-            error: req.flash('error'),
-            message: req.flash('message')
-          });
-        }
+      return res.json({
+        user : user
       });
     });
 };

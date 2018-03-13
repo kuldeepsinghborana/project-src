@@ -17,13 +17,19 @@ import { NotificationsComponent } from './notifications/notifications.component'
 import { JobAddEditComponent } from './job-add-edit/job-add-edit.component';
 import { EmployerDetailsComponent } from './employer-details/employer-details.component'
 // import { BsModalService } from 'ngx-bootstrap/modal';
+import { ModalModule } from "ngx-modal";
+
 // import { ModalModule } from "ngx-modal";
+import { Http,HttpModule } from '@angular/http';
+
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    HttpModule,
+    ModalModule,
     // ModalModule.forChild(),
     RouterModule.forChild([
       { path: '', redirectTo: 'overview', pathMatch: 'full' },

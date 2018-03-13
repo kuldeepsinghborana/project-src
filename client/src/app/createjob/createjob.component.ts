@@ -122,6 +122,15 @@ export class CreatejobComponent implements OnInit {
     this.coverImage = event.target.value;
   }
   emailVerify() {
+    let isEmail = new RegExp(/\S+@\S+\.\S+/);
+
+    let email = this.user["email"];
+
+    let emailIsValid = isEmail.test(this.user["email"]);
+    if (this.user["email"] === '' || this.user["email"] === undefined || !emailIsValid) {
+      return this.toasterService.pop('error', "Error", "Please enter correct email address");
+    }
+
     let emailId = this.user["email"];
     let data = {
       email: emailId

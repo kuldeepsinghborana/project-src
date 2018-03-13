@@ -1,5 +1,5 @@
 <div class="wrapper">
-    <div class="sidebar" data-color="#303135">
+   <div class="sidebar" data-color="#303135">
         <div class="sidebar-wrapper" >
             <div class="logo align-center">
                 <img class="img-circle" height="75" length="75" [src]="curruntUserDetails['profilePic']|| 'assets/img/logo.png'">
@@ -85,7 +85,7 @@
                                     </div>
                                 </a>
                             </li>
-                            <li class="left20">
+                            <li [routerLink]="['../homepage/postjob']" class="left20">
                                 <a >
                                     <span class="red-icon">Post Job</span>
                                 </a>

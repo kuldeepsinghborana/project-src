@@ -75,7 +75,7 @@ module.exports.createJob = function (req, res) {
       // res.redirect(400, '/newjob');
     } else {
       console.log("Job created ", job);
-      req.session.message = 'Job created sucessfully';
+      // req.session.message = 'Job created sucessfully';
       if (job.coverImage) {
         imgur.uploadFile('public/uploads/' + job.coverImage).then(function (json) {
           remote_url = json.data.link;

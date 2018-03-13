@@ -25,9 +25,6 @@ export class RegisterComponent implements OnInit {
   }
 
   ngOnInit() {
-
-
-
     this.activatedRoute.params.subscribe((params: Params) => {
       this.referenceNumber = params['referenceNumber'];
       console.log('this.referenceNumber', this.referenceNumber);
@@ -42,6 +39,16 @@ export class RegisterComponent implements OnInit {
 
 
   public register() {
+    let isEmail = new RegExp(/\S+@\S+\.\S+/);
+
+    let email = this.email;
+    let password = this.password;
+
+    let emailIsValid = isEmail.test(this.email);
+    let passwordLength = this.password.length;
+    if (this.email === '' || this.email === undefined || !emailIsValid) {
+      return this.toasterService.pop('error', "Error", "Please enter correct email address");
+    }
     if (this.email == '') {
       return this.toasterService.pop('error', 'Error', "Username Can't be blank");
     }
@@ -67,7 +74,7 @@ export class RegisterComponent implements OnInit {
       return this.toasterService.pop('error', 'Error', "Name Can't be blank");
     }
 
-    if (this.referenceNumber.length != 6 && this.referenceNumber.length != 0) {
+    if (this.referenceNumber != '' && this.referenceNumber != undefined && this.referenceNumber.length != 6 && this.referenceNumber.length != 0) {
       return this.toasterService.pop('error', 'Error', "Invalid Reference Number");
     }
 
@@ -90,7 +97,7 @@ export class RegisterComponent implements OnInit {
       this.password = '';
       this.toasterService.pop('success', 'Success', 'Registration Successfully done');
 
-      return this.router.navigate(["/employer/overview"]);
+      return this.router.navigate(["/homepage/login"]);
 
     }, err => {
       return this.toasterService.pop('error', 'Error', err.message);

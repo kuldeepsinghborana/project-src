@@ -430,6 +430,7 @@ module.exports.inviteWorkers = function (req, res, next) {
 };
 
 module.exports.sendinvite = (req, res) => {
+  console.log('sendinvite called');
   let user_id = jwt.getCurrentUserId(req);
   let email = req.body.email;
   waterfall([
@@ -465,6 +466,8 @@ module.exports.sendinvite = (req, res) => {
       let mailTemplatePath = "./mail_content/" + fileName + ".html";
       utils.getHtmlContent(mailTemplatePath, function (err, content) {
         if (err) {
+          console.log('err1', err);
+
           callback('PLEASE_TRY_AGAIN');
         }
         if (content) {
@@ -476,8 +479,11 @@ module.exports.sendinvite = (req, res) => {
 
           utils.sendEmail(email, subject, content, function (err, result) {
             if (err) {
+              console.log('err2', err);
               callback('PLEASE_TRY_AGAIN');
             }
+
+            console.log('result', result);
             if (result) {
               // callback(null, result);
               let response = {
@@ -488,11 +494,13 @@ module.exports.sendinvite = (req, res) => {
               return res.status(200).json(response);
             }
             else {
+              console.log('e3');
               callback('PLEASE_TRY_AGAIN');
             }
           });
         }
         else {
+          console.log('e4');
           callback('PLEASE_TRY_AGAIN');
         }
       });
@@ -501,7 +509,7 @@ module.exports.sendinvite = (req, res) => {
     if (err) {
       let response = {
         message: err,
-        status:400
+        status: 400
       }
       return res.status(400).json(response);
     }

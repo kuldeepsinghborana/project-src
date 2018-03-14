@@ -30,7 +30,8 @@ import { Http,HttpModule } from '@angular/http';
     ReactiveFormsModule,
     HttpModule,
     ModalModule,
-    // ModalModule.forChild(),
+    
+   // ModalModule.forChild(),
     RouterModule.forChild([
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
       { path: 'overview', component: JobOverviewComponent, pathMatch: 'full' },

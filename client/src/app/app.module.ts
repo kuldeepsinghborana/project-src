@@ -31,6 +31,7 @@ import { UserService } from './user-service.service';
 import { EmployerComponent } from './employer/employer.component';
 import { AdminComponent } from './admin/admin.component';
 import { CommaSepratedObjectPropertyValuesPipe } from './comma-seprated-object-property-values.pipe';
+import {ImageCropperComponent} from 'ng2-img-cropper';
 const appRoutes: Routes = [];
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ const appRoutes: Routes = [];
     EmployerComponent,
     AdminComponent,
     CommaSepratedObjectPropertyValuesPipe,
+    ImageCropperComponent
     
   ],
   imports: [

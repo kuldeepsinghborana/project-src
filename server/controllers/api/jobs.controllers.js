@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
+var userProfile = mongoose.model('userProfile');
 var Job = mongoose.model('Job');
 var moment = require('moment');
 var imgur = require('imgur');
@@ -19,7 +20,36 @@ module.exports.newJob = function (req, res) {
   res.locals.jobProfile = req.query.profile;
   res.status(200).render('jobs/newJob', { title: 'Jobbunny | New job' });
 }
-
+module.exports.saveUserProfile = function(req,res){
+  let user_id = jwt.getCurrentUserId(req);
+  if(!req.body.imageUrl){
+    return res.send({
+      message:"ImageUrl cannot be blank "
+    }) 
+  }
+  let img_url = req.body.imageUrl;
+  let userData = {
+    "userId":user_id,
+    "imageUrl":img_url
+  }
+  let saveData = new userProfile(userData);
+  console.log("saveData",saveData)
+  saveData.save(function(err,result){
+    if(err){
+      return res.send({
+        status:0,
+        message:err
+      })
+    }
+    else{
+      console.log("result",result)
+      return res.send({
+        status:1,
+        message:"User profile saved successfully"
+      })
+    }
+  })
+}
 // POST /api/jobs
 module.exports.createJob = function (req, res) {
   let user_id = jwt.getCurrentUserId(req);

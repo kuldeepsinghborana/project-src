@@ -55,7 +55,12 @@ export class UserService {
       })
       .catch(this.handleError);
   }
-
+  public saveUserProfile(data) {
+    return this.commonServiceService.post('/saveUserProfile',data)
+      .map(res => res.json())
+      .catch(this.handleError);
+  }
+  
   public sendInvite(data) {
     return this.commonServiceService.post('/employer/sendinvite', data).map(res => res.json()).catch(this.handleError);
   }

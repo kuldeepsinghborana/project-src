@@ -52,7 +52,12 @@ jobSchema.pre('save', function (next) {
   var job = this;
   next()
 });
+var userProfileSchema = new mongoose.Schema({
+userId: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+imageUrl:String
 
+})
 // export the schema as Job model
+mongoose.model('userProfile', userProfileSchema, 'userProfiles');
 mongoose.model('Job', jobSchema, 'jobs');
 

@@ -252,6 +252,9 @@ router
   .route('/api/employer/sendinvite')
   .post(auth.requiresEmployerLogin, ctrlEmployer.sendinvite);
 
+  router
+  .route('/api/saveUserProfile')
+  .post(auth.requiresEmployerLogin, ctrlJobs.saveUserProfile);
 
 // admin routes
 router

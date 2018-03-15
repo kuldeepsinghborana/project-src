@@ -256,7 +256,7 @@ module.exports.showJobWithId = function (req, res) {
 module.exports.showJob = function (req, res, next) {
   console.log("i am in show job")
   var job_id = req.params.jobId;
-  var current_user = req.session.user;
+  // var current_user = req.session.user;
   let user_id = jwt.getCurrentUserId(req);
 
   console.log('GET job with _id: ' + job_id);
@@ -287,7 +287,7 @@ module.exports.showJob = function (req, res, next) {
         res.locals.pendingAcceptanceWorkersCount = countMatches(matches, 'matched');
         res.locals.shortListedWorkersCount = countMatches(matches, 'shortlisted');
         res.locals.declinedWorkersCount = countMatches(matches, 'declined');
-        _appendMatchesMetricsToJob(job, current_user, req, function (err, job_with_stats) {
+        _appendMatchesMetricsToJob(job, user_id, req, function (err, job_with_stats) {
           if (err) {
             console.log(err);
           }
@@ -432,6 +432,7 @@ module.exports.inviteWorkers = function (req, res, next) {
 };
 
 module.exports.sendinvite = (req, res) => {
+  console.log('sendinvite called');
   let user_id = jwt.getCurrentUserId(req);
   let email = req.body.email;
   waterfall([
@@ -467,6 +468,8 @@ module.exports.sendinvite = (req, res) => {
       let mailTemplatePath = "./mail_content/" + fileName + ".html";
       utils.getHtmlContent(mailTemplatePath, function (err, content) {
         if (err) {
+          console.log('err1', err);
+
           callback('PLEASE_TRY_AGAIN');
         }
         if (content) {
@@ -478,8 +481,11 @@ module.exports.sendinvite = (req, res) => {
 
           utils.sendEmail(email, subject, content, function (err, result) {
             if (err) {
+              console.log('err2', err);
               callback('PLEASE_TRY_AGAIN');
             }
+
+            console.log('result', result);
             if (result) {
               // callback(null, result);
               let response = {
@@ -490,11 +496,13 @@ module.exports.sendinvite = (req, res) => {
               return res.status(200).json(response);
             }
             else {
+              console.log('e3');
               callback('PLEASE_TRY_AGAIN');
             }
           });
         }
         else {
+          console.log('e4');
           callback('PLEASE_TRY_AGAIN');
         }
       });
@@ -503,7 +511,7 @@ module.exports.sendinvite = (req, res) => {
     if (err) {
       let response = {
         message: err,
-        status:400
+        status: 400
       }
       return res.status(400).json(response);
     }

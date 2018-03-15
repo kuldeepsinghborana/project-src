@@ -8,7 +8,7 @@ import { BuyCarrotsComponent } from './buy-carrots/buy-carrots.component';
 import { FarmCarrotsComponent } from './farm-carrots/farm-carrots.component';
 import { BuyCarrotsService } from './buy-carrots/buy-carrots.service';
 import { JobComponent } from './job/job.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AccountSettingsComponent } from './account-settings/account-settings.component';
 import { InviteEmployeesComponent } from './invite-employees/invite-employees.component';
 import { EmployeeProfileComponent } from './employee-profile/employee-profile.component';
@@ -16,12 +16,22 @@ import { ReviewEmployeesComponent } from './review-employees/review-employees.co
 import { NotificationsComponent } from './notifications/notifications.component';
 import { JobAddEditComponent } from './job-add-edit/job-add-edit.component';
 import { EmployerDetailsComponent } from './employer-details/employer-details.component'
+// import { BsModalService } from 'ngx-bootstrap/modal';
+import { ModalModule } from "ngx-modal";
+
+// import { ModalModule } from "ngx-modal";
+import { Http,HttpModule } from '@angular/http';
 
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
+    HttpModule,
+    ModalModule,
+    
+   // ModalModule.forChild(),
     RouterModule.forChild([
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
       { path: 'overview', component: JobOverviewComponent, pathMatch: 'full' },
@@ -39,8 +49,8 @@ import { EmployerDetailsComponent } from './employer-details/employer-details.co
       { path:'invite-employees/:jobId', component: InviteEmployeesComponent, pathMatch: 'full' }
     ])
   ],
-  exports:[RouterModule],
+  exports: [RouterModule],
   declarations: [JobOverviewComponent, JobManagementComponent, EmployeeManagementComponent, BuyCarrotsComponent, FarmCarrotsComponent, JobComponent, AccountSettingsComponent, InviteEmployeesComponent, EmployeeProfileComponent, ReviewEmployeesComponent, NotificationsComponent, JobAddEditComponent, EmployerDetailsComponent],
-  providers:[BuyCarrotsService]
+  providers: [BuyCarrotsService]
 })
 export class EmployerModule { }

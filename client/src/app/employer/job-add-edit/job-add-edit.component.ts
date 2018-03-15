@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../user-service.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute,Router } from '@angular/router';
 import { ToasterModule, ToasterContainerComponent, ToasterService } from '../../../../node_modules/angular5-toaster/angular5-toaster';
 import { AmazingTimePickerService } from 'amazing-time-picker'; // this line you need
 
@@ -10,35 +10,35 @@ import { AmazingTimePickerService } from 'amazing-time-picker'; // this line you
   styleUrls: ['./job-add-edit.component.css']
 })
 export class JobAddEditComponent implements OnInit {
-  public jobTitle = '';
-  public requiredNumber = '';
-  public jobType = '';
-  public jobIndustry = '';
-  public salaryType = '';
-  public salary = '';
-  public startDate = '';
-  public endDate = '';
-  public workPeriod = '';
-  public totalHours = '';
-  public jobExpiration = '';
-  public location = '';
-  public workRegion = '';
-  public description = '';
-  public jobRole = '';
-  public requirement = '';
-  public selfEmployer = '';
-  public companyName = '';
-  public companyWebsite = '';
-  public employerName = '';
-  public employerPhone = '';
-  public startTime = '';
-  public endTime = '';
-  public coverImage = '';
-  public companyImage = '';
+  public jobTitle;
+  public requiredNumber;
+  public jobType ;
+  public jobIndustry ;
+  public salaryType ;
+  public salary ;
+  public startDate;
+  public endDate;
+  public workPeriod ;
+  public totalHours;
+  public jobExpiration ;
+  public location ;
+  public workRegion ;
+  public description ;
+  public jobRole ;
+  public requirement ;
+  public selfEmployer ;
+  public companyName ;
+  public companyWebsite ;
+  public employerName ;
+  public employerPhone ;
+  public startTime ;
+  public endTime ;
+  public coverImage ;
+  public companyImage ;
   public userId:any;
   public jobData = {};
 
-  constructor(public userService: UserService,private route: ActivatedRoute,public atp: AmazingTimePickerService,public toasterService: ToasterService) {
+  constructor(public userService: UserService,private route: ActivatedRoute,public router:Router,public atp: AmazingTimePickerService,public toasterService: ToasterService) {
       this.route.params.subscribe((params) => {
       this.userId = params['id'];
    });
@@ -79,6 +79,9 @@ export class JobAddEditComponent implements OnInit {
     this.employerPhone = this.jobData["employerPhone"];
     this.startTime = this.jobData["startTime"];
     this.endTime = this.jobData["endTime"];
+    
+   
+    
   }
   updateJobPost(){
     console.log("cover image",this.coverImage)
@@ -108,7 +111,8 @@ export class JobAddEditComponent implements OnInit {
     form.append("employerPhone", this.employerPhone)
    form.append("coverImage", this.coverImage)
     this.userService.updateJobPost(this.jobData["_id"],form).subscribe(res => {
-      return this.toasterService.pop('success', 'Success', 'Updated Successfully done');
+      this.toasterService.pop('success', 'Success', 'Updated Successfully done');
+      return this.router.navigate(["employer/job-management"])
     }, err => {
       return this.toasterService.pop('error', 'Error', err.message);
     }); 

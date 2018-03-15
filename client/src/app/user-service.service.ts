@@ -7,54 +7,64 @@ export class UserService {
   public userDetail = new BehaviorSubject({});
   constructor(private http: Http, private commonServiceService: CommonServiceService) {
   }
-  public getDashboardDetail(userType : string) {
-    return this.commonServiceService.get('/'+userType )
+  public getDashboardDetail(userType: string) {
+    return this.commonServiceService.get('/' + userType)
       .map(res => res.json())
       .catch(this.handleError)
   }
-  
+
   public getEmployerDetails(jobid) {
     return this.commonServiceService.get('/employer/jobs/' + jobid)
       .map(res => res.json())
       .catch(this.handleError);
-  } 
-  public getJobDetails(userType : string) {
-    return this.commonServiceService.get('/'+userType+'/jobs' )
+  }
+  public getJobDetails(userType: string) {
+    return this.commonServiceService.get('/' + userType + '/jobs')
       .map(res => res.json())
       .catch(this.handleError);
   }
- public updateJobStatus(jobId,status) {
-    return this.commonServiceService.get('/jobs/mark/' + jobId+'?status='+status)
+  public updateJobStatus(jobId, status) {
+    return this.commonServiceService.get('/jobs/mark/' + jobId + '?status=' + status)
       .map(res => res.json())
       .catch(this.handleError);
   }
-  
+
   public deleteJobPost(jobId) {
     return this.commonServiceService.get('/jobs/delete/' + jobId)
       .map(res => res.json())
       .catch(this.handleError);
   }
-  public updateJobPost(jobId,data) {
-    return this.commonServiceService.post('/jobs/update/' + jobId,data)
+  public updateJobPost(jobId, data) {
+    return this.commonServiceService.post('/jobs/update/' + jobId, data)
       .map(res => res.json())
       .catch(this.handleError);
   }
-  public getUserSettings(userType : string){
-    return this.commonServiceService.get('/'+userType+'/settings')
-    .map(res => res.json())
-    .catch(this.handleError)
-    .subscribe(res => {
-      this.userDetail.next(res['user']);
-    });
+  public getUserSettings(userType: string) {
+    return this.commonServiceService.get('/' + userType + '/settings')
+      .map(res => res.json())
+      .catch(this.handleError)
+      .subscribe(res => {
+        this.userDetail.next(res['user']);
+      });
   }
-  public saveProfile(payload, userType:string){
+  public saveProfile(payload, userType: string) {
     return this.commonServiceService.post('/users/update', payload)
-    .map(res => {
-      this.getUserSettings(userType);
-      return res.json()
-    })
-    .catch(this.handleError);
+      .map(res => {
+        this.getUserSettings(userType);
+        return res.json()
+      })
+      .catch(this.handleError);
   }
+  public saveUserProfile(data) {
+    return this.commonServiceService.post('/saveUserProfile',data)
+      .map(res => res.json())
+      .catch(this.handleError);
+  }
+  
+  public sendInvite(data) {
+    return this.commonServiceService.post('/employer/sendinvite', data).map(res => res.json()).catch(this.handleError);
+  }
+
 
   handleError(error: Response | any) {
     const body = JSON.parse(JSON.stringify(error)) || '';

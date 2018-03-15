@@ -9,50 +9,52 @@
           <br>
         </span>
         <p>Job ID: 5a76ca0afe657000143c15d3</p>
-        <hr>
-        <a href="/employer/workers/5a5db124a17df86089392b05?jobId=5a76ca0afe657000143c15d3"></a>
-        <div class="row pad20">
-          <a href="/employer/workers/5a5db124a17df86089392b05?jobId=5a76ca0afe657000143c15d3">
-            <div class="col-md-2">
-              <div class="align-center">
-                <img class="img-fit img-circle" src="https://scontent.xx.fbcdn.net/v/t31.0-1/16826009_10210205090476919_3964334241175919633_o.jpg?oh=e1a767f01a354528293ea31e8d9ae5fb&amp;oe=59A18FFC"
-                  height="100" width="100">
-              </div>
-            </div>
-          </a>
-          <div class="col-md-10">
-            <a href="/employer/workers/5a5db124a17df86089392b05?jobId=5a76ca0afe657000143c15d3"></a>
-            <div class="row">
-              <a href="/employer/workers/5a5db124a17df86089392b05?jobId=5a76ca0afe657000143c15d3">
-                <div class="col-md-3">
-                  <div class="strong capitalize black">Gary Lim</div>
-                  <p class="green strong">8$</p>
-                  <p class="strong black">male</p>
-                </div>
-                <div class="col-md-2">
-                  <strong class="gray">EXPERIENCE</strong>
-                  <p class="strong black">2 years</p>
-                </div>
-                <div class="col-md-3">
-                  <strong class="gray">LANGUAGE</strong>
-                  <p class="strong black">English,Mandarin</p>
-                </div>
-                <div class="col-md-2">
-                  <strong class="gray">PERSONALITY</strong>
-                  <p class="strong black"></p>
-                  <p class="strong black"></p>
-                </div>
-              </a>
+        <hr>{{employeesList}}
+        <div *ngFor="let emp of employeesList">
+          <a href="/employer/workers/5a5db124a17df86089392b05?jobId=5a76ca0afe657000143c15d3"></a>
+          <div class="row pad20">
+            <a href="/employer/workers/5a5db124a17df86089392b05?jobId=5a76ca0afe657000143c15d3">
               <div class="col-md-2">
-                <a href="/employer/workers/5a5db124a17df86089392b05?jobId=5a76ca0afe657000143c15d3"></a>
                 <div class="align-center">
+                  <img class="img-fit img-circle" [src]="emp['profilePic'] || '/assets/img/logo.png'" height="100" width="100">
+                </div>
+              </div>
+            </a>
+            <div class="col-md-10">
+              <a href="/employer/workers/5a5db124a17df86089392b05?jobId=5a76ca0afe657000143c15d3"></a>
+              <div class="row">
+                <a href="/employer/workers/5a5db124a17df86089392b05?jobId=5a76ca0afe657000143c15d3">
+                  <div class="col-md-3">
+                    <div class="strong capitalize black">{{emp['first name'] + ' '+ emp['last name']}}</div>
+                    <p class="green strong">${{emp['salary']}}</p>
+                    <p class="strong black">{{emp['gender']}}</p>
+                  </div>
+                  <div class="col-md-2">
+                    <strong class="gray">EXPERIENCE</strong>
+                    <p class="strong black">2 years</p>
+                  </div>
+                  <div class="col-md-3">
+                    <strong class="gray">LANGUAGE</strong>
+                    <p class="strong black">{{emp['languages'].join(',')}}</p>
+                  </div>
+                  <div class="col-md-2">
+                    <strong class="gray">PERSONALITY</strong>
+                    <p class="strong black"></p>
+                    <p class="strong black"></p>
+                  </div>
+                </a>
+                <div class="col-md-2">
                   <a href="/employer/workers/5a5db124a17df86089392b05?jobId=5a76ca0afe657000143c15d3"></a>
-                  <a class="btn btn-blue btn-block" href="/api/matches/update/5a76ca6da17df86089e47c0c?matchStatus=shortlisted">Shortlist</a>
+                  <div class="align-center">
+                    <a href="/employer/workers/5a5db124a17df86089392b05?jobId=5a76ca0afe657000143c15d3"></a>
+                    <a class="btn btn-blue btn-block" href="/api/matches/update/5a76ca6da17df86089e47c0c?matchStatus=shortlisted">Shortlist</a>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
       </div>
     </div>
   </div>

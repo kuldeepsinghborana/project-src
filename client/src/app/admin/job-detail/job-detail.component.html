@@ -7,7 +7,7 @@
       <div class="pad20">
         <p class="large strong capitalize">{{job['jobTitle']}}
           <span class="left20">
-            <a [routerLink]="['../../job-edit',job._id]">
+            <a [routerLink]="['../../job-edit',job['_id']]">
               <i class="fa fa-edit small gray"></i>
             </a>
             <a class="left20" href="/api/jobs/delete/5a4f2c71a1550f001455ac48" onclick="return confirm('delete now?');">

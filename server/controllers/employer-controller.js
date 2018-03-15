@@ -334,8 +334,8 @@ module.exports.editJob = function (req, res, next) {
 // GET /employer/workers?jobId=123
 module.exports.workersList = function (req, res, next) {
   console.log('GET Employer workersList');
-
-  var current_user = req.session.user;
+  // utils.getCurrentUser(req).then(user
+  // var current_user = req.session.user;
   let user_id = jwt.getCurrentUserId(req);
 
   var gender_type = req.query.gender;
@@ -349,17 +349,16 @@ module.exports.workersList = function (req, res, next) {
         if (err) {
           console.log(err);
           req.flash('error', 'Job not found');
-          res.status(400).render('employer/workersList', {
-            title: 'Jobbunny | Employer > Workers',
-            moment: moment
-          });
+          res.status(400).json({
+            message : 'Job not Found'
+          })
         }
         res.locals.job = job;
         // get all workers invited/shortlisted/hired by the employer
         Match.find({ employerId: user_id, jobId: job_id }, function (err, matches) {
           if (err) {
             console.log(err);
-            res.redirect('/employer')
+            res.redirect('/employer');
           }
           // get associated workers from the matches
           var tmpWorkersList = _getWorkersListFromMatchesList(matches);
@@ -376,7 +375,7 @@ module.exports.workersList = function (req, res, next) {
           // console.log(tmpWorkersList.length);
           res.locals.workerFilters = filters;
           res.locals.workersCount = tmpWorkersList.length;
-          res.status(200).render('employer/workersList', {
+          res.status(200).json({
             title: 'Jobbunny | Employer > Workers',
             workers: tmpWorkersList,
             moment: moment
@@ -386,7 +385,7 @@ module.exports.workersList = function (req, res, next) {
   }
   // else show nothing
   else {
-    res.status(200).render('employer/workersList', {
+    res.status(200).json({
       title: 'Jobbunny | Employer > Workers',
       workers: [],
       moment: moment
@@ -397,7 +396,9 @@ module.exports.workersList = function (req, res, next) {
 // GET /employer/invite/workers
 module.exports.inviteWorkers = function (req, res, next) {
   console.log('GET Employer invite workersList');
-  var current_user = req.session.user;
+  // var current_user = req.session.user;
+  utils.getCurrentUser(req).then(current_user =>{
+
   let user_id = jwt.getCurrentUserId(req);
 
   var job_id = req.params.jobId;
@@ -420,13 +421,14 @@ module.exports.inviteWorkers = function (req, res, next) {
         var tmpWorkersList = workers;
         // console.log(tmpWorkersList.length);
         res.locals.workersCount = tmpWorkersList.length;
-        res.status(200).render('employer/inviteWorkers', {
+        res.status(200).json({
           title: 'Jobbunny | Employer > Workers',
           workers: tmpWorkersList,
           moment: moment
         });
       });
     })
+  })
 };
 
 module.exports.sendinvite = (req, res) => {

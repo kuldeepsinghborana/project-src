@@ -235,7 +235,7 @@ router
   .route('/employer/workers/:workerId')
   .get(auth.requiresEmployerLogin, ctrlEmployer.showWorker);
 router
-  .route('/employer/workers/invite/:jobId')
+  .route('/api/employer/employees/invite/:jobId')
   .get(auth.requiresEmployerLogin, ctrlEmployer.inviteWorkers);
 router
   .route('/employer/notifications')

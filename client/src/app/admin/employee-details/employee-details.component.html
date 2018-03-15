@@ -29,13 +29,13 @@
               <p>{{employeeDetails['profile']['self_description'] || 'N/A'}}</p>
               <br>
               <h5 class="strong">Job Experience</h5>
-              <span *ngIf="employeeDetails['experience']; else notExeperience">
+              <ng-container *ngIf="employeeDetails['experience'];else notExeperience">
                 <ng-container *ngFor="let experience of employeeDetails['experience']">
                   <strong>{{experience['title']}} @ {{experience['company']}}</strong>
                   <p class="gray"> {{ experience['description'] }} </p>
                 </ng-container>
-              </span>
-              <ng-template #notExeperience *ngIf="!employeeDetails['experience']">
+              </ng-container>
+              <ng-template #notExeperience >
                 N/A
               </ng-template>
               <br>

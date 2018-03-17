@@ -7,19 +7,21 @@ import { UserService } from '../../user-service.service';
   styleUrls: ['./job-overview.component.scss']
 })
 export class JobOverviewComponent implements OnInit {
-  public jobCount :object = {};
-  public carrots : object = {};
-  constructor(public userService:UserService) { }
+  public jobCount: object = {};
+  public carrots: object = {};
+  constructor(public userService: UserService) { }
 
   ngOnInit() {
     this.userService.getDashboardDetail("employer").subscribe(res => {
-     this.jobCount = res.jobCount;
-     console.log("res",this.jobCount)
+      this.jobCount = res.jobCount;
+      console.log("res", this.jobCount)
     }, err => {
-      console.log("err",err)
+      console.log("err", err)
     });
-    this.userService.userDetail.subscribe(user =>{
-      this.carrots = user['carrots'];
+    this.userService.userDetail.subscribe(user => {
+      if (user) {
+        this.carrots = user['carrots'] || {};
+      }
     })
   }
 

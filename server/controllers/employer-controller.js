@@ -11,10 +11,9 @@ const waterfall = require('async-waterfall');
 
 // GET /employer
 module.exports.dashboard = function (req, res, next) {
-  console.log('GET Employer dashboard', req.session.userId);
   let user_id = jwt.getCurrentUserId(req);
+  console.log('GET Employer dashboard', user_id);
 
-  var current_user = req.session.user;
   // init stats object for storing site-wide stats to use in nav header
   var stats = {};
 
@@ -43,7 +42,7 @@ module.exports.dashboard = function (req, res, next) {
         console.log('Notifications found');
         let notificationCount = notifications.length;
         // set stats as session variable
-        req.session.stats = stats;
+        // req.session.stats = stats;
         res.json({
           notification: notifications,
           notificationCount: notificationCount,

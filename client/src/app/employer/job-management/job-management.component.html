@@ -179,7 +179,7 @@
               <div class="col-md-3">
                 <h6 class="gray">Shortlisted ({{job && job['shortlisted'] ? job['shortlisted'].length : 0}})</h6>
                 <span *ngFor="let shortlisted of job['shortlisted']; let i = index" [attr.data-index]="i">
-                  <img *ngIf="i < 3" [src]="shortlisted['worker']['profilePic']||'assets/img/logo.png'" height="30" width="30" title="{{applied['worker']['first name']}}" class="img-circle">
+                  <img *ngIf="i < 3" [src]="shortlisted['worker']['profilePic']||'assets/img/logo.png'" height="30" width="30" title="{{shortlisted['worker']['first name']}}" class="img-circle">
                 </span>
               </div>
               <div class="col-md-3">
@@ -199,7 +199,7 @@
       <div class="pad20">
         <p class="large strong capitalize">{{ jobData["jobTitle"] }}
           <span class="left20">
-            <a [routerLink]="['../job-details',jobData._id]">
+            <a [routerLink]="['../job-details']" [queryParams]="{ id:jobData._id }">
               <i class="fa fa-edit small gray"></i>
             </a>
             <a class="left20" (click)="deleteJobPost(jobData._id)" onclick="return confirm('delete now?');">

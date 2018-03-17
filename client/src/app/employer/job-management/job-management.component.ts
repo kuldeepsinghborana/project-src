@@ -58,7 +58,8 @@ export class JobManagementComponent implements OnInit {
       });
       this.jobListing = false;
     this.viewJob = true;
-    } else {
+    }
+     else {
       this.jobListing = true;
       this.viewJob = false;
     } 

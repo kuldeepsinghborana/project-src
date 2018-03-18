@@ -46,7 +46,8 @@ import { Http,HttpModule } from '@angular/http';
       { path:'review-employees', component: ReviewEmployeesComponent, pathMatch: 'full' },
       { path:'notifications', component: NotificationsComponent, pathMatch: 'full' },
       { path:'employer-details/:id', component: EmployerDetailsComponent, pathMatch: 'full' },
-      { path:'invite-employees/:jobId', component: InviteEmployeesComponent, pathMatch: 'full' }
+      { path:'invite-employees/:jobId', component: InviteEmployeesComponent, pathMatch: 'full' },
+      
     ])
   ],
   exports: [RouterModule],

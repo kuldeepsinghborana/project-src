@@ -91,7 +91,7 @@ module.exports.notifications = function (req, res, next) {
   // var current_user_id = req.session.user._id;
   let user_id = jwt.getCurrentUserId(req);
 
-  // console.log('GET notifications', current_user_id);
+  console.log('GET notifications', user_id);
 
   Notification
     .find({ notifieeId: user_id })
@@ -101,15 +101,19 @@ module.exports.notifications = function (req, res, next) {
         console.log(err);
       }
       console.log('Notifications found', notifications.length);
-      res.locals.notifications = notifications;
-      res.format({
-        html: function () {
-          res.render('employer/notifications', {
-            title: 'Jobbunny | Employer > Notifications',
-            moment: moment
-          });
-        }
-      });
+      return res.send({
+        status:1,
+        message:notifications
+      })
+     
+      // res.format({
+      //   html: function () {
+      //     res.render('employer/notifications', {
+      //       title: 'Jobbunny | Employer > Notifications',
+      //       moment: moment
+      //     });
+      //   }
+      // });
     });
 };
 

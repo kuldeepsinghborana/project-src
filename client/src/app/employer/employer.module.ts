@@ -41,7 +41,6 @@ import { Http,HttpModule } from '@angular/http';
       { path:'farm-carrots', component: FarmCarrotsComponent, pathMatch: 'full' },
       { path:'employee-management', component: EmployeeManagementComponent, pathMatch: 'full' },
       { path:'account-settings', component: AccountSettingsComponent, pathMatch: 'full' },
-      { path:'invite-employees', component: InviteEmployeesComponent, pathMatch: 'full' },
       { path:'employee-profile/:id', component: EmployeeProfileComponent, pathMatch: 'full' },
       { path:'review-employees', component: ReviewEmployeesComponent, pathMatch: 'full' },
       { path:'notifications', component: NotificationsComponent, pathMatch: 'full' },

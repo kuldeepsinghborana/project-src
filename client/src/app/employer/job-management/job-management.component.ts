@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../user-service.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AmazingTimePickerService } from 'amazing-time-picker'; // this line you need
-import { ToasterModule, ToasterContainerComponent, ToasterService } from '../../../../node_modules/angular5-toaster/angular5-toaster';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-job-management',
@@ -14,57 +12,7 @@ export class JobManagementComponent implements OnInit {
   public jobs = [];
   public filter: object = {};
   public filterCount: number = 0;
-  public jobData = {};
-  public editJobPost: boolean = false;
-  public viewJob: boolean = false;
-  public jobListing: boolean = true;
-  public jobTitle = '';
-  public requiredNumber = '';
-  public jobType = '';
-  public jobIndustry = '';
-  public salaryType = '';
-  public salary = '';
-  public startDate = '';
-  public endDate = '';
-  public workPeriod = '';
-  public totalHours = '';
-  public jobExpiration = '';
-  public location = '';
-  public workRegion = '';
-  public description = '';
-  public jobRole = '';
-  public requirement = '';
-  public selfEmployer = '';
-  public companyName = '';
-  public companyWebsite = '';
-  public employerName = '';
-  public employerPhone = '';
-  public startTime = '';
-  public endTime = '';
-  public coverImage = '';
-  
-  
-
-  constructor(public userService: UserService, private route: ActivatedRoute, public atp: AmazingTimePickerService,public toasterService: ToasterService,private router: Router) {
-    this.route.queryParams.subscribe(queryParams => {
-     console.log("queryParams",queryParams)
-     if(queryParams['id']){
-      this.userService.getEmployerDetails(queryParams['id']).subscribe(res => {
-        console.log("response",res)
-        this.jobData = res.job;
-        
-      }, err => {
-        console.log("err", err)
-      });
-      this.jobListing = false;
-    this.viewJob = true;
-    } else {
-      this.jobListing = true;
-      this.viewJob = false;
-    } 
-      
-    });
-   }
+  constructor(public userService: UserService, private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.userService.getJobDetails('employer').subscribe(res => {
@@ -114,41 +62,6 @@ export class JobManagementComponent implements OnInit {
     this.filterCount = 0;
     this.jobs = Object.assign([], this.jobsList);
   }
-  // rowSelect(rowData) {
-  //   console.log("rowData", rowData)
-  //   this.jobListing = false;
-  //   this.viewJob = true;
-  //   this.jobData = rowData;
-  // }
-  // showEdit() {
-  //   console.log("hello", this.jobData)
-  //   this.jobListing = false;
-  //   this.viewJob = false;
-  //   this.editJobPost = true;
-  //   this.jobTitle = this.jobData["jobTitle"];
-  //   this.requiredNumber = this.jobData["requiredNumber"];
-  //   this.jobType = this.jobData["jobType"];
-  //   this.jobIndustry = this.jobData["jobIndustry"];
-  //   this.salaryType = this.jobData["salaryType"];
-  //   this.salary = this.jobData["salary"];
-  //   this.startDate = this.jobData["startDate"];
-  //   this.endDate = this.jobData["endDate"];
-  //   this.workPeriod = this.jobData["workPeriod"];
-  //   this.totalHours = this.jobData["totalHours"];
-  //   this.jobExpiration = this.jobData["jobExpiration"];
-  //   this.location = this.jobData["location"];
-  //   this.workRegion = this.jobData["workRegion"];
-  //   this.description = this.jobData["description"];
-  //   this.jobRole = this.jobData["jobRole"];
-  //   this.requirement = this.jobData["requirement"];
-  //   this.selfEmployer = this.jobData["selfEmployer"];
-  //   this.companyName = this.jobData["companyName"];
-  //   this.companyWebsite = this.jobData["companyWebsite"];
-  //   this.employerName = this.jobData["employerName"];
-  //   this.employerPhone = this.jobData["employerPhone"];
-  //   this.startTime = this.jobData["startTime"];
-  //   this.endTime = this.jobData["endTime"];
-  // }
   sort(option) {
     let order = 0;
     if (option === 'Salary: Low to High') {
@@ -162,53 +75,5 @@ export class JobManagementComponent implements OnInit {
     this.jobs.sort((a, b) => {
       return order * (a['salary'] - b['salary']);
     })
-  }
-  openstartTime() {
-    console.log("asdasd")
-    const amazingTimePicker = this.atp.open();
-    amazingTimePicker.afterClose().subscribe(time => {
-      this.startTime = time;
-
-    });
-  }
-  openendTime() {
-    const amazingTimePickers = this.atp.open();
-    amazingTimePickers.afterClose().subscribe(time => {
-      this.endTime = time;
-
-    });
-  }
-  readFile(event) {
-    this.coverImage = event.target.value;
-  }
-  deleteJobPost(id){
-    this.userService.deleteJobPost(id).subscribe(res => {
-      this.router.navigate(["employer/job-management"])
-    return this.toasterService.pop('success', 'Success', res.message);
-
-   }, err => {
-      console.log("err", err)
-      return this.toasterService.pop('success', 'Success', err);
-
-    });
-  }
-  changeJobStatus(id,status){
-    let statusChanged;
-    if(status == "open"){
-      statusChanged = "completed";
-    }
-    else{
-      statusChanged = "open";
-    }
-  this.userService.updateJobStatus(id,statusChanged).subscribe(res => {
-      this.router.navigate(["employer/job-management"])
-    return this.toasterService.pop('success', 'Success', res.message);
-
-   }, err => {
-      console.log("err", err)
-      return this.toasterService.pop('success', 'Success', err);
-
-    });
-
   }
 }

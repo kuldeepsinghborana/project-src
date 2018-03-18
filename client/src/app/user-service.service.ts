@@ -13,12 +13,12 @@ export class UserService {
       .catch(this.handleError)
   }
 
-  public getEmployerDetails(jobid) {
+  public getJobDetails(jobid) {
     return this.commonServiceService.get('/employer/jobs/' + jobid)
       .map(res => res.json())
       .catch(this.handleError);
   }
-  public getJobDetails(userType: string) {
+  public getJobsDetails(userType: string) {
     return this.commonServiceService.get('/' + userType + '/jobs')
       .map(res => res.json())
       .catch(this.handleError);
@@ -63,6 +63,10 @@ export class UserService {
   
   public sendInvite(data) {
     return this.commonServiceService.post('/employer/sendinvite', data).map(res => res.json()).catch(this.handleError);
+  }
+
+  public getEmployeeDetails(id){
+    
   }
 
 

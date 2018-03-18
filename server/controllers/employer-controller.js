@@ -414,7 +414,6 @@ module.exports.inviteWorkers = function (req, res, next) {
         res.redirect('/employer')
       }
       console.log('Job found :' + job._id);
-      res.locals.job = job;
       getMatchedWorkers(job, function (err, workers) {
         if (err) {
           console.log(err);
@@ -427,6 +426,10 @@ module.exports.inviteWorkers = function (req, res, next) {
         res.status(200).json({
           title: 'Jobbunny | Employer > Workers',
           workers: tmpWorkersList,
+          job : {
+            _id : job._id,
+            jobType : job.jobType 
+          },
           moment: moment
         });
       });

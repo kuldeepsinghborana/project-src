@@ -7,9 +7,9 @@
     </span>
     <p>Job ID: 5aacc0a5dd7303001452a0b3</p>
     <hr>
-    <a href="/employer/workers/5a942640a17df86089b771a2?jobId=5aacc0a5dd7303001452a0b3"></a>
-    <div class="row pad20">
-      <a href="/employer/workers/5a942640a17df86089b771a2?jobId=5aacc0a5dd7303001452a0b3">
+    <a></a>
+    <div class="row pad20" *ngFor="let employee of employeesList">
+      <a>
         <div class="col-md-2">
           <div class="align-center">
             <img class="img-fit img-circle" src="https://scontent.xx.fbcdn.net/v/t31.0-1/p720x720/10506738_10150004552801856_220367501106153455_o.jpg?oh=664e758428fa3f1b5ff99621a150028b&amp;oe=5B05B78B"
@@ -18,13 +18,16 @@
         </div>
       </a>
       <div class="col-md-10">
-        <a href="/employer/workers/5a942640a17df86089b771a2?jobId=5aacc0a5dd7303001452a0b3"></a>
+        <a></a>
         <div class="row">
-          <a href="/employer/workers/5a942640a17df86089b771a2?jobId=5aacc0a5dd7303001452a0b3">
+          <a [routerLink]="['../../employee-profile', employee['_id']]">
             <div class="col-md-3">
-              <div class="strong capitalize black">Devender Singh</div>
-              <p class="green strong">undefined$</p>
-              <p class="strong black">male</p>
+              <div class="strong capitalize black">{{employee['first name']}} {{employee['last name']}}</div>
+              <p class="green strong" [hidden]="job['jobType'] !== 'Full-Time'">{{ employee['apllication'] && employee['apllication']['salaryMonth'] ? employee['apllication']['salaryMonth']
+                : 'Not specified '}}$</p>
+              <p class="green strong" [hidden]="job['jobType'] !== 'Part-Time'">{{ employee['apllication'] && employee['apllication']['salaryHour'] ? employee['apllication']['salaryHour']
+                : 'Not specified '}}$</p>
+              <p class="strong black">{{gender}}</p>
             </div>
             <div class="col-md-2">
               <strong class="gray">EXPERIENCE</strong>
@@ -32,18 +35,38 @@
             </div>
             <div class="col-md-3">
               <strong class="gray">LANGUAGE</strong>
-              <p class="strong black">English,No other languages</p>
+              <ng-container *ngIf="(employee['profile'] && employee['profile']['languages'] && employee['profile']['languages'].length > 0); else noLanguage">
+                <p class="strong black">{{employee['profile']['languages'].join(', ')}}</p>
+              </ng-container>
+              <ng-template #noLanguage>
+                <p class="strong black">N/A</p>
+              </ng-template>
             </div>
             <div class="col-md-2">
               <strong class="gray">PERSONALITY</strong>
-              <p class="black">N/A</p>
+              <ng-container *ngIf="(employee['personality'] && (employee['personality']['primary'] ||employee['personality']['secondary'])); else noPersonality">
+                <p class="strong black" [hidden]="!employee['personality']['primary']">employee['personality']['primary']['name']</p>
+                <p class="strong black" [hidden]="!employee['personality']['secondary']">employee['personality']['secondary']['name']</p>
+              </ng-container>
+              <ng-template #noPersonality>
+                <p class="black">N/A</p>
+              </ng-template>
+
             </div>
           </a>
           <div class="col-md-2">
-            <a href="/employer/workers/5a942640a17df86089b771a2?jobId=5aacc0a5dd7303001452a0b3"></a>
-            <div class="align-center">
-              <a href="/employer/workers/5a942640a17df86089b771a2?jobId=5aacc0a5dd7303001452a0b3"></a>
-              <a class="btn btn-yellow btn-block">Shortlisted</a>
+            <a></a>
+            <div class="align-center">{{employee['match']['matchStatus']}}
+                <ng-container [ngSwitch]="employee['match']['matchStatus']">
+                  <a *ngSwitchCase="invited" class="btn btn-red btn-block" (click)="changeMatchStatus('', 'delete', employee['match']['_id'])">Cancel Invite</a>
+                  <a *ngSwitchCase="applied" class="btn btn-blue btn-block" (click)="changeMatchStatus('', 'shortlisted', employee['match']['_id'])">Shortlist</a>
+                  <a *ngSwitchCase="shortlisted" class="btn btn-yellow btn-block">Shortlisted</a>
+                  <a *ngSwitchCase="declined" class="btn btn-red btn-block">User Declined</a>
+                  <a *ngSwitchDefault class="btn btn-green" (click)="changeMatchStatus(employee['_id'], 'invited')">
+                    Invite
+                    <small class="strong">use TWO carrots</small>
+                  </a>
+                </ng-container>
             </div>
           </div>
         </div>

@@ -2,18 +2,18 @@
   <div class="clearfix"></div>
   <div class="content-wrap">
     <div class="panel">
-      <div class="pad20">
-        <p class="large strong capitalize">Sales Executive
+      <div class="pad20" *ngIf="jobData">
+        <p class="large strong capitalize">{{ jobData["jobTitle"] }}
           <span class="left20">
-            <a href="/employer/jobs/5a685478d60e310014dab89b/edit">
+            <a [routerLink]="['../../job-edit']" [queryParams]="{ jobId:jobData._id }">
               <i class="fa fa-edit small gray"></i>
             </a>
-            <a class="left20" href="/api/jobs/delete/5a685478d60e310014dab89b" onclick="return confirm('delete now?');">
+            <a class="left20" (click)="deleteJobPost(jobData._id)" onclick="return confirm('delete now?');">
               <i class="fa fa-trash small gray"></i>
             </a>
           </span>
           <span class="left20">
-            <a class="small gray" href="/api/jobs/mark/5a685478d60e310014dab89b?status=completed">Mark as completed</a>
+           <a class="small gray" (click)="changeJobStatus(jobData._id,jobData.jobStatus)">Mark as {{jobData['jobStatus'] === 'completed' ? 'open':'completed' }}</a>
           </span>
         </p>
         <div class="row">
@@ -21,23 +21,23 @@
             <div class="row">
               <div class="col-md-9">
                 <i class="fa fa-map-marker"></i>
-                <span>West, JCUBE Mall</span>
+                <span>{{jobData['workRegion']}},{{jobData['location']}}</span>
                 <br>
                 <i class="fa fa-clock-o"></i>
-                <span>Full-time, 09:30 - 18:30, Both weekdays and weekends</span>
+                <span>{{jobData['jobType']}},{{jobData['startTime']}} - {{jobData['endTime']}},{{jobData["workPeriod"]}}</span>
                 <br>
                 <i class="fa fa-calendar"></i>
-                <span>Starts on 01/24/2018, Ends onInvalid date</span>
+               <span>Starts on {{jobData['startDate'] | date}}, Ends onInvalid date</span>
                 <br>
-                <img class="img-fit" src="/img/carrot.png" height="30" widht="30">
+                <img class="img-fit" src="assets/img/carrot.png" height="30" widht="30">
                 <span>10 carrots spent successfully</span>
               </div>
               <div class="col-md-3">
-                <div class="pull-right medium green"> $2000/Per Month</div>
+                <div class="pull-right medium green"> ${{jobData["salary"]}}/{{jobData["salaryType"]}}</div>
               </div>
             </div>
             <h4>Job Description</h4>
-            <p>Help company to bring in achieve sales targets month on month</p>
+            <p>{{ jobData["description"] }}</p>
             <h4>Duties and Responsibilities</h4>
             <p>N/A</p>
             <h4>Requirements</h4>
@@ -55,7 +55,7 @@
               </div>
               <div class="col-md-3">
                 <h1></h1>
-                <a class="btn btn-orange btn-block" href="/employer/workers/invite/5a685478d60e310014dab89b">Invite Employees</a>
+                <a class="btn btn-orange btn-block" [routerLink]="['../invite-employees', jobData['_id']]">Invite Employees</a>
               </div>
             </div>
           </div>
@@ -64,7 +64,7 @@
               <div class="medium strong">JOBBUNNY</div>
               <br>
               <div class="pad20">
-                <img class="img-circle pull-left" src="/img/logo.png" height="40" width="40">
+                <img class="img-circle pull-left" src="assets/img/logo.png" height="40" width="40">
                 <small class="strong top10 left10 pull-left">Posted by Gary</small>
               </div>
             </div>

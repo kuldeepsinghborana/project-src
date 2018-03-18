@@ -36,16 +36,16 @@ export class JobAddEditComponent implements OnInit {
   public endTime;
   public coverImage;
   public companyImage;
-  public userId: any;
+  public jobId: any;
   public jobData = {};
   detailedJobPost: boolean = false
   typeEdit:boolean = false
   
-  constructor(public userService: UserService,public createJobService: CreatejobService, private route: ActivatedRoute, public router: Router, public atp: AmazingTimePickerService, public toasterService: ToasterService) {
+  constructor(public userService: UserService, public createJobService: CreatejobService, private route: ActivatedRoute, public router: Router, public atp: AmazingTimePickerService, public toasterService: ToasterService) {
     this.route.queryParams.subscribe((params) => {
-      this.userId = params['id'];
-      if (this.userId) {
-        this.userService.getEmployerDetails(this.userId).subscribe(res => {
+      this.jobId = params['jobId'];
+      if (this.jobId) {
+        this.userService.getJobDetails(this.jobId).subscribe(res => {
           this.jobData = res.job;
           this.setValues(this.jobData);
 

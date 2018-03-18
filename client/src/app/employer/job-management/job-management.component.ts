@@ -76,4 +76,5 @@ export class JobManagementComponent implements OnInit {
       return order * (a['salary'] - b['salary']);
     })
   }
+
 }

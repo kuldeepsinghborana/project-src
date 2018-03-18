@@ -36,7 +36,7 @@ import { Http,HttpModule } from '@angular/http';
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
       { path: 'overview', component: JobOverviewComponent, pathMatch: 'full' },
       { path:'job-management', component: JobManagementComponent, pathMatch: 'full' },
-      { path:'job-details/:id', component: JobAddEditComponent, pathMatch: 'full' },
+      { path:'job-details', component: JobAddEditComponent, pathMatch: 'full' },
       { path:'buy-carrots', component: BuyCarrotsComponent, pathMatch: 'full' },
       { path:'farm-carrots', component: FarmCarrotsComponent, pathMatch: 'full' },
       { path:'employee-management', component: EmployeeManagementComponent, pathMatch: 'full' },

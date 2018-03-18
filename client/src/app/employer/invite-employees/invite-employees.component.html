@@ -56,12 +56,12 @@
           </a>
           <div class="col-md-2">
             <a></a>
-            <div class="align-center">{{employee['match']['matchStatus']}}
+            <div class="align-center" *ngIf="employee['match'] && employee['match']['matchStatus']">
                 <ng-container [ngSwitch]="employee['match']['matchStatus']">
-                  <a *ngSwitchCase="invited" class="btn btn-red btn-block" (click)="changeMatchStatus('', 'delete', employee['match']['_id'])">Cancel Invite</a>
-                  <a *ngSwitchCase="applied" class="btn btn-blue btn-block" (click)="changeMatchStatus('', 'shortlisted', employee['match']['_id'])">Shortlist</a>
-                  <a *ngSwitchCase="shortlisted" class="btn btn-yellow btn-block">Shortlisted</a>
-                  <a *ngSwitchCase="declined" class="btn btn-red btn-block">User Declined</a>
+                  <a *ngSwitchCase="'invited'" class="btn btn-red btn-block" (click)="changeMatchStatus('', 'delete', employee['match']['_id'])">Cancel Invite</a>
+                  <a *ngSwitchCase="'applied'" class="btn btn-blue btn-block" (click)="changeMatchStatus('', 'shortlisted', employee['match']['_id'])">Shortlist</a>
+                  <a *ngSwitchCase="'shortlisted'" class="btn btn-yellow btn-block">Shortlisted</a>
+                  <a *ngSwitchCase="'declined'" class="btn btn-red btn-block">User Declined</a>
                   <a *ngSwitchDefault class="btn btn-green" (click)="changeMatchStatus(employee['_id'], 'invited')">
                     Invite
                     <small class="strong">use TWO carrots</small>

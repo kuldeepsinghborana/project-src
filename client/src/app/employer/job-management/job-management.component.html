@@ -101,7 +101,7 @@
             <a></a>
             <div *ngFor="let job of jobs;">
               <hr>
-              <div class="row">
+              <div class="row" [routerLink]="['../job']" [queryParams]="{ jobId:job._id }">
                 <a>
                   <div class="col-md-2">
                     <div class="strong black capitalize">{{job['companyName']}}</div>

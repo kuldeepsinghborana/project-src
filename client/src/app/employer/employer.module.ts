@@ -15,7 +15,6 @@ import { EmployeeProfileComponent } from './employee-profile/employee-profile.co
 import { ReviewEmployeesComponent } from './review-employees/review-employees.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { JobAddEditComponent } from './job-add-edit/job-add-edit.component';
-import { EmployerDetailsComponent } from './employer-details/employer-details.component'
 // import { BsModalService } from 'ngx-bootstrap/modal';
 import { ModalModule } from "ngx-modal";
 
@@ -36,7 +35,8 @@ import { Http,HttpModule } from '@angular/http';
       { path: '', redirectTo: 'overview', pathMatch: 'full' },
       { path: 'overview', component: JobOverviewComponent, pathMatch: 'full' },
       { path:'job-management', component: JobManagementComponent, pathMatch: 'full' },
-      { path:'job-details', component: JobAddEditComponent, pathMatch: 'full' },
+      { path:'job', component: JobComponent, pathMatch: 'full' },
+      { path:'job-edit', component: JobAddEditComponent, pathMatch: 'full' },
       { path:'buy-carrots', component: BuyCarrotsComponent, pathMatch: 'full' },
       { path:'farm-carrots', component: FarmCarrotsComponent, pathMatch: 'full' },
       { path:'employee-management', component: EmployeeManagementComponent, pathMatch: 'full' },
@@ -44,12 +44,11 @@ import { Http,HttpModule } from '@angular/http';
       { path:'employee-profile/:id', component: EmployeeProfileComponent, pathMatch: 'full' },
       { path:'review-employees', component: ReviewEmployeesComponent, pathMatch: 'full' },
       { path:'notifications', component: NotificationsComponent, pathMatch: 'full' },
-      { path:'employer-details/:id', component: EmployerDetailsComponent, pathMatch: 'full' },
       { path:'invite-employees/:jobId', component: InviteEmployeesComponent, pathMatch: 'full' }
     ])
   ],
   exports: [RouterModule],
-  declarations: [JobOverviewComponent, JobManagementComponent, EmployeeManagementComponent, BuyCarrotsComponent, FarmCarrotsComponent, JobComponent, AccountSettingsComponent, InviteEmployeesComponent, EmployeeProfileComponent, ReviewEmployeesComponent, NotificationsComponent, JobAddEditComponent, EmployerDetailsComponent],
+  declarations: [JobOverviewComponent, JobManagementComponent, EmployeeManagementComponent, BuyCarrotsComponent, FarmCarrotsComponent, JobComponent, AccountSettingsComponent, InviteEmployeesComponent, EmployeeProfileComponent, ReviewEmployeesComponent, NotificationsComponent, JobAddEditComponent],
   providers: [BuyCarrotsService]
 })
 export class EmployerModule { }

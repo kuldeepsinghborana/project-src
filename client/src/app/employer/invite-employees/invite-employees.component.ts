@@ -39,6 +39,26 @@ export class InviteEmployeesComponent implements OnInit {
         });
     }
   }
+  public changeMatchStatus(employeeId, status, matchId){
+    let url = '';
+    switch(status){
+      case 'invited' : url = '/' + this.jobId + '/' + employeeId + '?matchStatus=invited';
+        break;
+      case 'delete' : url = '/matches/delete/' + matchId;
+        break;
+      case 'shortlisted' : url = '/matches/update/' + matchId + '?matchStatus=shortlisted'
+        break;
+    }
+    if(url){
+      console.log('robot url ', url)
+      this.commonServiceService.get(url)
+      .map(res => res.json())
+        .catch(this.handleError)
+        .subscribe(res => {
+          console.info(res);
+        })
+    }
+  }
 
   handleError(error: Response | any) {
     const body = JSON.parse(JSON.stringify(error)) || '';

@@ -7,9 +7,9 @@
     </span>
     <p>Job ID: 5aacc0a5dd7303001452a0b3</p>
     <hr>
-    <a ></a>
+    <a></a>
     <div class="row pad20" *ngFor="let employee of employeesList">
-      <a >
+      <a>
         <div class="col-md-2">
           <div class="align-center">
             <img class="img-fit img-circle" src="https://scontent.xx.fbcdn.net/v/t31.0-1/p720x720/10506738_10150004552801856_220367501106153455_o.jpg?oh=664e758428fa3f1b5ff99621a150028b&amp;oe=5B05B78B"
@@ -18,13 +18,15 @@
         </div>
       </a>
       <div class="col-md-10">
-        <a ></a>
+        <a></a>
         <div class="row">
-          <a >
+          <a [routerLink]="['../../employee-profile', employee['_id']]">
             <div class="col-md-3">
               <div class="strong capitalize black">{{employee['first name']}} {{employee['last name']}}</div>
-              <p class="green strong" [hidden]="job['jobType'] !== 'Full-Time'">{{ employee['apllication'] && employee['apllication']['salaryMonth'] ? employee['apllication']['salaryMonth'] : 'Not specified '}}$</p>
-              <p class="green strong" [hidden]="job['jobType'] !== 'Part-Time'">{{ employee['apllication'] && employee['apllication']['salaryHour'] ? employee['apllication']['salaryHour'] : 'Not specified '}}$</p>
+              <p class="green strong" [hidden]="job['jobType'] !== 'Full-Time'">{{ employee['apllication'] && employee['apllication']['salaryMonth'] ? employee['apllication']['salaryMonth']
+                : 'Not specified '}}$</p>
+              <p class="green strong" [hidden]="job['jobType'] !== 'Part-Time'">{{ employee['apllication'] && employee['apllication']['salaryHour'] ? employee['apllication']['salaryHour']
+                : 'Not specified '}}$</p>
               <p class="strong black">{{gender}}</p>
             </div>
             <div class="col-md-2">
@@ -34,39 +36,37 @@
             <div class="col-md-3">
               <strong class="gray">LANGUAGE</strong>
               <ng-container *ngIf="(employee['profile'] && employee['profile']['languages'] && employee['profile']['languages'].length > 0); else noLanguage">
-                  <p class="strong black">{{employee['profile']['languages'].join(', ')}}</p>
+                <p class="strong black">{{employee['profile']['languages'].join(', ')}}</p>
               </ng-container>
               <ng-template #noLanguage>
-                  <p class="strong black">N/A</p>
+                <p class="strong black">N/A</p>
               </ng-template>
             </div>
             <div class="col-md-2">
               <strong class="gray">PERSONALITY</strong>
               <ng-container *ngIf="(employee['personality'] && (employee['personality']['primary'] ||employee['personality']['secondary'])); else noPersonality">
-                  <p class="strong black" [hidden]="!employee['personality']['primary']">employee['personality']['primary']['name']</p>
-                  <p class="strong black" [hidden]="!employee['personality']['secondary']">employee['personality']['secondary']['name']</p>
-                </ng-container>
+                <p class="strong black" [hidden]="!employee['personality']['primary']">employee['personality']['primary']['name']</p>
+                <p class="strong black" [hidden]="!employee['personality']['secondary']">employee['personality']['secondary']['name']</p>
+              </ng-container>
               <ng-template #noPersonality>
-                  <p class="black">N/A</p>
+                <p class="black">N/A</p>
               </ng-template>
-              
+
             </div>
           </a>
           <div class="col-md-2">
-            <a ></a>
-            <div class="align-center">
-              <ng-container *ngIf="(employee['match'] && employee['match']['matchStatus']); else inviteBlock">
-                  <a *ngIf="employee['match']['matchStatus'] === 'invited'; else shortlistBlock" class="btn btn-red btn-block">Cancel Invite</a>
-                  <ng-template #shorlistBlock *ngIf="employee['match']['matchStatus'] === 'applied'; else shortlistedBlock" ><a class="btn btn-blue btn-block">Shortlist</a></ng-template>
-                  <ng-template #shortlistedBlock *ngIf="employee['match']['matchStatus'] === 'shortlisted'; else declinedBlock" ><a class="btn btn-yellow btn-block">Shortlisted</a></ng-template>
-                  <ng-template #declinedBlock *ngIf="employee['match']['matchStatus'] === 'declined'" ><a class="btn btn-red btn-block">User Declined</a></ng-template>
-                </ng-container>
-              <ng-template #inviteBlock>
-                <a class="btn btn-green">
+            <a></a>
+            <div class="align-center">{{employee['match']['matchStatus']}}
+                <ng-container [ngSwitch]="employee['match']['matchStatus']">
+                  <a *ngSwitchCase="invited" class="btn btn-red btn-block" (click)="changeMatchStatus('', 'delete', employee['match']['_id'])">Cancel Invite</a>
+                  <a *ngSwitchCase="applied" class="btn btn-blue btn-block" (click)="changeMatchStatus('', 'shortlisted', employee['match']['_id'])">Shortlist</a>
+                  <a *ngSwitchCase="shortlisted" class="btn btn-yellow btn-block">Shortlisted</a>
+                  <a *ngSwitchCase="declined" class="btn btn-red btn-block">User Declined</a>
+                  <a *ngSwitchDefault class="btn btn-green" (click)="changeMatchStatus(employee['_id'], 'invited')">
                     Invite
-                  <small class="strong">use TWO carrots</small>
-                </a>
-              </ng-template>
+                    <small class="strong">use TWO carrots</small>
+                  </a>
+                </ng-container>
             </div>
           </div>
         </div>

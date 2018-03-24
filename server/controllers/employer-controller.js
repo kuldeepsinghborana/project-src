@@ -351,7 +351,7 @@ module.exports.workersList = function (req, res, next) {
       .exec(function (err, job) {
         if (err) {
           console.log(err);
-          req.flash('error', 'Job not found');
+          // req.flash('error', 'Job not found');
           res.status(400).json({
             message : 'Job not Found'
           })
@@ -381,7 +381,7 @@ module.exports.workersList = function (req, res, next) {
           res.status(200).json({
             title: 'Jobbunny | Employer > Workers',
             workers: tmpWorkersList,
-            moment: moment
+            // moment: moment
           });
         });
       });

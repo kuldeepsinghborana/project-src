@@ -9,9 +9,9 @@
               <div class="large strong">Employee Management</div>
             </div>
             <div class="col-md-7">
-              <form class="form-inline" action="/employer/workers" method="get">
-                <input class="form-control" type="text" name="jobId" placeholder="Search by job ID">
-                <button class="form-control" type="submit">
+              <form class="form-inline">
+                <input class="form-control" type="text" [(ngModel)]="jobId" name="jobId" placeholder="Search by job ID">
+                <button class="form-control" (click)="searchEmployee()">
                   <i class="fa fa-search"></i>
                 </button>
               </form>

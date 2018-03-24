@@ -64,11 +64,15 @@ export class UserService {
   public sendInvite(data) {
     return this.commonServiceService.post('/employer/sendinvite', data).map(res => res.json()).catch(this.handleError);
   }
-
+   
   public getEmployeeDetails(id){
     
   }
-
+  public getWorkerProfile(jobId) {
+    return this.commonServiceService.get('/employer/workers/'+ '?jobId=' + jobId)
+      .map(res => res.json())
+      .catch(this.handleError);
+  }
 
   handleError(error: Response | any) {
     const body = JSON.parse(JSON.stringify(error)) || '';

@@ -296,6 +296,8 @@ router
   .route('/newjob')
   .get(ctrlJobs.newJob)
 router
+  .route('/api/employee/:workerId')
+  .get(ctrlEmployer.showWorker)
 router
   .route('/api/isEmailExist')
   .post(ctrlUsers.isEmailExist)
@@ -325,6 +327,7 @@ router
   .get(ctrlJobs.filterJob)
 
 // matches routes
+
 router
   .route('/api/matches/:employerId/:jobId/:workerId')
   .all(ctrlMatches.createMatch);
@@ -337,7 +340,9 @@ router
 router
   .route('/api/matches/delete/:matchId')
   .get(ctrlMatches.deleteMatch);
-
+router
+  .route('/api/matches/:jobId/:workerId')
+  .all(ctrlMatches.createMatch);
 // authentication routes
 router
   .route('/api/users/register')

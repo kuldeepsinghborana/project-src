@@ -74,12 +74,12 @@ BotControl.processTask= async function(req, res, task){
 						          "elements":[
 						            {
 						              "title":"Your personality trait is -  " + personality_traits[test_result['primary']]['name'].toUpperCase() ,
-						              "image_url":"https://jobbunny.herokuapp.com/img/Jobbunny.png",
+						              "image_url":"https://project25.herokuapp.com/img/Jobbunny.png",
 						              "subtitle": personality_traits[test_result['primary']]['trait']  ,
 						              "buttons":[
 						                {
 							              "type": "web_url",
-							              "url": "https://facebook.com/share.php?u=http://jobbunny.herokuapp.com/personality_test/"+req.body['messenger user id'],
+							              "url": "https://facebook.com/share.php?u=https://project25.herokuapp.com/personality_test/"+req.body['messenger user id'],
 							              "title": "Share"
 							            },
 						              ]
@@ -889,17 +889,17 @@ BotControl.sendInvite = function(job_id, worker, match_id){
 var buildJobCard = function(jobData, applicant_id){
 	var job_card = {
 		              "title": jobData["jobTitle"],
-		              "image_url":"https://jobbunny.herokuapp.com/img/Jobbunny.png",
+		              "image_url":"https://project25.herokuapp.com/img/Jobbunny.png",
 		              "subtitle":jobData["description"],
 		              "buttons":[
 		                {
-		                  "url" : "http://jobbunny.herokuapp.com/api/matches/" + jobData['employerId'] + "/" + jobData['_id']+"/" + applicant_id + "?matchStatus=applied" ,
+		                  "url" : "https://project25.herokuapp.com/api/matches/" + jobData['employerId'] + "/" + jobData['_id']+"/" + applicant_id + "?matchStatus=applied" ,
 			              "type":"json_plugin_url",
 			              "title":"Apply now!"
 			            },
 			            {
 			              "type": "web_url",
-			              "url": "https://jobbunny.herokuapp.com/jobs/"+jobData['_id'],
+			              "url": "https://project25.herokuapp.com/jobs/"+jobData['_id'],
 			              "title": "View Details"
 			            },
 		              ]
@@ -911,21 +911,21 @@ var buildJobCard = function(jobData, applicant_id){
 var buildInviteCard = function(jobData, applicant_id, match_id){
 	var job_card = {
 		              "title": jobData["jobTitle"] + '@' + jobData["companyName"],
-		              "image_url":"https://jobbunny.herokuapp.com/img/Jobbunny.png",
+		              "image_url":"https://project25.herokuapp.com/img/Jobbunny.png",
 		              "subtitle":jobData["description"],
 		              "buttons":[
    		                {
 			              "type": "web_url",
-			              "url": "https://jobbunny.herokuapp.com/jobs/"+jobData['_id'],
+			              "url": "https://project25.herokuapp.com/jobs/"+jobData['_id'],
 			              "title": "View Job Details"
 			            },
 		                {
-		                  "url" : "http://jobbunny.herokuapp.com/api/matches/update/" + match_id + "?matchStatus=shortlisted" ,
+		                  "url" : "https://project25.herokuapp.com/api/matches/update/" + match_id + "?matchStatus=shortlisted" ,
 			              "type":"json_plugin_url",
 			              "title":"Accept invite!"
 			            },
 			            {
-		                  "url" : "http://jobbunny.herokuapp.com/api/matches/update/" + match_id + "?matchStatus=declined" ,
+		                  "url" : "https://project25.herokuapp.com/api/matches/update/" + match_id + "?matchStatus=declined" ,
 			              "type":"json_plugin_url",
 			              "title":"Not now."
 			            }

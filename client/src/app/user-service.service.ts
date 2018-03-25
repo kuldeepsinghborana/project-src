@@ -66,12 +66,15 @@ export class UserService {
   }
    
   public getEmployeeDetails(id){
-    
+    return this.commonServiceService.get('/employee/'+id).map(res => res.json()).catch(this.handleError);
+<<<<<<< Updated upstream
   }
   public getWorkerProfile(jobId) {
     return this.commonServiceService.get('/employer/workers'+ '?jobId=' + jobId)
       .map(res => res.json())
       .catch(this.handleError);
+=======
+>>>>>>> Stashed changes
   }
 
   handleError(error: Response | any) {

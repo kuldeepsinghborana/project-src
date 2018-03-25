@@ -10,27 +10,30 @@ var Job = mongoose.model('Job');
 var Notification = mongoose.model('Notification');
 var botControl = require('./bot.controller')
 var moment = require('moment')
+const jwt = require('../../helper/jwt');
+
 
 // this can be used by bot to create a match when a worker applies to a job
 // GET /api/matches/:employerId/:jobId/:workerId?matchStatus=invited
 module.exports.createMatch = function(req, res) {
   console.log('CREATE match');
-  var current_user = req.session.user;
-  var employer_id = req.params.employerId;
+  let user_id = jwt.getCurrentUserId(req);
+  // var current_user = req.session.user;
+  var employer_id = user_id && req.params.employerId;
   var job_id = req.params.jobId;
   var worker_id = req.params.workerId;
   var match_status = req.query.matchStatus;
   var carrots_used = req.query.carrots;
   var initiator_id, session_carrot_stats, updated_carrot_stats;
 
-  if (current_user) { // if the endpoint is hit from employer CMS
-    initiator_id = current_user._id;
+  if (user_id) { // if the endpoint is hit from employer CMS
+    initiator_id = user_id;
     // update carrots
-    session_carrot_stats = req.session.carrots;
-    console.log(req.session.carrots)
-    updated_carrot_stats = _updateCarrotStats(current_user._id, session_carrot_stats, carrots_used);
+    session_carrot_stats =  100;
+    // console.log(req.session.carrots)
+    updated_carrot_stats = _updateCarrotStats(user_id, session_carrot_stats, carrots_used);
     console.log(updated_carrot_stats)
-    req.session.carrots = updated_carrot_stats;
+    // req.session.carrots = updated_carrot_stats;
   } else {  // hit API endpoint from bot
     initiator_id = worker_id;
   }
@@ -58,7 +61,7 @@ module.exports.createMatch = function(req, res) {
         Match.findOne( matchQuery ).then( match => {
           console.log('TATATATTATA');
           console.log(match);
-          req.session.message = 'Match created sucessfully';
+          // req.session.message = 'Match created sucessfully';
               Worker.findById(worker_id).exec(async function(err, worker){
             if (err) {
               console.log(err);
@@ -69,7 +72,7 @@ module.exports.createMatch = function(req, res) {
             switch(match.matchStatus){
               case 'invited':
                 msg = _getWorkerName(worker) + ' was invited to your job.';
-                _addNotification(match.employerId, match.jobId, msg, '/employer/workers/'+worker_id);
+                // _addNotification(match.employerId, match.jobId, msg, '/employer/workers/'+worker_id);
                 await botControl.sendInvite(job_id, worker, match._id);
                 break;
 
@@ -82,13 +85,13 @@ module.exports.createMatch = function(req, res) {
             }
 
             // respond
-            if (current_user) { // respond a redirect for employerCMS request
+            if (user_id) { // respond a redirect for employerCMS request
               // update session stats if exists
-              req.session.stats.notificationsCount = req.session.stats.notificationsCount + 1;
+              // req.session.stats.notificationsCount = req.session.stats.notificationsCount + 1;
               if (match_status == 'invited') {
-                req.session.stats.invitationsCount = req.session.stats.invitationsCount + 1;
+                // req.session.stats.invitationsCount = req.session.stats.invitationsCount + 1;
               }
-              req.flash('message', 'Worker invited successfully');
+              return res.send('Worker invited successfully');
               res.redirect('/employer/workers/invite/'+job_id);
             } else { // JSON response for a bot request
               var response = {
@@ -108,7 +111,7 @@ module.exports.createMatch = function(req, res) {
           
       }, err=>{
           console.log("Error creating match", err)
-          req.session.error = 'Error creating match';
+          // req.session.error = 'Error creating match';
           res.render('error');
       });
     });
@@ -202,8 +205,9 @@ module.exports.deleteMatch = function(req, res, next) {
           console.log('DELETE match ID: ' + match._id);
           res.format({
             html: function(){
-              req.session.message = 'Invitation cancelled';
-              res.redirect( '/employer/workers/invite/' + match['jobId'] );
+              // req.session.message = 'Invitation cancelled';
+              res.send();
+              // res.redirect( '/employer/workers/invite/' + match['jobId'] );
             },
             json: function(){
               res.json({ message : 'deleted' });

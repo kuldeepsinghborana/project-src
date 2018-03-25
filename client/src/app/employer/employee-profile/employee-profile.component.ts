@@ -18,9 +18,10 @@ export class EmployeeProfileComponent implements OnInit {
       }
     })
     this.route.params.subscribe(params => {
-      // self.userService.getEmployeeDetails(params.id)
-      // .map(res => res.json())
-      // .catch
+      self.userService.getEmployeeDetails(params.id)
+      .subscribe(res => {
+        self.employee = res['worker'];
+      })
     })
   }
 

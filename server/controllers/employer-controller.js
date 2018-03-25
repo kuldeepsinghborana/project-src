@@ -420,25 +420,19 @@ module.exports.inviteWorkers = function (req, res, next) {
           console.log(err);
           res.redirect('/employer')
         }
-        console.log('Job found :' + job._id);
-        getMatchedWorkers(job, function (err, workers) {
-          if (err) {
-            console.log(err);
-            res.redirect('/employer')
-          }
-          console.log(workers);
-          var tmpWorkersList = workers;
-          // console.log(tmpWorkersList.length);
-          res.locals.workersCount = tmpWorkersList.length;
-          res.status(200).json({
-            title: 'Jobbunny | Employer > Workers',
-            workers: tmpWorkersList,
-            job: {
-              _id: job._id,
-              jobType: job.jobType
-            },
-            moment: moment
-          });
+        console.log(workers);
+        var tmpWorkersList = workers;
+        // console.log(tmpWorkersList.length);
+        res.locals.workersCount = tmpWorkersList.length;
+        res.status(200).json({
+          title: 'Jobbunny | Employer > Workers',
+          workers: tmpWorkersList,
+          job : {
+            workRegion : job.workRegion,
+            jobTitle : job.jobTitle,
+            location : job.location
+          },
+          moment: moment
         });
       })
   })
@@ -539,8 +533,10 @@ Object.getPrototypeOf(moment()).toBSON = function () {
 var getMatchedWorkers = async function (job, callback) {
   var query = {}
   var applicationKey
+  console.log('robot GSFGHJGSJHGHJSGS')
 
   var applied_users_raw = await Match.find({ 'jobId': job['_id'] });
+  console.log('robot', applied_users_raw);  
   var applied_users = []
   for (x = 0; x < applied_users_raw.length; x++) {
     applied_users.push(applied_users_raw[x]['worker']['_id'])
@@ -599,7 +595,6 @@ var getMatchedWorkers = async function (job, callback) {
   query[applicationKey] = { '$exists': true }
 
   var match_query = { "$or": [{ '_id': { '$in': applied_users } }, query] }
-
   console.log(JSON.stringify(query))
   //return {'filter': query, 'project'  : {  }]\
   var pipeline = [
@@ -663,7 +658,6 @@ var getMatchedWorkers = async function (job, callback) {
 module.exports.showWorker = function (req, res, next) {
   var worker_id = req.params.workerId;
   console.log('GET worker with _id: ' + worker_id);
-  var current_user = req.session.user;
   let user_id = jwt.getCurrentUserId(req);
 
   var job_id = req.query.jobId;
@@ -701,17 +695,9 @@ module.exports.showWorker = function (req, res, next) {
           match.worker._id == worker_id && worker_clone.matches.push(match);
         }
         console.log(worker_clone);
-        return res.status(200).send({
-          title: 'Jobbunny | Employer > Worker',
-          worker: worker_clone
-
+        res.status(200).json({
+          worker : worker_clone
         })
-        // res.status(200).render('employer/showWorker', {
-        //   title: 'Jobbunny | Employer > Worker',
-        //   worker: worker_clone,
-        //   message: req.flash('message'),
-        //   error: req.flash('error')
-        // });
       })
     });
 }

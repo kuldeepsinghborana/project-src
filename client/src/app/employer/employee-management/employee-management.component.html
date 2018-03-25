@@ -123,8 +123,16 @@
                 </div>
                 <div class="col-md-2">
                   <strong class="gray">PERSONALITY</strong>                  
-                  <ng-container *ngIf="(worker['profile'] && worker['profile']['personality'] && worker['profile']['personality'].length > 0); else noPersonality">
+                  <!-- <ng-container *ngIf="(worker['profile'] && worker['profile']['personality'] && worker['profile']['personality'].length > 0); else noPersonality">
                     <p class="strong black">{{worker['profile']['personality'].join(', ')}}</p>
+                  </ng-container>
+                  <ng-template #noPersonality>
+                    <p class="strong black">N/A</p>
+                  </ng-template> -->
+
+                  <ng-container *ngIf="(worker['personality'] && (worker['personality']['primary'] ||worker['personality']['secondary'])); else noPersonality">
+                    <p class="strong black" [hidden]="!worker['personality']['primary']">{{worker['personality']['primary']['name']}}</p>
+                    <p class="strong black" [hidden]="!worker['personality']['secondary']">{{worker['personality']['secondary']['name']}}</p>
                   </ng-container>
                   <ng-template #noPersonality>
                     <p class="strong black">N/A</p>
@@ -133,6 +141,20 @@
                 </div>
                 <div class="col-md-2">
                   <div class="align-center"></div>
+                  <div class="align-center" *ngIf="worker['match'] && worker['match']['status']; else inviteBlock">
+                    <ng-container [ngSwitch]="worker['match']['status']">
+                      <a *ngSwitchCase="'invited'" class="btn btn-red btn-block" (click)="changeMatchStatus('', 'delete', worker['match']['_id'])">Cancel Invite</a>
+                      <a *ngSwitchCase="'applied'" class="btn btn-yellow btn-block" (click)="changeMatchStatus('', 'shortlisted', worker['match']['_id'])">Shortlist</a>
+                      <a *ngSwitchCase="'shortlisted'" class="btn btn-blue btn-block">Shortlisted</a>
+                      <a *ngSwitchCase="'declined'" class="btn btn-red btn-block">User Declined</a>
+                    </ng-container>
+                </div>
+                <ng-template #inviteBlock>
+                  <a class="btn btn-green" (click)="changeMatchStatus(worker['_id'], 'invited')">
+                    Invite
+                  </a>
+                  <small class="strong">use TWO carrots</small>
+                </ng-template>
                 </div>
               </div>
               <div class="row">

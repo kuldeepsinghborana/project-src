@@ -42,7 +42,7 @@ export class InviteEmployeesComponent implements OnInit {
   public changeMatchStatus(employeeId, status, matchId){
     let url = '';
     switch(status){
-      case 'invited' : url = '/' + this.jobId + '/' + employeeId + '?matchStatus=invited';
+      case 'invited' : url = '/matches/' + this.jobId + '/' + employeeId + '?matchStatus=invited';
         break;
       case 'delete' : url = '/matches/delete/' + matchId;
         break;

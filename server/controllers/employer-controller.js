@@ -102,10 +102,10 @@ module.exports.notifications = function (req, res, next) {
       }
       console.log('Notifications found', notifications.length);
       return res.send({
-        status:1,
-        message:notifications
+        status: 1,
+        message: notifications
       })
-     
+
       // res.format({
       //   html: function () {
       //     res.render('employer/notifications', {
@@ -344,6 +344,8 @@ module.exports.workersList = function (req, res, next) {
   var gender_type = req.query.gender;
   var match_status = req.query.matchStatus;
   var job_id = req.query.jobId;
+  console.log('job_id', job_id);
+  let jobDetails;
   // show workers list when job_id is present
   if (job_id) {
     Job
@@ -353,18 +355,21 @@ module.exports.workersList = function (req, res, next) {
           console.log(err);
           // req.flash('error', 'Job not found');
           res.status(400).json({
-            message : 'Job not Found'
-          })
+            message: 'Job not Found'
+          });
         }
+        jobDetails=job;
         res.locals.job = job;
         // get all workers invited/shortlisted/hired by the employer
         Match.find({ employerId: user_id, jobId: job_id }, function (err, matches) {
           if (err) {
             console.log(err);
-            res.redirect('/employer');
+            // res.redirect('/employer');
           }
           // get associated workers from the matches
-          var tmpWorkersList = _getWorkersListFromMatchesList(matches);
+          if (matches) {
+            var tmpWorkersList = _getWorkersListFromMatchesList(matches);
+          }
           var filters = [];
 
           if (gender_type) {
@@ -378,9 +383,11 @@ module.exports.workersList = function (req, res, next) {
           // console.log(tmpWorkersList.length);
           res.locals.workerFilters = filters;
           res.locals.workersCount = tmpWorkersList.length;
-          res.status(200).json({
+          return res.status(200).json({
             title: 'Jobbunny | Employer > Workers',
             workers: tmpWorkersList,
+            job_id: req.query.jobId,
+            jobDetails:jobDetails
             // moment: moment
           });
         });
@@ -400,40 +407,40 @@ module.exports.workersList = function (req, res, next) {
 module.exports.inviteWorkers = function (req, res, next) {
   console.log('GET Employer invite workersList');
   // var current_user = req.session.user;
-  utils.getCurrentUser(req).then(current_user =>{
+  utils.getCurrentUser(req).then(current_user => {
 
-  let user_id = jwt.getCurrentUserId(req);
+    let user_id = jwt.getCurrentUserId(req);
 
-  var job_id = req.params.jobId;
+    var job_id = req.params.jobId;
 
-  Job
-    .findById(job_id)
-    .exec(function (err, job) {
-      if (err) {
-        console.log(err);
-        res.redirect('/employer')
-      }
-      console.log('Job found :' + job._id);
-      getMatchedWorkers(job, function (err, workers) {
+    Job
+      .findById(job_id)
+      .exec(function (err, job) {
         if (err) {
           console.log(err);
           res.redirect('/employer')
         }
-        console.log(workers);
-        var tmpWorkersList = workers;
-        // console.log(tmpWorkersList.length);
-        res.locals.workersCount = tmpWorkersList.length;
-        res.status(200).json({
-          title: 'Jobbunny | Employer > Workers',
-          workers: tmpWorkersList,
-          job : {
-            _id : job._id,
-            jobType : job.jobType 
-          },
-          moment: moment
+        console.log('Job found :' + job._id);
+        getMatchedWorkers(job, function (err, workers) {
+          if (err) {
+            console.log(err);
+            res.redirect('/employer')
+          }
+          console.log(workers);
+          var tmpWorkersList = workers;
+          // console.log(tmpWorkersList.length);
+          res.locals.workersCount = tmpWorkersList.length;
+          res.status(200).json({
+            title: 'Jobbunny | Employer > Workers',
+            workers: tmpWorkersList,
+            job: {
+              _id: job._id,
+              jobType: job.jobType
+            },
+            moment: moment
+          });
         });
-      });
-    })
+      })
   })
 };
 
@@ -694,12 +701,17 @@ module.exports.showWorker = function (req, res, next) {
           match.worker._id == worker_id && worker_clone.matches.push(match);
         }
         console.log(worker_clone);
-        res.status(200).render('employer/showWorker', {
+        return res.status(200).send({
           title: 'Jobbunny | Employer > Worker',
-          worker: worker_clone,
-          message: req.flash('message'),
-          error: req.flash('error')
-        });
+          worker: worker_clone
+
+        })
+        // res.status(200).render('employer/showWorker', {
+        //   title: 'Jobbunny | Employer > Worker',
+        //   worker: worker_clone,
+        //   message: req.flash('message'),
+        //   error: req.flash('error')
+        // });
       })
     });
 }
@@ -804,8 +816,11 @@ var _getWorkersListFromMatchesList = function (matches) {
   var workersList = [];
   for (m in matches) {
     match = matches[m];
-    worker = match.worker;
-    worker.match = { _id: match._id, status: match.matchStatus }
+    if (match && match.worker) {
+      worker = match.worker;
+      worker.match = { _id: match._id, status: match.matchStatus }
+    }
+
     workersList.push(match.worker);
   }
   return workersList;

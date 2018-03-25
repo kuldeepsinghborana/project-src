@@ -229,10 +229,10 @@ router
   .route('/employer/jobs/:jobId/edit')
   .get(auth.requiresEmployerLogin, ctrlEmployer.editJob);
 router
-  .route('/employer/workers')
+  .route('/api/employer/workers')
   .get(auth.requiresEmployerLogin, ctrlEmployer.workersList);
 router
-  .route('/employer/workers/:workerId')
+  .route('/api/employer/workers/:workerId')
   .get(auth.requiresEmployerLogin, ctrlEmployer.showWorker);
 router
   .route('/api/employer/employees/invite/:jobId')

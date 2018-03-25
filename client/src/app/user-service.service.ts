@@ -69,7 +69,7 @@ export class UserService {
     
   }
   public getWorkerProfile(jobId) {
-    return this.commonServiceService.get('/employer/workers/'+ '?jobId=' + jobId)
+    return this.commonServiceService.get('/employer/workers'+ '?jobId=' + jobId)
       .map(res => res.json())
       .catch(this.handleError);
   }

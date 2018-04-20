@@ -10,7 +10,6 @@
 # dependencies
 /client/node_modules
 /server/node_modules
-/server/dist
 
 # IDEs and editors
 /.idea

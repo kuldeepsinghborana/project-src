@@ -24,7 +24,7 @@ export class CreatejobComponent implements OnInit {
   hidePassword: boolean = true;
   showSubmit: boolean = false;
   next: boolean = true;
-  email: any;
+ email: any;
   user = {};
   post = {
     jobTitle: "",
@@ -59,7 +59,7 @@ export class CreatejobComponent implements OnInit {
 
 
   };
-  constructor(public createJobService: CreatejobService, public toasterService: ToasterService, public atp: AmazingTimePickerService, private loginService: LoginService, public registerServiceService: RegisterServiceService, public router: Router) {
+  constructor(public createJobService: CreatejobService, public toasterService: ToasterService, public atp: AmazingTimePickerService, private loginService: LoginService, public registerServiceService: RegisterServiceService,public router:Router) {
     this.toasterService = toasterService;
   }
 
@@ -122,15 +122,6 @@ export class CreatejobComponent implements OnInit {
     this.coverImage = event.target.value;
   }
   emailVerify() {
-    let isEmail = new RegExp(/\S+@\S+\.\S+/);
-
-    let email = this.user["email"];
-
-    let emailIsValid = isEmail.test(this.user["email"]);
-    if (this.user["email"] === '' || this.user["email"] === undefined || !emailIsValid) {
-      return this.toasterService.pop('error', "Error", "Please enter correct email address");
-    }
-
     let emailId = this.user["email"];
     let data = {
       email: emailId
@@ -141,7 +132,6 @@ export class CreatejobComponent implements OnInit {
         this.next = false;
         this.hidePassword = false;
         this.showSubmit = true;
-        console.log("1")
       }
       else if (res.status == 201) {
         this.showPassword = true;
@@ -149,12 +139,10 @@ export class CreatejobComponent implements OnInit {
         this.hideConfirmPassword = false;
         this.hidePassword = true;
         this.next = false;
-        console.log("2")
         return this.toasterService.pop('error', 'Error', res.message);
       }
     }, err => {
       console.log("err", err)
-      console.log("3")
       return this.toasterService.pop('error', 'Error', err.message);
     });
   }
@@ -165,7 +153,7 @@ export class CreatejobComponent implements OnInit {
       this.loginService.login(this.user).subscribe(res => {
         myModal.close();
         this.user = {};
-        this.postJob(this.post)
+        this.toasterService.pop('success', 'Success', 'You post is successfuly registered');
         this.router.navigate(["/employer/overview"]);
       }, (err) => {
         console.log('err', err);
@@ -180,14 +168,8 @@ export class CreatejobComponent implements OnInit {
     if (this.user['password'] != this.user['Confirmpassword']) {
       return this.toasterService.pop('error', 'Error', "Password and confirm password must be same");
     }
-    console.log('test');
     this.registerServiceService.register(this.user).subscribe(res => {
-      console.log('res------------------------', res);
       this.user = {};
-      if (res.status == 200) {
-        this.post["employerId"] = res.userId;
-        this.postJob(this.post);
-      }
       this.toasterService.pop('success', 'Success', 'Registration Successfully done');
       this.router.navigate(["/employer/overview"]);
     }, err => {

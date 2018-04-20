@@ -50,15 +50,6 @@ utilsfunction.makeRandom = (req) => {
     return text;
 }
 
-utilsfunction.makeRandomWithCharacter = (req) => {
-    let text = "";
-    let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    for (let i = 0; i < 6; i++) {
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
-    return text;
-}
-
 utilsfunction.isPasswordMatch = (password, hash) => {
     //compare db password hash with new request password
     return new Promise((resolve, reject) => {
@@ -129,7 +120,6 @@ utilsfunction.sendEmail = (toEmail, subject, body, callback) => {
         // console.log('error', error);
         // console.log('response', response);
         if (error) {
-            console.log('error', error);
             isEmailSent = false;
         } else {
             // console.log(response);
@@ -150,7 +140,7 @@ utilsfunction.getCurrentUser = (req) => {
             _id: userId,
             userType: 'employer'
         }
-        return User.findOne(filter).then((data) => {
+        return User.findOne(filter).then((data)=>{
             return data;
         });
     }

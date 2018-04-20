@@ -9,72 +9,40 @@
         <div class="row">
           <div class="col-md-3">
             <div class="align-center">
-              <img class="img-fit img-circle" [src]="employee['profilePic']" height="100" width="100">
+              <img class="img-fit img-circle" src="https://scontent.xx.fbcdn.net/v/t31.0-1/16826009_10210205090476919_3964334241175919633_o.jpg?oh=e1a767f01a354528293ea31e8d9ae5fb&amp;oe=59A18FFC"
+                height="100" width="100">
               <br>
               <br>
-              <div class="strong capitalize">{{employee['first name']}} {{employee['last name']}}</div>
-              <p class="green strong"> ${{worker['salaryHour']}}</p>
-              <p class="strong">{{employee['gender']}}</p>
+              <div class="strong capitalize">Gary Lim</div>
+              <p class="green strong"> $undefined</p>
+              <p class="strong">male</p>
               <strong class="gray">EXPERIENCE</strong>
               <p class="strong">2 years</p>
               <br>
               <strong class="gray">LANGUAGE</strong>
-              <p class="strong">{{employee['languages'] ? employee['languages'].join(', ') : 'N/A'}}</p>
+              <p class="strong">English,Mandarin</p>
               <br>
               <strong class="gray">SAVINGS</strong>
-              <p>You save $10 when you hire {{employee['first name']}} {{employee['last name']}} with his expected salary.</p>
+              <p>You save $10 when you hire Gary Lim with his expected salary.</p>
             </div>
           </div>
           <div class="col-md-6">
             <div class="pad20">
               <h5 class="strong">About Me</h5>
-              <p>{{employee['profile']['self_description'] || 'N/A'}}</p>
+              <p>Entrepreneur</p>
               <br>
               <h5 class="strong">Job Experience</h5>
-              <ng-container *ngIf="employee['experience'];else notExeperience">
-                <ng-container *ngFor="let experience of employee['experience']">
-                  <strong>{{experience['title']}} @ {{experience['company']}}</strong>
-                  <p class="gray"> {{ experience['description'] }} </p>
-                </ng-container>
-              </ng-container>
-              <ng-template #notExeperience>
-                N/A
-              </ng-template>
+              <strong>Project Manager @ Vendermac</strong>
+              <p class="gray">Plan and Manage Events, Lead the salesforce to achieve yearly targets</p>
+              <strong>Project Manager @ Vendermac</strong>
+              <p class="gray">Lead team of 5 people to achieve Event sales target of 700k within a week</p>
               <br>
               <h5 class="strong">Personality Metrics</h5>
-              <ng-container [ngSwitch]="employee['personality'] && (['primary'] || employee['personality']['secondary'])">
-                <ng-container *ngSwitchCase="'A'">
-                  <h5>Driver</h5>
-                  <p>The Driver is a high achiever – a mover and shaker who is definitely not averse to risk. The individual
-                    is extroverted, strong-willed, direct, practical, organised, forceful, and decisive. Look for someone
-                    who tells it the way it is and is very persuasive. Watch out or you’ll be worn down and bowled over.
-                    A driver is task- rather than relationship-oriented and wants immediate results.</p>
-                </ng-container>
-                <ng-container *ngSwitchCase="'B'">
-                  <h5>Analytical</h5>
-                  <p>The Analytical is polite but reserved, logical, fact- and task-oriented. This person’s focus is on precision
-                    and perfection. Other strengths include persistence, diligence, caution, and a systematic approach.</p>
-                </ng-container>
-                <ng-container *ngSwitchCase="'C'">
-                  <h5>Amiable</h5>
-                  <p>Devoted, consistent, dependable, and loyal, the Amiable is a hard worker and will persevere long after
-                    others have given up. He or she is a team player, cooperative and easy to get along with, trustful, sensitive
-                    and a good listener. Working in groups with cooperative individuals, the Amiable tries to avoid confrontation.
-                    He or she enjoys company, performs best in a stable environment, and often has a stabilizing effect on
-                    others.
-                  </p>
-                </ng-container>
-                <ng-container *ngSwitchCase="'D'">
-                  <h5>Expressive</h5>
-                  <p>The Expressive, a verbally adept personality, is engaging, accommodating, supportive of others, persuasive,
-                    socially adept, and relationship- rather than task-oriented. He or she loves to be one of the gang, and
-                    is always ready for something new and exciting, especially if the gang is ready to participate. Additional
-                    strengths include enthusiasm, diplomatic skills, and the ability to inspire others.</p>
-                </ng-container>
-                <ng-container *ngSwitchDefault>
-                  <p>N/A</p>
-                </ng-container>
-              </ng-container>
+              <h5 class="strong red">Driver</h5>
+              <p>The Driver is a high achiever – a mover and shaker who is definitely not averse to risk. The individual is
+                extroverted, strong-willed, direct, practical, organised, forceful, and decisive. Look for someone who tells
+                it the way it is and is very persuasive. Watch out or you’ll be worn down and bowled over. A driver is task-
+                rather than relationship-oriented and wants immediate results.</p>
             </div>
           </div>
           <div class="col-md-3">

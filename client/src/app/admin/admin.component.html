@@ -2,11 +2,11 @@
   <div class="sidebar" data-color="#303135">
     <div class="sidebar-wrapper">
       <div class="logo align-center">
-        <img height="75" length="75" [src]="curruntUserDetails['profilePic'] || 'assets/img/logo.png'">
+        <img height="75" length="75" src="assets/img/logo.png">
         <div class="top10 strong medium">Administrator</div>
-        <div class="medium">{{curruntUserDetails['email']}}</div>
+        <div class="medium"></div>
         <a >
-          <i class="small pointer" [routerLink]="['account-settings']">Edit Account Settings</i>
+          <i class="small">Edit Account Settings</i>
         </a>
       </div>
       <ul class="nav list-group">
@@ -76,7 +76,7 @@
           <div class="collapse navbar-collapse pad10">
             <ul class="nav navbar-nav">
               <li>
-                <a  [routerLink]="['mission']" style="margin-top: 0px;">
+                <a  style="margin-top: 0px;">
                   <img class="pull-left" height="45" length="45" src="assets/img/logo.png">
                   <div class="pull-left left10">
                     <strong>Jobbunny</strong>
@@ -85,10 +85,10 @@
                 </a>
               </li>
               <li class="left20" role="presentation">
-                <a target="_blank" [routerLink]="['/homepage/about']">FAQ</a>
+                <a >FAQ</a>
               </li>
               <li class="left20" role="presentation">
-                <a target="_blank" [routerLink]="['/homepage/contact']">Contact Us</a>
+                <a >Contact Us</a>
               </li>
               <li>
                 <a class="text-danger" >

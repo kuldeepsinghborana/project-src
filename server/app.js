@@ -33,20 +33,20 @@ app.use(cors());
 app.use(flash());
 
 //use sessions for tracking logins, valid for 1 day
-// app.use(session({
-//   key: 'userId',
-//   secret: sessionSecret,
-//   resave: false,
-//   saveUninitialized: true,
-//   cookie: {
-//     path: '/',
-//     httpOnly: false,
-//     maxAge: 24 * 60 * 60 * 1000
-//   },
-//   store: new mongoStore({
-//     url: mongoose.dbUrl
-//   })
-// }));
+app.use(session({
+  key: 'userId',
+  secret: sessionSecret,
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    path: '/',
+    httpOnly: false,
+    maxAge: 24 * 60 * 60 * 1000
+  },
+  store: new mongoStore({
+    url: mongoose.dbUrl
+  })
+}));
 
 app.use(function (req, res, next) {
   res.locals.session = req.session;
@@ -83,7 +83,7 @@ app.use("/node_modules" , express.static(__dirname + '/node_modules'));
 app.use((req, res, next) => {
   // use session data in view templates
   // res.locals.session = req.session;
-  if (req.cookies.userId ) {
+  if (req.cookies.userId && !req.session.userId) {
     res.clearCookie('userId');
   }
   next();

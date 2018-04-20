@@ -1,75 +1,56 @@
-<div class="content-wrap">
-  <div class="panel pad10">
-    <span class="large strong">
-      <span>Invite Employees for Job : {{job['jobTitle']}}</span>
-      <span> @ {{ job['workRegion']}} {{job['location']}}</span>
-      <br>
-    </span>
-    <p>Job ID: {{jobId}}</p>
-    <hr>
-    <a></a>
-    <div class="row pad20" *ngFor="let employee of employeesList">
-      <a>
-        <div class="col-md-2">
-          <div class="align-center">
-            <img class="img-fit img-circle" [src]="employee['profilePic']"
-              height="100" width="100">
-          </div>
-        </div>
-      </a>
-      <div class="col-md-10">
-        <a></a>
-        <div class="row">
-          <a [routerLink]="['../../employee-profile', employee['_id']]">
-            <div class="col-md-3">
-              <div class="strong capitalize black">{{employee['first name']}} {{employee['last name']}}</div>
-              <p class="green strong" [hidden]="job['jobType'] !== 'Full-Time'">{{ employee['apllication'] && employee['apllication']['salaryMonth'] ? employee['apllication']['salaryMonth']
-                : 'Not specified '}}$</p>
-              <p class="green strong" [hidden]="job['jobType'] !== 'Part-Time'">{{ employee['apllication'] && employee['apllication']['salaryHour'] ? employee['apllication']['salaryHour']
-                : 'Not specified '}}$</p>
-              <p class="strong black">{{gender}}</p>
-            </div>
+<div class="content">
+  <div class="clearfix"></div>
+  <div class="container-fluid">
+    <div class="content-wrap">
+      <div class="panel pad10">
+        <span class="large strong">
+          <span>Invite Employees for Job : test</span>
+          <span> @ West test</span>
+          <br>
+        </span>
+        <p>Job ID: 5a76ca0afe657000143c15d3</p>
+        <hr>
+        <a href="/employer/workers/5a5db124a17df86089392b05?jobId=5a76ca0afe657000143c15d3"></a>
+        <div class="row pad20">
+          <a href="/employer/workers/5a5db124a17df86089392b05?jobId=5a76ca0afe657000143c15d3">
             <div class="col-md-2">
-              <strong class="gray">EXPERIENCE</strong>
-              <p class="strong black">2 years</p>
-            </div>
-            <div class="col-md-3">
-              <strong class="gray">LANGUAGE</strong>
-              <ng-container *ngIf="(employee['profile'] && employee['profile']['languages'] && employee['profile']['languages'].length > 0); else noLanguage">
-                <p class="strong black">{{employee['profile']['languages'].join(', ')}}</p>
-              </ng-container>
-              <ng-template #noLanguage>
-                <p class="strong black">N/A</p>
-              </ng-template>
-            </div>
-            <div class="col-md-2">
-              <strong class="gray">PERSONALITY</strong>
-              <ng-container *ngIf="(employee['personality'] && (employee['personality']['primary'] ||employee['personality']['secondary'])); else noPersonality">
-                <p class="strong black" [hidden]="!employee['personality']['primary']">{{employee['personality']['primary']['name']}}</p>
-                <p class="strong black" [hidden]="!employee['personality']['secondary']">{{employee['personality']['secondary']['name']}}</p>
-              </ng-container>
-              <ng-template #noPersonality>
-                <p class="strong black">N/A</p>
-              </ng-template>
-
+              <div class="align-center">
+                <img class="img-fit img-circle" src="https://scontent.xx.fbcdn.net/v/t31.0-1/16826009_10210205090476919_3964334241175919633_o.jpg?oh=e1a767f01a354528293ea31e8d9ae5fb&amp;oe=59A18FFC"
+                  height="100" width="100">
+              </div>
             </div>
           </a>
-          <div class="col-md-2">
-            <a></a>
-            <div class="align-center" *ngIf="employee['match'] && employee['match']['matchStatus']; else inviteBlock">
-                <ng-container [ngSwitch]="employee['match']['matchStatus']">
-                  <a *ngSwitchCase="'invited'" class="btn btn-red btn-block" (click)="changeMatchStatus('', 'delete', employee['match']['_id'])">Cancel Invite</a>
-                  <a *ngSwitchCase="'applied'" class="btn btn-yellow btn-block" (click)="changeMatchStatus('', 'shortlisted', employee['match']['_id'])">Shortlist</a>
-                  <a *ngSwitchCase="'shortlisted'" class="btn btn-blue btn-block">Shortlisted</a>
-                  <a *ngSwitchCase="'declined'" class="btn btn-red btn-block">User Declined</a>
-                </ng-container>
-            </div>
-            <ng-template #inviteBlock>
-              <a class="btn btn-green" (click)="changeMatchStatus(employee['_id'], 'invited')">
-                Invite
+          <div class="col-md-10">
+            <a href="/employer/workers/5a5db124a17df86089392b05?jobId=5a76ca0afe657000143c15d3"></a>
+            <div class="row">
+              <a href="/employer/workers/5a5db124a17df86089392b05?jobId=5a76ca0afe657000143c15d3">
+                <div class="col-md-3">
+                  <div class="strong capitalize black">Gary Lim</div>
+                  <p class="green strong">8$</p>
+                  <p class="strong black">male</p>
+                </div>
+                <div class="col-md-2">
+                  <strong class="gray">EXPERIENCE</strong>
+                  <p class="strong black">2 years</p>
+                </div>
+                <div class="col-md-3">
+                  <strong class="gray">LANGUAGE</strong>
+                  <p class="strong black">English,Mandarin</p>
+                </div>
+                <div class="col-md-2">
+                  <strong class="gray">PERSONALITY</strong>
+                  <p class="strong black"></p>
+                  <p class="strong black"></p>
+                </div>
               </a>
-              <small class="strong">use TWO carrots</small>
-            </ng-template>
+              <div class="col-md-2">
+                <a href="/employer/workers/5a5db124a17df86089392b05?jobId=5a76ca0afe657000143c15d3"></a>
+                <div class="align-center">
+                  <a href="/employer/workers/5a5db124a17df86089392b05?jobId=5a76ca0afe657000143c15d3"></a>
+                  <a class="btn btn-blue btn-block" href="/api/matches/update/5a76ca6da17df86089e47c0c?matchStatus=shortlisted">Shortlist</a>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

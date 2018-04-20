@@ -6,8 +6,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ToasterModule, ToasterContainerComponent, ToasterService } from './../../node_modules/angular5-toaster/angular5-toaster';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgProgressModule, NgProgressBrowserXhr } from 'ngx-progressbar';
-import { BrowserXhr,Http, HttpModule } from '@angular/http';
-import { HttpClientModule } from '@angular/common/http';
+import { BrowserXhr, HttpModule } from '@angular/http';
 import { CommonServiceService } from './common/common-service.service';
 import { RegisterServiceService } from './register/register-service.service';
 import { AuthGuard } from './common/auth-gaurd.service';
@@ -31,7 +30,6 @@ import { UserService } from './user-service.service';
 import { EmployerComponent } from './employer/employer.component';
 import { AdminComponent } from './admin/admin.component';
 import { CommaSepratedObjectPropertyValuesPipe } from './comma-seprated-object-property-values.pipe';
-import {ImageCropperComponent} from 'ng2-img-cropper';
 const appRoutes: Routes = [];
 @NgModule({
   declarations: [
@@ -47,9 +45,7 @@ const appRoutes: Routes = [];
     ActivateAccountComponent,
     EmployerComponent,
     AdminComponent,
-    CommaSepratedObjectPropertyValuesPipe,
-    ImageCropperComponent
-    
+    CommaSepratedObjectPropertyValuesPipe
   ],
   imports: [
     BrowserModule,
@@ -62,8 +58,7 @@ const appRoutes: Routes = [];
     AppRoutingModule,
     FormsModule,
     AmazingTimePickerModule,
-    ModalModule,
-    HttpClientModule,
+    ModalModule
 
     // HttpClientModule,
     // RouterModule.forRoot(

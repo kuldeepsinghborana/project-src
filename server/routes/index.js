@@ -1,8 +1,10 @@
 var express = require('express');
 var cookieParser = require('cookie-parser');
+var cors = require('cors');
 let auth = require('../helper/auth');
 var router = express.Router();
 
+router.use(cors());
 // image upload
 var multer = require('multer')
 var storage = multer.diskStorage({
@@ -220,7 +222,7 @@ router
   .route('/employer/jobs/new')
   .get(auth.requiresEmployerLogin, ctrlEmployer.newJob);
 router
-  .route('/api/employer/jobs/:jobId')
+  .route('/employer/jobs/:jobId')
   .get(ctrlEmployer.showJob);
   router
   .route('/employer/jobsWithId/:jobId')
@@ -229,13 +231,13 @@ router
   .route('/employer/jobs/:jobId/edit')
   .get(auth.requiresEmployerLogin, ctrlEmployer.editJob);
 router
-  .route('/api/employer/workers')
+  .route('/employer/workers')
   .get(auth.requiresEmployerLogin, ctrlEmployer.workersList);
 router
-  .route('/api/employer/workers/:workerId')
+  .route('/employer/workers/:workerId')
   .get(auth.requiresEmployerLogin, ctrlEmployer.showWorker);
 router
-  .route('/api/employer/employees/invite/:jobId')
+  .route('/employer/workers/invite/:jobId')
   .get(auth.requiresEmployerLogin, ctrlEmployer.inviteWorkers);
 router
   .route('/employer/notifications')
@@ -248,18 +250,14 @@ router.get('/employer/buy-carrots', function (req, res, next) {
   res.render('employer/buyCarrots', { title: 'Jobbunny | Employer > Carrots' });
 });
 
-router
-  .route('/api/employer/sendinvite')
-  .post(auth.requiresEmployerLogin, ctrlEmployer.sendinvite);
-
-  router
-  .route('/api/saveUserProfile')
-  .post(auth.requiresEmployerLogin, ctrlJobs.saveUserProfile);
 
 // admin routes
 router
-  .route('/api/admin')
+  .route('/admin')
   .get(auth.requiresAdminLogin, ctrlAdmin.dashboard)
+router
+  .route('/admin/settings')
+  .get(auth.requiresAdminLogin, ctrlAdmin.settings);
 router
   .route('/api/admin/employers')
   .get(auth.requiresAdminLogin, ctrlAdmin.employersList);
@@ -267,10 +265,7 @@ router
   .route('/admin/employers/search')
   .get(auth.requiresAdminLogin, ctrlAdmin.searchEmployers);
 router
-  .route('/api/admin/settings')
-  .get(auth.requiresAdminLogin, ctrlAdmin.settings);
-router
-  .route('/api/admin/employers/:employerId')
+  .route('/admin/employers/:employerId')
   .get(auth.requiresAdminLogin, ctrlAdmin.showEmployer);
 router
   .route('/api/admin/jobs')
@@ -282,7 +277,7 @@ router
   .route('/api/admin/employee')
   .get(auth.requiresAdminLogin, ctrlAdmin.workersList);
 router
-  .route('/api/admin/employees/:employeeId')
+  .route('/admin/workers/:workerId')
   .get(auth.requiresAdminLogin, ctrlAdmin.showWorker);
 router
   .route('/admin/carrots')
@@ -296,8 +291,6 @@ router
   .route('/newjob')
   .get(ctrlJobs.newJob)
 router
-  .route('/api/employee/:workerId')
-  .get(ctrlEmployer.showWorker)
 router
   .route('/api/isEmailExist')
   .post(ctrlUsers.isEmailExist)
@@ -327,7 +320,6 @@ router
   .get(ctrlJobs.filterJob)
 
 // matches routes
-
 router
   .route('/api/matches/:employerId/:jobId/:workerId')
   .all(ctrlMatches.createMatch);
@@ -340,9 +332,7 @@ router
 router
   .route('/api/matches/delete/:matchId')
   .get(ctrlMatches.deleteMatch);
-router
-  .route('/api/matches/:jobId/:workerId')
-  .all(ctrlMatches.createMatch);
+
 // authentication routes
 router
   .route('/api/users/register')

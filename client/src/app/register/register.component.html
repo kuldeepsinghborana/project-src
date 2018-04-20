@@ -32,8 +32,9 @@
 
         <div class="form-group">
           <label for="username">Email Id</label>
-          <input type="email" class="form-control" id="username" placeholder="Email ID" [(ngModel)]="email" autocapitalize="none">
+          <input type="username" class="form-control" id="username" placeholder="Email ID" [(ngModel)]="email" autocapitalize="none">
         </div>
+
         <div class="form-group">
           <label for="password">Password</label>
           <input type="password" class="form-control" id="password" placeholder="Password" [(ngModel)]="password" autocapitalize="none">
@@ -49,12 +50,8 @@
         </div>
         <div class="form-group">
           <label for="username">Handphone Number</label>
-          <input type="username" class="form-control" oninput="this.value=this.value.replace(/[^0-9]/g, '');" id="handphoneNumber" placeholder="Handphone Number" [(ngModel)]="handphoneNumber"
+          <input type="username" class="form-control" id="handphoneNumber" placeholder="Handphone Number" [(ngModel)]="handphoneNumber"
             autocapitalize="none">
-        </div>
-        <div class="form-group">
-          <label for="username">Reference Number</label>
-          <input type="text" class="form-control"  placeholder="Reference Number" [(ngModel)]="referenceNumber">
         </div>
         <button type="submit" class="btn btn-success btn-block" (click)="register()">Register</button>
         <br/>

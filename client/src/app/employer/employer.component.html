@@ -1,12 +1,12 @@
 <div class="wrapper">
     <div class="sidebar" data-color="#303135">
-        <div class="sidebar-wrapper">
+        <div class="sidebar-wrapper" >
             <div class="logo align-center">
-                <img class="img-circle" height="75" length="75" (click)="myModal.open()" [src]="data2.image ? data2.image : curruntUserDetails['profilePic']|| 'assets/img/logo.png'">
+                <img class="img-circle" height="75" length="75" [src]="curruntUserDetails['profilePic']|| 'assets/img/logo.png'">
                 <div class="strong medium">{{curruntUserDetails['firstName'] + ' ' + curruntUserDetails['lastName']}}</div>
                 <div class="medium">{{curruntUserDetails['companyName']}}</div>
                 <a [routerLink]="['./account-settings']">
-                    <i class="small">Edit Account Settings</i>
+                    <i class="small" >Edit Account Settings</i>
                 </a>
             </div>
             <ul class="nav list-group">
@@ -50,7 +50,7 @@
         <nav class="navbar navbar-default navbar-fixed">
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <a class="navbar-brand hidden-md hidden-lg">
+                    <a class="navbar-brand hidden-md hidden-lg" >
                         <span>Overview</span>
                     </a>
                     <button class="navbar-toggle" id="navigation-dropdown" data-toggle="dropdown" type="button">
@@ -61,7 +61,7 @@
                     </button>
                     <div class="dropdown-menu pull-right" id="dropdown-nav-menu" aria-labelledby="navigation-dropdown">
                         <div class="pad20">
-                            <a class="text-bold text-danger">
+                            <a class="text-bold text-danger" >
                                 <i class="fa fa-power-off"></i>
                                 <span>Log out</span>
                             </a>
@@ -70,14 +70,14 @@
                     <div class="collapse navbar-collapse pad10">
                         <ul class="nav navbar-nav">
                             <li>
-                                <a>
-                                    <div [routerLink]="['../employer/notifications']" class="notification-icon">
+                                <a >
+                                    <div class="notification-icon">
                                         <i class="fa fa-bars"></i>
                                     </div>
                                 </a>
                             </li>
                             <li>
-                                <a style="margin-top: 0px;">
+                                <a  style="margin-top: 0px;">
                                     <img class="pull-left" height="45" length="45" src="assets/img/logo.png">
                                     <div class="pull-left left10">
                                         <strong>Jobbunny</strong>
@@ -85,8 +85,8 @@
                                     </div>
                                 </a>
                             </li>
-                            <li [routerLink]="['../employer/job-details']" class="left20">
-                                <a>
+                            <li class="left20">
+                                <a >
                                     <span class="red-icon">Post Job</span>
                                 </a>
                             </li>
@@ -97,7 +97,7 @@
                                 <a target="_blank" [routerLink]="['../homepage/contact']">Contact Us</a>
                             </li>
                             <li>
-                                <a class="text-danger" (click)="logout()">
+                                <a class="text-danger" >
                                     <i class="fa fa-power-off"></i>
                                     <span> Log out</span>
                                 </a>
@@ -106,13 +106,13 @@
                     </div>
                 </div>
                 <div class="pull-right hidden-xs top20">
-                    <!-- <a class="hover">
+                    <a class="hover" >
                         <div class="tooltip pad10">
                             <div class="strong">Available Carrots: {{(curruntUserDetails['carrots'] && curruntUserDetails['carrots']['available'])||0}}</div>
                             <div class="strong">Pending Carrots: {{(curruntUserDetails['carrots'] && curruntUserDetails['carrots']['pending'])||0}}</div>
                             <div class="strong">Total Carrots: {{(curruntUserDetails['carrots'] && curruntUserDetails['carrots']['total'])||0}}</div>
                             <form action="/employer/buy-carrots" method="get">
-                                <button class="btn btn-orange">Purchase carrots</button>
+                                <button class="btn btn-orange" >Purchase carrots</button>
                             </form>
                         </div>
                         <img class="pull-left" height="50" length="50" src="assets/img/carrot.png">
@@ -120,7 +120,7 @@
                             <span class="strong">{{(curruntUserDetails['carrots'] && curruntUserDetails['carrots']['available'])||0}}</span>
                             <p>Available</p>
                         </div>
-                    </a> -->
+                    </a>
                     <i class="fa fa-2x fa-send pull-left top10"></i>
                     <div class="pull-left left10">
                         <span class="strong">1</span>
@@ -132,20 +132,3 @@
         <router-outlet></router-outlet>
     </div>
 </div>
-<modal #myModal>
-    <modal-content>
-        <h3>
-            <div class="file-upload">
-                <input id="custom-input" type="file" (change)="fileChangeListener($event)" accept="image/x-png,image/gif,image/jpeg">
-            </div>
-        </h3>
-        <img-cropper #cropper [image]="data2" [settings]="cropperSettings2"></img-cropper>
-        <br>
-        <!-- <span class="result rounded" *ngIf="data2.image">
-            <img [src]="data2.image" [width]="cropperSettings2.croppedWidth" [height]="cropperSettings2.croppedHeight">
-        </span> -->
-        <button class="btn btn-primary"  (click)="saveCroppedImage(data2.image,myModal)" type="button">Save</button>
-
-        
-    </modal-content>
-</modal>

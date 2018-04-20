@@ -1,11 +1,9 @@
 var mongoose = require('mongoose');
 var User = mongoose.model('User');
-var userProfile = mongoose.model('userProfile');
 var Job = mongoose.model('Job');
 var moment = require('moment');
 var imgur = require('imgur');
 let waterfall = require('async-waterfall');
-const jwt = require('../../helper/jwt');
 
 // Setting
 imgur.setClientId('e019b1bcff86b7f');
@@ -20,49 +18,11 @@ module.exports.newJob = function (req, res) {
   res.locals.jobProfile = req.query.profile;
   res.status(200).render('jobs/newJob', { title: 'Jobbunny | New job' });
 }
-module.exports.saveUserProfile = function(req,res){
-  let user_id = jwt.getCurrentUserId(req);
-  if(!req.body.imageUrl){
-    return res.send({
-      message:"ImageUrl cannot be blank "
-    }) 
-  }
-  let img_url = req.body.imageUrl;
-  let userData = {
-    "userId":user_id,
-    "imageUrl":img_url
-  }
-  let saveData = new userProfile(userData);
-  console.log("saveData",saveData)
-  saveData.save(function(err,result){
-    if(err){
-      return res.send({
-        status:0,
-        message:err
-      })
-    }
-    else{
-      console.log("result",result)
-      return res.send({
-        status:1,
-        message:"User profile saved successfully"
-      })
-    }
-  })
-}
+
 // POST /api/jobs
 module.exports.createJob = function (req, res) {
-  let user_id = jwt.getCurrentUserId(req);
-
   console.log('Creating new job');
   var formData = req.body;
-  let employerId;
-  if(formData.employerId != "" && formData.employerId != undefined){
-    employerId = formData.employerId
-  }
-  else{
-    employerId = user_id
-  }
   var newJob = Job({
     jobTitle: formData.jobTitle,
     jobType: formData.jobType,
@@ -88,24 +48,23 @@ module.exports.createJob = function (req, res) {
     employerName: formData.employerName,
     employerEmail: formData.employerEmail,
     employerPhone: formData.employerPhone,
-    employerId: employerId,
+    employerId: formData.employerId,
     coverImage: req.file ? req.file.filename : null
-    
   });
- 
+
   newJob.save(function (err, job) {
     if (err) {
       console.log("Error creating job", err)
-      return res.stattus(400).send({
+      res.send({
         status: 400,
         message: "Error creating job",
         error: err
-      });
+      })
       // req.session.error = 'Error creating job';
       // res.redirect(400, '/newjob');
     } else {
       console.log("Job created ", job);
-      // req.session.message = 'Job created sucessfully';
+      req.session.message = 'Job created sucessfully';
       if (job.coverImage) {
         imgur.uploadFile('public/uploads/' + job.coverImage).then(function (json) {
           remote_url = json.data.link;
@@ -150,7 +109,6 @@ module.exports.createJob = function (req, res) {
 // POST /api/jobs/update/:jobId
 module.exports.updateJob = function (req, res) {
   var jobId = req.params.jobId;
-  let user_id = jwt.getCurrentUserId(req);
   console.log('UPDATE job with _id: ' + jobId);
   var formData = req.body;
   var updateJobParams = {
@@ -178,7 +136,7 @@ module.exports.updateJob = function (req, res) {
     employerName: formData.employerName,
     employerEmail: formData.employerEmail,
     employerPhone: formData.employerPhone,
-    employerId: user_id ? user_id : null,
+    employerId: req.session.user ? req.session.user._id : null,
     coverImage: req.file ? req.file.filename : null
   };
 
@@ -195,14 +153,11 @@ module.exports.updateJob = function (req, res) {
       job.save(function (err, job) {
         if (err) {
           console.log("Error updating job", err)
-        return res.status(400).send({
-            message:err
-          })
-          // req.session.error = 'Error updating job';
-          // res.redirect(400, req.header('Referer'));
+          req.session.error = 'Error updating job';
+          res.redirect(400, req.header('Referer'));
         } else {
           console.log("Job updated >>>>>", job);
-          // req.session.message = 'Job updated sucessfully';
+          req.session.message = 'Job updated sucessfully';
           if (job.coverImage) {
             imgur.uploadFile('public/uploads/' + job.coverImage).then(function (json) {
               remote_url = json.data.link;
@@ -211,15 +166,15 @@ module.exports.updateJob = function (req, res) {
                 if (err) {
                   console.log("Something wrong when updating data!");
                   res.send({
-                    status: 400,
-                    message: "Something wrong when updating data!"
+                    status:400,
+                    message:"Something wrong when updating data!"
                   })
                   return false;
                 }
                 console.log('Updated job', job);
                 res.send({
-                  status: 1,
-                  message: "Updated job"
+                  status:1,
+                  message:"Updated job"
                 })
                 return false;
               });
@@ -230,8 +185,8 @@ module.exports.updateJob = function (req, res) {
               });
           } else {
             res.send({
-              status: 1,
-              message: "job Job updated successfully"
+              status:1,
+              message:"job Job updated successfully"
             })
             // req.flash('info', 'Job updated successfully');
             // res.redirect(getRedirectionPath(req, job._id));
@@ -269,20 +224,32 @@ module.exports.getJob = function (jobId) {
 module.exports.deleteJob = function (req, res, next) {
   var jobId = req.params.jobId;
   console.log('GET job with _id: ' + jobId);
-  return Job
+
+  Job
     .findById(jobId)
-    .exec()
-    .then(job => {
-      return job.remove()
-        .then(() => {
+    .exec(function (err, job) {
+      if (err) {
+        console.log("Job not found: ", err)
+        res.status(400).render('error');
+      }
+      console.log('Found job: ', job._id);
+      //remove it from db
+      job.remove(function (err, job) {
+        if (err) {
+          console.log(err);
+        } else {
           console.log('DELETE removing ID: ' + job._id);
-          res.json({ message: 'deleted' });
-        })
-    })
-    .catch(err => {
-      res.status(500).json({
-        message: 'Something went wrong'
-      })
+          res.format({
+            html: function () {
+              req.flash('message', 'Job deleted successfully!')
+              res.redirect(getRedirectionPath(req));
+            },
+            json: function () {
+              res.json({ message: 'deleted' });
+            }
+          });
+        }
+      });
     });
 }
 
@@ -302,11 +269,12 @@ module.exports.markJob = function (req, res, next) {
         console.log(err);
       } else {
         console.log('Updated successfully: ' + job._id);
-        res.send({
-          status: 1,
-          message: "Status changed successfully"
-        })
-        return false;
+        res.format({
+          html: function () {
+            req.flash('message', 'Job marked [' + status + '] successfully!')
+            res.redirect(getRedirectionPath(req));
+          }
+        });
       }
     });
 }

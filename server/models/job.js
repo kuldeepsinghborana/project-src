@@ -26,7 +26,6 @@ var jobSchema = new mongoose.Schema({
   employerEmail: String,
   employerPhone: String,
   coverImage: String,
-  companyPhoto: String,
   featuredImages: [String],
   employerId: String,
   jobStatus: { type: String, default: 'open' },
@@ -52,12 +51,7 @@ jobSchema.pre('save', function (next) {
   var job = this;
   next()
 });
-var userProfileSchema = new mongoose.Schema({
-userId: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
-imageUrl:String
 
-})
 // export the schema as Job model
-mongoose.model('userProfile', userProfileSchema, 'userProfiles');
 mongoose.model('Job', jobSchema, 'jobs');
 

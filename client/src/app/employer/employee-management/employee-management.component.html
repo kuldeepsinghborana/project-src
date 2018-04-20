@@ -1,5 +1,4 @@
-<!-- <ng-container> -->
-<div *ngIf="!showEmployees" class="content">
+<div class="content">
   <div class="clearfix"></div>
   <div class="container-fluid">
     <div class="content-wrap">
@@ -9,9 +8,9 @@
             <div class="large strong">Employee Management</div>
           </div>
           <div class="col-md-7">
-            <form class="form-inline">
-              <input class="form-control" type="text" [(ngModel)]="jobId" name="jobId" placeholder="Search by job ID">
-              <button class="form-control" (click)="searchEmployee()">
+            <form class="form-inline" action="/employer/workers" method="get">
+              <input class="form-control" type="text" name="jobId" placeholder="Search by job ID">
+              <button class="form-control" type="submit">
                 <i class="fa fa-search"></i>
               </button>
             </form>
@@ -22,158 +21,3 @@
     </div>
   </div>
 </div>
-<!-- </ng-container> -->
-<!-- <ng-template > -->
-<div *ngIf="showEmployees" class="content">
-  <div class="clearfix"></div>
-  <div class="container-fluid">
-    <div class="content-wrap">
-      <div class="panel pad10">
-        <div class="row">
-          <div class="col-md-5">
-            <div class="large strong">Employee Management</div>
-          </div>
-          <div class="col-md-7">
-            <form class="form-inline">
-              <input class="form-control" [(ngModel)]="jobId" type="text" name="jobId" placeholder="Search by job ID">
-              <button class="form-control" (click)="searchEmployee()" type="submit">
-                <i class="fa fa-search"></i>
-              </button>
-            </form>
-          </div>
-        </div>
-        <span class="strong">Job ID: </span>
-        <span class="gray strong">{{jobId}}</span>
-        <br>
-        <br>
-        <div class="row">
-          <div class="col-md-3">
-            <p class="strong">{{workerList.length}} matches</p>
-          </div>
-          <div class="col-md-9">
-            <div class="pull-right">
-              <a class="dropdown-toggle" href="#filters" data-toggle="collapse" aria-expanded="">
-                <i class="fa fa-filter"></i>
-                <span>FILTER</span>
-              </a>
-            </div>
-          </div>
-        </div>
-        <div class="collapse in" id="filters">
-          <div class="row">
-            <div class="col-md-2">
-              <strong>STATUS</strong>
-              <ul class="list-unstyled">
-                <li class="top10">
-                  <a class="gray" href="/employer/workers?jobId=5aacac4f21f485001485d98f&amp;matchStatus=invited">invited</a>
-                </li>
-                <li class="top10">
-                  <a class="gray" href="/employer/workers?jobId=5aacac4f21f485001485d98f&amp;matchStatus=applied">applied</a>
-                </li>
-                <li class="top10">
-                  <a class="gray" href="/employer/workers?jobId=5aacac4f21f485001485d98f&amp;matchStatus=shortlisted">shortlisted</a>
-                </li>
-                <li class="top10">
-                  <a class="gray" href="/employer/workers?jobId=5aacac4f21f485001485d98f&amp;matchStatus=employed">employed</a>
-                </li>
-              </ul>
-            </div>
-            <div class="col-md-2">
-              <strong>GENDER</strong>
-              <ul class="list-unstyled">
-                <li class="top10">
-                  <a class="gray" href="/employer/workers?jobId=5aacac4f21f485001485d98f&amp;gender=male">male</a>
-                </li>
-                <li class="top10">
-                  <a class="gray" href="/employer/workers?jobId=5aacac4f21f485001485d98f&amp;gender=female">female</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <hr>
-        <a href="/employer/workers/5a942640a17df86089b771a2?jobId=5aacac4f21f485001485d98f">
-          <div class="row pad20" *ngFor="let worker of workerList">
-            <div class="col-md-2">
-              <div class="align-center">
-                <img class="img-fit img-circle" src="{{worker['profilePic']}}"
-                  height="100" width="100">
-              </div>
-            </div>
-            <div class="col-md-10">
-              <div class="row" >
-                <div class="col-md-3">
-                  <div class="strong capitalize black">{{worker['first name']}} {{worker['last name']}}</div>
-                  <p class="green strong">${{jobDetails['salary']}} {{jobDetails['salaryType']}}</p>
-                  <p class="strong black">{{worker['gender']}}</p>
-                </div>
-                <div class="col-md-2">
-                  <strong class="gray">EXPERIENCE</strong>
-                  <p class="strong black">2 years</p>
-                </div>
-                <div class="col-md-3">
-                  <strong class="gray">LANGUAGE</strong>
-                  <ng-container *ngIf="(worker['profile'] && worker['profile']['languages'] && worker['profile']['languages'].length > 0); else noLanguage">
-                    <p class="strong black">{{worker['profile']['languages'].join(', ')}}</p>
-                  </ng-container>
-                  <ng-template #noLanguage>
-                    <p class="strong black">N/A</p>
-                  </ng-template>
-                  <!-- <p class="strong black">English,No other languages</p> -->
-                </div>
-                <div class="col-md-2">
-                  <strong class="gray">PERSONALITY</strong>                  
-                  <!-- <ng-container *ngIf="(worker['profile'] && worker['profile']['personality'] && worker['profile']['personality'].length > 0); else noPersonality">
-                    <p class="strong black">{{worker['profile']['personality'].join(', ')}}</p>
-                  </ng-container>
-                  <ng-template #noPersonality>
-                    <p class="strong black">N/A</p>
-                  </ng-template> -->
-
-                  <ng-container *ngIf="(worker['personality'] && (worker['personality']['primary'] ||worker['personality']['secondary'])); else noPersonality">
-                    <p class="strong black" [hidden]="!worker['personality']['primary']">{{worker['personality']['primary']['name']}}</p>
-                    <p class="strong black" [hidden]="!worker['personality']['secondary']">{{worker['personality']['secondary']['name']}}</p>
-                  </ng-container>
-                  <ng-template #noPersonality>
-                    <p class="strong black">N/A</p>
-                  </ng-template>
-                  <!-- <p class="black">N/A</p> -->
-                </div>
-                <div class="col-md-2">
-                  <div class="align-center"></div>
-                  <div class="align-center" *ngIf="worker['match'] && worker['match']['status']; else inviteBlock">
-                    <ng-container [ngSwitch]="worker['match']['status']">
-                      <a *ngSwitchCase="'invited'" class="btn btn-red btn-block" (click)="changeMatchStatus('', 'delete', worker['match']['_id'])">Cancel Invite</a>
-                      <a *ngSwitchCase="'applied'" class="btn btn-yellow btn-block" (click)="changeMatchStatus('', 'shortlisted', worker['match']['_id'])">Shortlist</a>
-                      <a *ngSwitchCase="'shortlisted'" class="btn btn-blue btn-block">Shortlisted</a>
-                      <a *ngSwitchCase="'declined'" class="btn btn-red btn-block">User Declined</a>
-                    </ng-container>
-                </div>
-                <ng-template #inviteBlock>
-                  <a class="btn btn-green" (click)="changeMatchStatus(worker['_id'], 'invited')">
-                    Invite
-                  </a>
-                  <small class="strong">use TWO carrots</small>
-                </ng-template>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="black">
-                    <!-- <p>hard worker</p> -->
-                    <i class="fa fa-2x fa-circle right10"></i>
-                    <span>{{worker['match']['status']}}</span>
-                    <span class="strong"> Job ID {{jobId}} : {{jobDetails['jobTitle']}}  </span>
-                    <span> for </span>
-                    <span class="strong">{{jobDetails['companyName']}}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </a>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- </ng-template> -->
